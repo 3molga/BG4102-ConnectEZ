@@ -1,24 +1,27 @@
+// Header file for "joystick" class, meant to store information about the overall joystick
+// It will construct 2 joystickAxis 
 // Include these lines by default
 #ifndef joystick_h
 #define joystick_h
 #include <Arduino.h>
+#include "joystickAxis.h"
 
 // Class declaration
-class joystick{
+class joystick {
 
 // Public stuff
 public:
-	joystick(int joystickPin, bool joystickXY); // Creates object for each pin
-	String joystickToggledMsg(); // Returns message from joystick
+  // Constructor and joystickAxis objects
+	joystick(int joystickXPin, int joystickYPin); // Creates object from X and Y pins
+  extern joystickAxis joyX(int joystickXPin, bool 0);
+  extern joystickAxis joyY(int joystickYPin, bool 1);
+
+  // Functions
+  bool joystickStateCheck();
+  String joystickMessageCheck();
 
 // Private stuff
 private:
-	int _joystickPin; // Pin int
-	bool _joystickXY; // Joystick X or Y (0/1)
-	int _joystickValue; // Joystick current value
-	int _joystickCurrentState; // Joystick current state
-	int _joystickPreviousState; // Stores previous state of joystick
-	int joystickToggleCheck(int _joystickPin); // Checks if joystick is toggled
 };
 
 #endif
