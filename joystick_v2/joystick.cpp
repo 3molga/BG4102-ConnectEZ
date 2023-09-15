@@ -6,10 +6,10 @@
 #include "joystick.h"
 #include "joystickAxis.h"
 
-std::array<int, 2> _joystickCurValues = {0, 0};
-std::array<int, 2> _joystickPrevValues =  {0, 0};
+std::array<int, 2> _joystickPrevValues;
+std::array<int, 2> _joystickCurValues;
 int joystickDebounceTime = 250; // In ms
-unsigned long _joystickRecentStateUpdateTime = 0;
+unsigned long _joystickRecentStateUpdateTime;
 
 // Constructor
 joystick::joystick(int joystickXPin, int joystickYPin) : 
@@ -17,19 +17,18 @@ joystick::joystick(int joystickXPin, int joystickYPin) :
   joyY(joystickYPin, true) {
 }
 
-
 // joystickSetup
-// Set up joystickAxis loops
+// Assigns initial state
 void joystick::joystickSetup(){
-  joyX.joystickAxisLoop();
-  joyY.joystickAxisLoop();
+  _joystickPrevValues =  {0, 0};
 }
 
 // _joystickUpdateState
 // Updates state of joystick
 void joystick::_joystickUpdateState(){
-  _joystickCurValues[0] = joyX.joystickAxisCurrentState;
-  _joystickCurValues[1] = joyY.joystickAxisCurrentState;
+  joyX.joystickAxisLoop();
+  joyY.joystickAxisLoop();
+  _joystickCurValues = {joyX.joystickAxisCurrentState, joyY.joystickAxisCurrentState};
 }
 
 // joystickStateTrigger

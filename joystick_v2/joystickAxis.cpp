@@ -6,11 +6,11 @@
 // joystickAxis thresholds
 #define threshold_high 4500
 #define threshold_low 500
-int _joystickAxisPin = 0; // Pin int
-bool _joystickAxisXY = 0; // joystickAxis X or Y (0/1)
-int _joystickAxisValue = 0; // joystickAxis current value
-int joystickAxisCurrentState = 0; // joystickAxis current state
-String joystickAxisMessage = ""; // stores message to be sent out
+int _joystickAxisPin; // Pin int
+bool _joystickAxisXY; // joystickAxis X or Y (0/1)
+int _joystickAxisValue; // joystickAxis current value
+int joystickAxisCurrentState; // joystickAxis current state
+String joystickAxisMessage; // stores message to be sent out
 
 // Constructor
 joystickAxis::joystickAxis(int joystickAxisPin, bool joystickAxisXY) {
@@ -43,22 +43,24 @@ int joystickAxis::_joystickAxisToggleCheck(int _joystickAxisPin){
 	}
 }
 
-// Private function to return message of joystickAxis state
+// Private function to update message of joystickAxis state
 void joystickAxis::_joystickAxisUpdateMsg(){
 	// Return string corresponding to toggle state + joystickAxis XY
+	// Higher threshold
 	if (joystickAxisCurrentState == 1){
-		// Higher threshold
 		if (_joystickAxisXY == 0){ 
-			joystickAxisMessage =  "Left";
-		} else {
-			joystickAxisMessage = "Up";
-		}
-	} else if (joystickAxisCurrentState == 2){
-		if (_joystickAxisXY == 0){
-			joystickAxisMessage = "Right";
+			joystickAxisMessage =  "Right";
 		} else {
 			joystickAxisMessage = "Down";
 		}
+
+	} else if (joystickAxisCurrentState == 2){
+		if (_joystickAxisXY == 0){
+			joystickAxisMessage = "Left";
+		} else {
+			joystickAxisMessage = "Up";
+		}
+
 	} else {
 		joystickAxisMessage = "Neutral";
 	}
