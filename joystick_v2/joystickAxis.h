@@ -15,7 +15,7 @@ public:
 
   // Functions
   void joystickAxisLoop(); // Main loop to check state
-	String returnJoystickAxisToggledMsg(); // Returns message
+  String returnJoystickAxisToggledMsg(); // Returns message
 
 // Private stuff
 private:
@@ -28,8 +28,8 @@ private:
 
   // Functions
 	int joystickAxisToggleCheck(int _joystickAxisPin); // Checks if joystickAxis is toggled
-  String joystickAxisToggledMsg(); // Returns message from joystickAxis
-  bool joystickAxisStateCheck(); // Determines if overall joystickAxis state (with both axes) has changed
+	String joystickAxisToggledMsg(); // Returns message from joystickAxis
+	bool joystickAxisStateCheck(); // Determines if overall joystickAxis state (with both axes) has changed
 };
 
 #endif
