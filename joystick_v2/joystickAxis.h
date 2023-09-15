@@ -17,19 +17,19 @@ public:
   void joystickAxisLoop(); // Main loop to check state
   String returnJoystickAxisToggledMsg(); // Returns message
 
+  // Variables
+  int joystickAxisCurrentState; // joystickAxis current state
+
 // Private stuff
 private:
   // Variables
 	int _joystickAxisPin; // Pin int
 	bool _joystickAxisXY; // joystickAxis X or Y (0/1)
 	int _joystickAxisValue; // joystickAxis current value
-	int _joystickAxisCurrentState; // joystickAxis current state
-	int _joystickAxisPreviousState; // Stores previous state of joystickAxis
 
   // Functions
 	int joystickAxisToggleCheck(int _joystickAxisPin); // Checks if joystickAxis is toggled
 	String joystickAxisToggledMsg(); // Returns message from joystickAxis
-	bool joystickAxisStateCheck(); // Determines if overall joystickAxis state (with both axes) has changed
 };
 
 #endif
