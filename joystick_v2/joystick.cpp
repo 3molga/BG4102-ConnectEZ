@@ -1,13 +1,15 @@
 // Source file for joystick class
 
 #include <Arduino.h>
+#include <array>
 #include <algorithm>
 #include "joystick.h"
 #include "joystickAxis.h"
 
-int _joystickCurValues[2] = {0, 0};
-int _joystickPrevValues[2] = {0, 0};
-int joystickDebounceTime = 200; // In ms
+std::array<int, 2> _joystickCurValues = {0, 0};
+std::array<int, 2> _joystickPrevValues =  {0, 0};
+int joystickDebounceTime = 250; // In ms
+unsigned long _joystickRecentStateUpdateTime = 0;
 
 // Constructor
 joystick::joystick(int joystickXPin, int joystickYPin) : 
@@ -38,13 +40,13 @@ bool joystick::joystickStateTrigger(){
 
   // If there is an update in state, return 1 and save the time the state update happened
   if (_joystickCurValues != _joystickPrevValues){
-    unsigned long _joystickRecentStateUpdateTime = millis();
+    _joystickRecentStateUpdateTime = millis();
     return 1;
   
   // Else if time elapsed between last update and current time is greater than debounce time
   // return 1 and update time since last update
   } else if ((millis() - _joystickRecentStateUpdateTime) > joystickDebounceTime){
-    unsigned long _joystickRecentStateUpdateTime = millis();
+    _joystickRecentStateUpdateTime = millis();
     return 1;
 
   // Else no update has happened, proceed as usual
@@ -53,16 +55,15 @@ bool joystick::joystickStateTrigger(){
   }
 
   // Re-assign current joystick values to previous joystick values
-  _joystickPrevValues[0] = _joystickCurValues[0];
-  _joystickPrevValues[1] = _joystickCurValues[1];
+  _joystickPrevValues.swap(_joystickCurValues);
 } 
 
 // joystickMessageCheck
 // Call only if joystickStateTrigger returns a 1
 String joystick::joystickMessageCheck(){
   if (joystickStateTrigger()){
-    String joyXMsg = joyX.returnJoystickAxisToggledMsg();
-    String joyYMsg = joyY.returnJoystickAxisToggledMsg();
+    String joyXMsg = joyX.joystickAxisMessage;
+    String joyYMsg = joyY.joystickAxisMessage;
     String joystickMsg = joyXMsg + " + " + joyYMsg;
     return joystickMsg;
   }

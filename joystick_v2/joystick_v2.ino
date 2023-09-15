@@ -7,6 +7,7 @@
 #include "joystick.h"
 #include "joystickAxis.h"
 #include <iostream>
+#include <array>
 #include <algorithm>
 using namespace std;
 
@@ -16,10 +17,10 @@ joystick joystick(13, 12);
 
 void setup() {
   Serial.begin(9600);
-  joystick.joystickSetup();
 }
 
 void loop() {
+  joystick.joystickSetup();
   // Check for update to joystick and print message if there is one
   if (joystick.joystickStateTrigger()){
     Serial.println(joystick.joystickMessageCheck());

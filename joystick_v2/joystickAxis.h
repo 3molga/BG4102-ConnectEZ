@@ -18,7 +18,7 @@ public:
   	String returnJoystickAxisToggledMsg(); // Returns message
 
   // Variables
-  	int joystickAxisCurrentState; // joystickAxis current state
+  		int joystickAxisCurrentState; // joystickAxis current state
 	  String joystickAxisMessage; // joystickAxis message
 
 // Private stuff
@@ -27,11 +27,11 @@ private:
 	  int _joystickAxisPin; // Pin int
 	  bool _joystickAxisXY; // joystickAxis X or Y (0/1)
 	  int _joystickAxisValue; // joystickAxis current value
-  	String _joystickAxisMessage; // joystickAxis current message
+  		
 
   // Functions
 	  int _joystickAxisToggleCheck(int _joystickAxisPin); // Checks if joystickAxis is toggled
-	  void _joystickAxisToggledMsg(int _joystickAxisCurrentState); //Updates message from joystickAxis
+	  void _joystickAxisUpdateMsg(); //Updates message from joystickAxis
 };
 
 #endif

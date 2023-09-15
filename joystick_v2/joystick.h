@@ -5,6 +5,7 @@
 #ifndef joystick_h
 #define joystick_h
 #include <Arduino.h>
+#include <array>
 #include <algorithm>
 #include "joystickAxis.h"
 
@@ -29,8 +30,8 @@ public:
 // Private stuff
 private:
   // Variables
-  int _joystickCurValues[2];
-  int _joystickPrevValues[2]; 
+  std::array<int, 2> _joystickCurValues;
+  std::array<int, 2> _joystickPrevValues;
   unsigned long _joystickRecentStateUpdateTime;
   
   // Functions
