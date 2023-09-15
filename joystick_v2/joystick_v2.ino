@@ -20,7 +20,7 @@ void setup() {
 
 void loop() {
   // Check for update to joystick and print message if there is one
-  if (joystick.joystickStateCheck){
+  if (joystick.joystickStateTrigger){
     Serial.println(joystick.joystickMessageCheck());
   }
 }

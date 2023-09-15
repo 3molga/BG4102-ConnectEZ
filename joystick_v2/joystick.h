@@ -19,7 +19,6 @@ public:
 
   // Functions
   void joystickSetup();
-  
   bool joystickStateTrigger();
   String joystickMessageCheck();
 

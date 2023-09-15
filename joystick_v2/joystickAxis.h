@@ -14,11 +14,12 @@ public:
 	joystickAxis(int joystickAxisPin, bool joystickAxisXY); // Creates object for each pin
 
   // Functions
-  void joystickAxisLoop(); // Main loop to check state
-  String returnJoystickAxisToggledMsg(); // Returns message
+  	void joystickAxisLoop(); // Main loop to check state
+  	String returnJoystickAxisToggledMsg(); // Returns message
 
   // Variables
-  int joystickAxisCurrentState; // joystickAxis current state
+  	int joystickAxisCurrentState; // joystickAxis current state
+	string joystickAxisMessage; // joystickAxis message
 
 // Private stuff
 private:
@@ -26,10 +27,11 @@ private:
 	int _joystickAxisPin; // Pin int
 	bool _joystickAxisXY; // joystickAxis X or Y (0/1)
 	int _joystickAxisValue; // joystickAxis current value
+  	String _joystickAxisMessage; // joystickAxis current message
 
   // Functions
-	int joystickAxisToggleCheck(int _joystickAxisPin); // Checks if joystickAxis is toggled
-	String joystickAxisToggledMsg(); // Returns message from joystickAxis
+	int _joystickAxisToggleCheck(int _joystickAxisPin); // Checks if joystickAxis is toggled
+	void _joystickAxisToggledMsg(int _joystickAxisCurrentState); //Updates message from joystickAxis
 };
 
 #endif

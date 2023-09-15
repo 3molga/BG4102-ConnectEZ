@@ -10,6 +10,8 @@ int _joystickAxisPin = 0; // Pin int
 bool _joystickAxisXY = 0; // joystickAxis X or Y (0/1)
 int _joystickAxisValue = 0; // joystickAxis current value
 int joystickAxisCurrentState = 0; // joystickAxis current state
+String _joystickAxisMessage = ""; // stores current message
+String joystickAxisMessage = ""; // stores message to be sent out
 
 // Constructor
 joystickAxis::joystickAxis(int joystickAxisPin, bool joystickAxisXY) {
@@ -19,12 +21,12 @@ joystickAxis::joystickAxis(int joystickAxisPin, bool joystickAxisXY) {
 
 // Main public loop
 void joystickAxis::joystickAxisLoop(){
-  joystickAxisCurrentState = joystickAxisToggleCheck(_joystickAxisPin);
+  joystickAxisCurrentState = _joystickAxisToggleCheck(_joystickAxisPin);
 }
 
 // Private function to check if joystickAxis is toggled
 // 0 =  no toggle, 1 = upper toggle, 2 = lower toggle
-int joystickAxis::joystickAxisToggleCheck(int _joystickAxisPin){
+int joystickAxis::_joystickAxisToggleCheck(int _joystickAxisPin){
 	int _joystickAxisValue = analogRead(_joystickAxisPin); // Reads analog value passed into joystickAxis pin
 	
 	// If joystickAxis value greater than upper threshold
@@ -41,23 +43,29 @@ int joystickAxis::joystickAxisToggleCheck(int _joystickAxisPin){
 	}
 }
 
-// Public function to return message of joystickAxis state
-String joystickAxis::joystickAxisToggledMsg(int _joystickAxisCurrentState, int _joystickAxisPreviousState){
+// Private function to return message of joystickAxis state
+void joystickAxis::_joystickAxisToggledMsg(int _joystickAxisCurrentState){
 	// Return string corresponding to toggle state + joystickAxis XY
 	if (joystickAxisCurrentState == 1){
 		// Higher threshold
 		if (_joystickAxisXY == 0){ 
-			return "Left";
+			_joystickAxisMessage =  "Left";
 		} else {
-			return "Up";
+			_joystickAxisMessage = "Up";
 		}
 	} else if (joystickAxisCurrentState == 2){
 		if (_joystickAxisXY == 1){
-			return "Right";
+			_joystickAxisMessage = "Right";
 		} else {
-			return "Down";
+			_joystickAxisMessage = "Down";
 		}
 	} else {
-		return "Neutral";
+		_joystickAxisMessage = "Neutral";
 	}
+}
+
+// Public function to return aforementioned message
+String joystickAxis::returnJoystickAxisToggledMsg(){
+  String joystickAxisMessage = _joystickAxisMessage;
+  return joystickAxisMessage;
 }

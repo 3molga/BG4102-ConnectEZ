@@ -9,8 +9,8 @@ int joystickDebounceTime = 200; // In ms
 
 // Constructor
 joystick::joystick(int joystickXPin, int joystickYPin) {
-  joystickAxis joyX(joystickXPin, 0);
-  joystickAxis joyY(joystickYPin, 1);
+  joystickAxis joyX(joystickXPin, false);
+  joystickAxis joyY(joystickYPin, true);
 }
 
 // joystickSetup
@@ -20,7 +20,7 @@ void joystick::joystickSetup(){
   joyY.joystickAxisLoop();
 }
 
-// joystickUpdate
+// _joystickUpdateState
 // Updates state of joystick
 void joystick::_joystickUpdateState(){
   _joystickCurValues[0] = joyX.joystickAxisCurrentState;
@@ -30,7 +30,7 @@ void joystick::_joystickUpdateState(){
 // joystickStateTrigger
 // Continuous checking of previous and current joystick axes, returns 1 if either axis has an update
 // or if 200ms has passed with same state AND there is an input
-bool joystick::joystickStateCheck(){
+bool joystick::joystickStateTrigger(){
   _joystickUpdateState();
 
   // If there is an update in state, return 1 and save the time the state update happened
@@ -40,7 +40,7 @@ bool joystick::joystickStateCheck(){
   
   // Else if time elapsed between last update and current time is greater than debounce time
   // return 1 and update time since last update
-  } else if (millis() - _joystickStateUpdateTime > joystickDebounceTime){
+  } else if ((millis() - _joystickStateUpdateTime) > joystickDebounceTime){
     unsigned long _joystickStateUpdateTime = millis();
     return 1;
 
@@ -56,7 +56,7 @@ bool joystick::joystickStateCheck(){
 // joystickMessageCheck
 // Call only if joystickStateTrigger returns a 1
 String joystick::joystickMessageCheck(){
-  if (joystickStateCheck){
+  if (joystickStateTrigger()){
     String joyXMsg = joyX.joystickAxisToggledMsg();
     String joyYMsg = joyY.joystickAxisToggledMsg();
     String joystickMsg = joyXMsg + " + " + joyYMsg;
