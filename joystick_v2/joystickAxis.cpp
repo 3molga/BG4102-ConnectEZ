@@ -4,8 +4,8 @@
 #include "joystickAxis.h"
 
 // joystickAxis thresholds
-#define threshold_high 4500
-#define threshold_low 500
+const int threshold_high = 4500
+const int threshold_low = 500
 int _joystickAxisPin; // Pin int
 bool _joystickAxisXY; // joystickAxis X or Y (0/1)
 int _joystickAxisValue; // joystickAxis current value
@@ -20,13 +20,13 @@ joystickAxis::joystickAxis(int joystickAxisPin, bool joystickAxisXY) {
 
 // Main public loop
 void joystickAxis::joystickAxisLoop(){
-  joystickAxisCurrentState = _joystickAxisToggleCheck(_joystickAxisPin);
+  joystickAxisCurrentState = _joystickAxisToggleCheck();
   _joystickAxisUpdateMsg();
 }
 
 // Private function to check if joystickAxis is toggled
 // 0 =  no toggle, 1 = upper toggle, 2 = lower toggle
-int joystickAxis::_joystickAxisToggleCheck(int _joystickAxisPin){
+int joystickAxis::_joystickAxisToggleCheck(){
 	_joystickAxisValue = analogRead(_joystickAxisPin); // Reads analog value passed into joystickAxis pin
 	
 	// If joystickAxis value greater than upper threshold

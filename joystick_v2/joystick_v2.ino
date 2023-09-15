@@ -8,7 +8,6 @@
 #include "joystickAxis.h"
 #include <iostream>
 #include <array>
-#include <algorithm>
 using namespace std;
 
 // Creating objects

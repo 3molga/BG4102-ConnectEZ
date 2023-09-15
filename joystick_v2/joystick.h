@@ -6,7 +6,6 @@
 #define joystick_h
 #include <Arduino.h>
 #include <array>
-#include <algorithm>
 #include "joystickAxis.h"
 
 // Class declaration
@@ -15,27 +14,25 @@ class joystick {
 // Public stuff
 public:
   // Constructor and joystickAxis objects
-	joystick(int joystickXPin, int joystickYPin); // Creates object from X and Y pins
-  joystickAxis joyX;
-  joystickAxis joyY; 
+	  joystick(int joystickXPin, int joystickYPin); // Creates object from X and Y pins
+    joystickAxis joyX;
+    joystickAxis joyY; 
+    String joystickMessage;
 
   // Functions
-  void joystickSetup();
-  bool joystickStateTrigger();
-  String joystickMessageCheck();
-
-  // Variables
-  int joystickDebounceTime;
+    void joystickSetup();
+    bool joystickStateTrigger();
+    String joystickMessageCheck();
 
 // Private stuff
 private:
   // Variables
-  std::array<int, 2> _joystickCurValues;
-  std::array<int, 2> _joystickPrevValues;
-  unsigned long _joystickRecentStateUpdateTime;
+    std::array<int, 2> _joystickCurValues;
+    std::array<int, 2> _joystickPrevValues;
+    unsigned long _joystickRecentStateUpdateTime;
   
   // Functions
-  void _joystickUpdateState();
+    void _joystickUpdateState();
 };
 
 #endif
