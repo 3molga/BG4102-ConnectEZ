@@ -7,6 +7,7 @@
 #include "joystick.h"
 #include "joystickAxis.h"
 #include <iostream>
+#include <algorithm>
 using namespace std;
 
 // Creating objects
@@ -20,7 +21,7 @@ void setup() {
 
 void loop() {
   // Check for update to joystick and print message if there is one
-  if (joystick.joystickStateTrigger){
+  if (joystick.joystickStateTrigger()){
     Serial.println(joystick.joystickMessageCheck());
   }
 }

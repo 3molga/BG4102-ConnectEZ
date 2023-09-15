@@ -1,17 +1,20 @@
 // Source file for joystick class
 
 #include <Arduino.h>
+#include <algorithm>
 #include "joystick.h"
+#include "joystickAxis.h"
 
 int _joystickCurValues[2] = {0, 0};
 int _joystickPrevValues[2] = {0, 0};
 int joystickDebounceTime = 200; // In ms
 
 // Constructor
-joystick::joystick(int joystickXPin, int joystickYPin) {
-  joystickAxis joyX(joystickXPin, false);
-  joystickAxis joyY(joystickYPin, true);
+joystick::joystick(int joystickXPin, int joystickYPin) : 
+  joyX(joystickXPin, false), 
+  joyY(joystickYPin, true) {
 }
+
 
 // joystickSetup
 // Set up joystickAxis loops
@@ -35,13 +38,13 @@ bool joystick::joystickStateTrigger(){
 
   // If there is an update in state, return 1 and save the time the state update happened
   if (_joystickCurValues != _joystickPrevValues){
-    unsigned long _joystickStateUpdateTime = millis();
+    unsigned long _joystickRecentStateUpdateTime = millis();
     return 1;
   
   // Else if time elapsed between last update and current time is greater than debounce time
   // return 1 and update time since last update
-  } else if ((millis() - _joystickStateUpdateTime) > joystickDebounceTime){
-    unsigned long _joystickStateUpdateTime = millis();
+  } else if ((millis() - _joystickRecentStateUpdateTime) > joystickDebounceTime){
+    unsigned long _joystickRecentStateUpdateTime = millis();
     return 1;
 
   // Else no update has happened, proceed as usual
@@ -50,15 +53,16 @@ bool joystick::joystickStateTrigger(){
   }
 
   // Re-assign current joystick values to previous joystick values
-  _joystickPrevValues = _joystickCurValues;
-}
+  _joystickPrevValues[0] = _joystickCurValues[0];
+  _joystickPrevValues[1] = _joystickCurValues[1];
+} 
 
 // joystickMessageCheck
 // Call only if joystickStateTrigger returns a 1
 String joystick::joystickMessageCheck(){
   if (joystickStateTrigger()){
-    String joyXMsg = joyX.joystickAxisToggledMsg();
-    String joyYMsg = joyY.joystickAxisToggledMsg();
+    String joyXMsg = joyX.returnJoystickAxisToggledMsg();
+    String joyYMsg = joyY.returnJoystickAxisToggledMsg();
     String joystickMsg = joyXMsg + " + " + joyYMsg;
     return joystickMsg;
   }
