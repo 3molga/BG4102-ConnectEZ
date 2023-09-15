@@ -1,6 +1,7 @@
-// Header file for "joystick" class, meant to store information about the overall joystick
-// It will construct 2 joystickAxis 
-// Include these lines by default
+/* Header file for "joystick" class, meant to store information about the overall joystick
+ It will construct 2 joystickAxis objects for each pin on the ESP32
+ Include these lines by default
+*/
 #ifndef joystick_h
 #define joystick_h
 #include <Arduino.h>
@@ -17,11 +18,23 @@ public:
   extern joystickAxis joyY(int joystickYPin, bool 1);
 
   // Functions
-  bool joystickStateCheck();
+  void joystickSetup();
+  
+  bool joystickStateTrigger();
   String joystickMessageCheck();
+
+  // Variables
+  int joystickDebounceTime();
 
 // Private stuff
 private:
+  // Variables
+  int _joystickCurValues[2];
+  int _joystickPrevValues[2]; 
+  unsigned long _joystickStateUpdateTime;
+  
+  // Functions
+  void _joystickUpdateState();
 };
 
 #endif

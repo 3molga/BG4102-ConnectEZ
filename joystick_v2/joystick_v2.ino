@@ -15,6 +15,7 @@ joystick joystick(13, 12);
 
 void setup() {
   Serial.begin(9600);
+  joystick.joystickSetup();
 }
 
 void loop() {
