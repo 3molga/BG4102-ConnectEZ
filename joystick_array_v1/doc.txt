@@ -1,0 +1,3 @@
+Trying out some object-oriented programming methods
+
+IDK what I'm doing :')

@@ -11,8 +11,10 @@
 using namespace std;
 
 // Creating objects
-// Joystick 
 joystick joystick(13, 12);
+
+// Defining variables
+std::array(int, 2) userInputs;
 
 void setup() {
   Serial.begin(9600);
@@ -20,8 +22,13 @@ void setup() {
 }
 
 void loop() {
-  // Check for update to joystick and print message if there is one
-  if (joystick.joystickStateTrigger()){
-    Serial.println(joystick.joystickMessageCheck());
+  // If there is no update from joystick, do NOT execute the following lines
+  if (!joystick.joystickStateTrigger()){
+    return;
   }
+
+  // Get and print joystick state and returned message
+  userInputs = joystick.joystickReturnState();
+  Serial.println(joystick.joystickMessageCheck());
+  Serial.println(userInputs);
 }
