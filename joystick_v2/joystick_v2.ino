@@ -7,11 +7,15 @@
 #include "joystick.h"
 #include "joystickAxis.h"
 #include <iostream>
+#include <array>
+#include <string>
 using namespace std;
 
 // Creating objects
-// Joystick 
 joystick joystick(13, 12);
+
+// Defining variables
+std::array<int, 2> userInputs;
 
 void setup() {
   Serial.begin(9600);
@@ -19,8 +23,16 @@ void setup() {
 }
 
 void loop() {
-  // Check for update to joystick and print message if there is one
-  if (joystick.joystickStateCheck){
-    Serial.println(joystick.joystickMessageCheck());
+  // If there is no update from joystick, do NOT execute the following lines
+  if (!joystick.joystickStateTrigger()){
+    return;
   }
+
+  // Get and print joystick state and returned message
+  userInputs = joystick.joystickReturnState();
+  Serial.println(joystick.joystickMessageCheck());
+  for (int i = 0; i < userInputs.size(); i++){
+    Serial.println(userInputs[i]);
+  }
+  Serial.println();
 }
