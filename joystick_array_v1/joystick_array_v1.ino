@@ -17,9 +17,12 @@ joystick joystick(13, 12);
 ezButton buttonConfirm(1); // Fill this in later ya dumb cunt
 ezButton buttonReturn(2);
 
-
 // Defining variables
 std::array<int, 2> userState; // Stores x and y coords of where the user currently is on the UI
+int matrixSize = 3; // Arbitrary assumption for maximum size of array (+1)
+
+// Defining const
+const String newLineBar = "-----------------------------------------------------------------------------------------------";
 
 void setup() {
   Serial.begin(9600);
@@ -52,13 +55,14 @@ void loop() {
     return;
   }
 
-  // Lowest priority state: joystick input
+  // Lowest priority state: only joystick input
   // Get and print joystick state and returned message
   userInput = joystick.joystickReturnState();
   Serial.println(joystick.joystickMessageCheck());
   Serial.println(userInput);
-  updateInputs(userInput, 3);
+  updateInputs(userInput, matrixSize);
   Serial.println(printUserState(userState))
+  Serial.println(newLineBar);
 }
 
 //------------------------------------FUNCTIONS------------------------------------
