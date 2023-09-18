@@ -23,7 +23,7 @@ public:
     void joystickSetup();
     bool joystickStateTrigger();
     String joystickMessageCheck();
-    String joystickReturnState(); 
+    std::array<int, 2> joystickReturnState(); 
 
 // Private stuff
 private:
