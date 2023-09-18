@@ -1,5 +1,5 @@
-// Version 2 of joystick code
-// Includes: support for all 4 directions
+// Version 3 of joystick code
+// Includes: support for all 4 directions, testing code for array navigation
 // Prints inputs to serial port only if a change is detected
 // Now with object-oriented programming (?)
 
@@ -16,6 +16,7 @@ using namespace std;
 joystick joystick(2,4);
 ezButton buttonConfirm(1); // Fill this in later ya dumb cunt
 ezButton buttonReturn(2);
+ezButton buttonTelegram(3);
 
 // Defining variables
 std::array<int, 2> userState {0, 0}; // Stores x and y coords of where the user currently is on the UI
@@ -31,11 +32,13 @@ void setup() {
   joystick.joystickSetup();
   buttonConfirm.setDebounceTime(50);
   buttonReturn.setDebounceTime(50);
+  buttonTelegram.setDebounceTime(50);
 }
 
 void loop() {
   buttonConfirm.loop();
   buttonReturn.loop();
+  buttonTelegram.loop();
   userUpdateTrigger = joystick.joystickStateTrigger();
 
   // If there is no update from joystick or either button, return early and don't execute the following code
@@ -52,19 +55,19 @@ void loop() {
   // Else have individual actions for either confirm or return
   if (buttonConfirm.isPressed()){
     return;
-  }
-
-  if (buttonReturn.isPressed()){
+  } else if (buttonReturn.isPressed()){
     return;
   }
 
   // Lowest priority state: only joystick input
   // Get and print joystick state and returned message
   userInput = joystick.joystickReturnState();
-  Serial.println(joystick.joystickMessageCheck());
-  Serial.println(printUserState(userInput));
   updateInputs(matrixSize);
-  Serial.println(printUserState(userState));
+
+  // Print everything
+  Serial.println(joystick.joystickMessageCheck());
+  Serial.println(intToString(userInput));
+  Serial.println(intToString(userState));
   Serial.println(newLineBar);
 }
 
@@ -82,10 +85,12 @@ void updateInputs(int upper_bound){
   }
 }
 
-// Funcion to convert user state into a string to print
-String printUserState(std::array<int, 2> userState){
-  std::string tempOutput = to_string(userState[0]);
-  tempOutput = tempOutput + " , " + to_string(userState[1]);
+// Funcion to convert int array into a string to print
+String intToString(std::array<int, 2> intArray){
+  std::string tempOutput = to_string(intArray[0]);
+  for (i = 1; i < intArray.size(); i++){
+    tempOutput = tempOutput + " , " + to_string(intArray[i]);
+  }
   String tempOutputString = String(tempOutput.data());
   return tempOutputString;
 }
