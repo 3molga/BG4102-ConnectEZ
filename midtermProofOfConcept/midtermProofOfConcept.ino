@@ -8,7 +8,7 @@
 //#include "joystickAxis.h"
 #include "ezButton.h"
 #include <iostream>
-#include <array>
+#include <vector>
 #include <string>
 #include <WiFi.h>
 #include <WiFiClientSecure.h>
@@ -18,8 +18,8 @@ using namespace std;
 
 // Creating objects
 joystick joystick(13, 12);
-ezButton buttonConfirm(); // Fill this in later ya dumb cunt
-ezButton buttonReturn();
+ezButton buttonConfirm(1); // Fill this in later ya dumb cunt
+ezButton buttonReturn(2);
 
 // Wifi setup
 const char* ssid = "Zane’s iPhone"; // Wi-Fi ID
@@ -32,7 +32,8 @@ int botRequestDelay = 1000;
 unsigned long lastTimeBotRan;
 
 // Defining variables
-std::array(int, 2) userState; // Stores x and y coords of where the user currently is on the UI
+std::vector<int> userState; // Stores x and y coords of where the user currently is on the UI
+std::vector<int> userInputs;
 
 // Wi-Fi is connected confirmation LED
 #define ONBOARD_LED  2 // ON_BOARD LED value is 2
@@ -144,14 +145,13 @@ void loop() {
   // Get and print joystick state and returned message
   userInputs = joystick.joystickReturnState();
   Serial.println(joystick.joystickMessageCheck());
-  Serial.println(userInputs);
   updateInputs(userInputs);
-  Serial.println(printUserState(userState))
+  Serial.println(vector2Str(userState));
 }
 
 //------------------------------------FUNCTIONS------------------------------------
 // Function to update user state (temporary, maybe move into class later)
-void updateInputs(std::array userInputs){
+void updateInputs(std::vector<int> userInputs){
   // Assuming the grid is 2D, get the x and y coords of the current box
   int x_coord = userState[0];
   int y_coord = userState[1];
@@ -176,11 +176,14 @@ void updateInputs(std::array userInputs){
   userState[1] = y_coord;
 }
 
-// Funcion to convert user state into a string to print
-std::string printUserState(std::array userState){
-  std::string tempOutput = to_string(userState[0]);
-  tempOutput = tempOutput + " , " + to_string(userState[1]);
-  return tempOutput;
+// Funcion to convert vector input into a string to print
+String vector2Str(std::vector<int> inputVector){
+  std::string stdOutput = to_string(inputVector[0]);
+  for (int i = 1; i < inputVector.size(); i++){
+    stdOutput = stdOutput + " + " + to_string(inputVector[i]);
+  }
+  String strOutput = String(stdOutput.c_str());
+  return strOutput;
 }
 
 
