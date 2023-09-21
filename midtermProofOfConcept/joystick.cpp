@@ -30,7 +30,7 @@ joystick::joystick(int joystickXPin, int joystickYPin) :
   joyY(joystickYPin, true) {
 }
 
-joystickAxis::joystickAxis(int joystickAxisPin, bool joystickAxisXY) {
+joystick::joystickAxis::joystickAxis(int joystickAxisPin, bool joystickAxisXY) {
 	_joystickAxisPin = joystickAxisPin;
 	_joystickAxisXY = joystickAxisXY;
 }
@@ -44,7 +44,7 @@ void joystick::joystickSetup(){
 }
 
 // joystickAxis loop - continuously updates state of each axis
-void joystickAxis::joystickAxisLoop(){
+void joystick::joystickAxis::joystickAxisLoop(){
   joystickAxisCurrentState = _joystickAxisToggleCheck();
   _joystickAxisUpdateMsg();
 }
@@ -102,7 +102,7 @@ void joystick::_joystickUpdateState(){
 
 // Private function to check if joystickAxis is toggled
 // 0 =  no toggle, 1 = upper toggle, 2 = lower toggle
-int joystickAxis::_joystickAxisToggleCheck(){
+int joystick::joystickAxis::_joystickAxisToggleCheck(){
 	_joystickAxisValue = analogRead(_joystickAxisPin); // Reads analog value passed into joystickAxis pin
 	
 	// If joystickAxis value greater than upper threshold
@@ -120,7 +120,7 @@ int joystickAxis::_joystickAxisToggleCheck(){
 }
 
 // Private function to update message of joystickAxis state
-void joystickAxis::_joystickAxisUpdateMsg(){
+void joystick::joystickAxis::_joystickAxisUpdateMsg(){
 	// Return string corresponding to toggle state + joystickAxis XY
 	// Higher threshold
 	if (joystickAxisCurrentState == 1){

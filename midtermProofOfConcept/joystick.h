@@ -6,62 +6,64 @@
 #define joystick_h
 #include <Arduino.h>
 #include <array>
-//#include "joystickAxis.h"
+// #include "joystickAxis.h"
 
 // Class declaration
-class joystick {
+class joystick
+{
 
-// Public stuff
+  // Public stuff
 public:
   // Constructor and joystickAxis objects
-	  joystick(int joystickXPin, int joystickYPin); // Creates object from X and Y pins
-    joystickAxis joyX;
-    joystickAxis joyY; 
-    String joystickMessage;
+  joystick(int joystickXPin, int joystickYPin); // Creates object from X and Y pins
+  joystickAxis joyX;
+  joystickAxis joyY;
+  String joystickMessage;
 
   // Functions
-    void joystickSetup();
-    bool joystickStateTrigger();
-    String joystickMessageCheck();
-    String joystickReturnState(); 
+  void joystickSetup();
+  bool joystickStateTrigger();
+  String joystickMessageCheck();
+  String joystickReturnState();
 
-// Private stuff
+  // Public class for joystickAxis
+  class joystickAxis
+  {
+
+    // Public stuff
+  public:
+    // Constructor
+    joystickAxis(int joystickAxisPin, bool joystickAxisXY); // Creates object for each pin
+
+    // Functions
+    void joystickAxisLoop();               // Main loop to check state
+    String returnJoystickAxisToggledMsg(); // Returns message
+
+    // Variables
+    int joystickAxisCurrentState; // joystickAxis current state
+    String joystickAxisMessage;   // joystickAxis message
+
+    // Private stuff
+  private:
+    // Variables
+    int _joystickAxisPin;   // Pin int
+    bool _joystickAxisXY;   // joystickAxis X or Y (0/1)
+    int _joystickAxisValue; // joystickAxis current value
+
+    // Functions
+    int _joystickAxisToggleCheck(); // Checks if joystickAxis is toggled
+    void _joystickAxisUpdateMsg();  // Updates message from joystickAxis
+  };
+
+  // Private stuff
 private:
   // Variables
-    std::array<int, 2> _joystickCurValues;
-    std::array<int, 2> _joystickPrevValues;
-    unsigned long _joystickRecentStateUpdateTime;
-  
-  // Functions
-    void _joystickUpdateState();
-};
-
-class joystickAxis {
-
-// Public stuff
-public:
-  // Constructor
-	  	joystickAxis(int joystickAxisPin, bool joystickAxisXY); // Creates object for each pin
+  std::array<int, 2> _joystickCurValues;
+  std::array<int, 2> _joystickPrevValues;
+  unsigned long _joystickRecentStateUpdateTime;
 
   // Functions
-  		void joystickAxisLoop(); // Main loop to check state
-  		String returnJoystickAxisToggledMsg(); // Returns message
-
-  // Variables
-  		int joystickAxisCurrentState; // joystickAxis current state
-	  	String joystickAxisMessage; // joystickAxis message
-
-// Private stuff
-private:
-  // Variables
-		int _joystickAxisPin; // Pin int
-	 	bool _joystickAxisXY; // joystickAxis X or Y (0/1)
-		int _joystickAxisValue; // joystickAxis current value
-  		
-
-  // Functions
-		int _joystickAxisToggleCheck(); // Checks if joystickAxis is toggled
-		void _joystickAxisUpdateMsg(); //Updates message from joystickAxis
+  void _joystickUpdateState();
 };
 
 #endif
