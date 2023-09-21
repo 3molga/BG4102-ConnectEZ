@@ -7,6 +7,7 @@
 //#include "joystickAxis.h"
 
 // joystick variables
+const unsigned long joystickHoldTime = 750; 
 const unsigned long joystickDebounceTime = 250; // In ms
 String joystickMessage;
 std::vector<int> _joystickPrevValues;
@@ -14,8 +15,8 @@ std::vector<int> _joystickCurValues;
 unsigned long _joystickRecentStateUpdateTime;
 
 // joystickAxis variables
-const int threshold_high = 4500;
-const int threshold_low = 500;
+const int threshold_high = 4000;
+const int threshold_low = 50;
 int _joystickAxisPin; // Pin int
 bool _joystickAxisXY; // joystickAxis X or Y (0/1)
 int _joystickAxisValue; // joystickAxis current value
@@ -50,24 +51,25 @@ void joystick::joystickAxis::joystickAxisLoop(){
 }
 
 // joystickStateTrigger
-// Continuous checking of previous and current joystick axes, returns 1 if either axis has an update
-// or if 200ms has passed with same state AND there is an input
+/* Continuous checking of previous and current joystick axes, returns 1 if 
+ - New update above debounce time
+ - Position hasn't changed, isn't neutral and above hold time
+*/ 
 bool joystick::joystickStateTrigger(){
   _joystickUpdateState();
   unsigned long current_time = millis();
 
-  // If there is an update in state, return 1 and save the time the state update happened
-  if (_joystickCurValues != _joystickPrevValues){
+  // If there is an update in state and time elapsed since last update is greater than debounce time
+  if ((_joystickCurValues != _joystickPrevValues) && (current_time - _joystickRecentStateUpdateTime > joystickDebounceTime)){
     _joystickRecentStateUpdateTime = current_time;
-    _joystickPrevValues.swap(_joystickCurValues);
+    _joystickPrevValues = _joystickCurValues;
     return 1;
   }
 
-  // Else if time elapsed between last update and current time is greater than debounce time
-  // return 1 and update time since last update
-  if (current_time - _joystickRecentStateUpdateTime >= joystickDebounceTime){
+  // Else if the current and previous states are same but NOT neutral and time elapsed since last update is greater than hold time
+  if ((_joystickPrevValues[0] || joystickPrevValues[1]) && (current_time - _joystickRecentStateUpdateTime >= joystickHoldTime)){
     _joystickRecentStateUpdateTime = current_time;
-    _joystickPrevValues.swap(_joystickCurValues); 
+    _joystickPrevValues = _joystickCurValues; 
     return 1;
 
   // Else no update has happened, proceed as usual

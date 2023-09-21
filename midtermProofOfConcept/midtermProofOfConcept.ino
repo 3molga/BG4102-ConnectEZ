@@ -33,7 +33,7 @@ unsigned long lastTimeBotRan;
 
 // Defining variables
 std::vector<int> userState; // Stores x and y coords of where the user currently is on the UI
-std::vector<int> userInputs;
+std::vector<int> userInputs; // Stores inputs from user
 
 // Wi-Fi is connected confirmation LED
 #define ONBOARD_LED  2 // ON_BOARD LED value is 2
