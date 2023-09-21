@@ -49,60 +49,6 @@ const int threshold = 30; // Capacitance touch value lower than this will indica
 const int ledPin = 22; // External LED is 
 bool ledState = LOW; // Set initial state as low 
 
-// Allow telegram to query 
-void handleNewMessages(int numNewMessages) {
-  Serial.println("handleNewMessages");
-  Serial.println(String(numNewMessages));
-
-  for (int i=0; i<numNewMessages; i++) {
-    // Check the chat id of the requester
-    String chat_id = String(bot.messages[i].chat_id);
-    if (chat_id != CHAT_ID){
-      bot.sendMessage(chat_id, "Unauthorized user", "");
-      continue;
-    }
-    
-    // Print the received message
-    String text = bot.messages[i].text;
-    Serial.println(text);
-    Serial.println(chat_id);
-    String from_name = bot.messages[i].from_name;
-
-    // Change this message accordingly to the device function
-    if (text == "/start") {
-      String welcome = "Welcome, " + from_name + ".\n";
-      welcome += "Use the following commands to control your outputs.\n\n";
-      welcome += "/hello to say hello with bot \n";
-      welcome += "/name to to ask bot's name \n";
-      welcome += "/mode to ask is bot happy or not \n";
-      welcome += "/afk to ask whether user holding the device \n";
-      bot.sendMessage(chat_id, welcome, "");
-    }
-    
-    if (text == "/hello") {
-      bot.sendMessage(chat_id, "Hello, people", "");
-    }
-    
-    if (text == "/name") {
-      bot.sendMessage(chat_id, "My name is Zane Bot!", "");
-    }
-    
-    if (text == "/mode") {
-      bot.sendMessage(chat_id, "I am happy!", "");
-    }
-
-    // To query if the person is touching the device by questioning is the ledPin HIGH or LOW
-    if (text == "/afk") {
-      if (digitalRead(ledPin)){
-        bot.sendMessage(chat_id, "Person is touching the device", "");
-      }
-      else{
-        bot.sendMessage(chat_id, "Person is afk", "");
-      }
-    }
-  }
-}
-
 // -----------------------------------------SETUP-------------------------------------------
 void setup() {
   Serial.begin(9600);
@@ -235,4 +181,59 @@ std::string printUserState(std::array userState){
   std::string tempOutput = to_string(userState[0]);
   tempOutput = tempOutput + " , " + to_string(userState[1]);
   return tempOutput;
+}
+
+
+// Allow telegram to query 
+void handleNewMessages(int numNewMessages) {
+  Serial.println("handleNewMessages");
+  Serial.println(String(numNewMessages));
+
+  for (int i=0; i<numNewMessages; i++) {
+    // Check the chat id of the requester
+    String chat_id = String(bot.messages[i].chat_id);
+    if (chat_id != CHAT_ID){
+      bot.sendMessage(chat_id, "Unauthorized user", "");
+      continue;
+    }
+    
+    // Print the received message
+    String text = bot.messages[i].text;
+    Serial.println(text);
+    Serial.println(chat_id);
+    String from_name = bot.messages[i].from_name;
+
+    // Change this message accordingly to the device function
+    if (text == "/start") {
+      String welcome = "Welcome, " + from_name + ".\n";
+      welcome += "Use the following commands to control your outputs.\n\n";
+      welcome += "/hello to say hello with bot \n";
+      welcome += "/name to to ask bot's name \n";
+      welcome += "/mode to ask is bot happy or not \n";
+      welcome += "/afk to ask whether user holding the device \n";
+      bot.sendMessage(chat_id, welcome, "");
+    }
+    
+    if (text == "/hello") {
+      bot.sendMessage(chat_id, "Hello, people", "");
+    }
+    
+    if (text == "/name") {
+      bot.sendMessage(chat_id, "My name is Zane Bot!", "");
+    }
+    
+    if (text == "/mode") {
+      bot.sendMessage(chat_id, "I am happy!", "");
+    }
+
+    // To query if the person is touching the device by questioning is the ledPin HIGH or LOW
+    if (text == "/afk") {
+      if (digitalRead(ledPin)){
+        bot.sendMessage(chat_id, "Person is touching the device", "");
+      }
+      else{
+        bot.sendMessage(chat_id, "Person is afk", "");
+      }
+    }
+  }
 }

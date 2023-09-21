@@ -88,7 +88,7 @@ void updateInputs(int upper_bound){
 // Funcion to convert int array into a string to print
 String intToString(std::array<int, 2> intArray){
   std::string tempOutput = to_string(intArray[0]);
-  for (i = 1; i < intArray.size(); i++){
+  for (int i = 1; i < intArray.size(); i++){
     tempOutput = tempOutput + " , " + to_string(intArray[i]);
   }
   String tempOutputString = String(tempOutput.data());
