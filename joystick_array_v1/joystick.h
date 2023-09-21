@@ -5,10 +5,10 @@
 #ifndef joystick_h
 #define joystick_h
 #include <Arduino.h>
-#include <array>
+#include <vector>
 #include "joystickAxis.h"
 
-// Class declaration
+//  Class declaration
 class joystick {
 
 // Public stuff
@@ -23,13 +23,13 @@ public:
     void joystickSetup();
     bool joystickStateTrigger();
     String joystickMessageCheck();
-    std::array<int, 2> joystickReturnState(); 
+    std::vector<int> joystickReturnState(); 
 
 // Private stuff
 private:
   // Variables
-    std::array<int, 2> _joystickCurValues;
-    std::array<int, 2> _joystickPrevValues;
+    std::vector<int> _joystickCurValues;
+    std::vector<int> _joystickPrevValues;
     unsigned long _joystickRecentStateUpdateTime;
   
   // Functions

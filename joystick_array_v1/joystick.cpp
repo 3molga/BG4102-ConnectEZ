@@ -10,8 +10,8 @@ const unsigned long joystickDebounceTime = 500;
 
 String joystickMessage;
 
-std::array<int, 2> _joystickPrevValues;
-std::array<int, 2> _joystickCurValues;
+std::vector<int> _joystickPrevValues;
+std::vector<int> _joystickCurValues;
 unsigned long _joystickRecentStateUpdateTime;
 
 
@@ -68,7 +68,7 @@ String joystick::joystickMessageCheck(){
 
 //joystickReturnState
 //Returns state of joystick to main loop (messing around with pointers here)
-std::array<int, 2> joystick::joystickReturnState(){
+std::vector<int> joystick::joystickReturnState(){
   return _joystickCurValues;
 }
 

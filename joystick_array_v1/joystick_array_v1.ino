@@ -13,14 +13,14 @@
 using namespace std;
 
 // Creating objects
-joystick joystick(2,4);
-ezButton buttonConfirm(1); // Fill this in later ya dumb cunt
-ezButton buttonReturn(2);
-ezButton buttonTelegram(3);
+joystick joystick(15, 4);
+ezButton buttonConfirm(18); // Fill this in later ya dumb cunt
+ezButton buttonReturn(19);
+ezButton buttonTelegram(21);
 
 // Defining variables
-std::array<int, 2> userState {0, 0}; // Stores x and y coords of where the user currently is on the UI
-std::array<int, 2> userInput {0, 0};
+std::vector<int> userState {0, 0}; // Stores x and y coords of where the user currently is on the UI
+std::vector<int> userInput {0, 0};
 int matrixSize = 3; // Arbitrary assumption for maximum size of array (+1)
 bool userUpdateTrigger;
 
@@ -85,11 +85,11 @@ void updateInputs(int upper_bound){
   }
 }
 
-// Funcion to convert int array into a string to print
-String intToString(std::array<int, 2> intArray){
-  std::string tempOutput = to_string(intArray[0]);
-  for (int i = 1; i < intArray.size(); i++){
-    tempOutput = tempOutput + " , " + to_string(intArray[i]);
+// Funcion to convert int vector into a string to print
+String intToString(std::vector<int> intVector){
+  std::string tempOutput = to_string(intVector[0]);
+  for (int i = 1; i < intVector.size(); i++){
+    tempOutput = tempOutput + " , " + to_string(intVector[i]);
   }
   String tempOutputString = String(tempOutput.data());
   return tempOutputString;
