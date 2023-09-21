@@ -14,8 +14,8 @@ std::array<int, 2> _joystickCurValues;
 unsigned long _joystickRecentStateUpdateTime;
 
 // joystickAxis variables
-const int threshold_high = 4500
-const int threshold_low = 500
+const int threshold_high = 4500;
+const int threshold_low = 500;
 int _joystickAxisPin; // Pin int
 bool _joystickAxisXY; // joystickAxis X or Y (0/1)
 int _joystickAxisValue; // joystickAxis current value

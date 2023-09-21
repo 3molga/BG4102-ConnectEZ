@@ -6,7 +6,7 @@
 #define joystick_h
 #include <Arduino.h>
 #include <array>
-#include "joystickAxis.h"
+//#include "joystickAxis.h"
 
 // Class declaration
 class joystick {
