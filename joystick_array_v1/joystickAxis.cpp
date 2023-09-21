@@ -4,8 +4,8 @@
 #include "joystickAxis.h"
 
 // joystickAxis thresholds
-const int threshold_high = 4500
-const int threshold_low = 500
+const int threshold_high = 4000;
+const int threshold_low = 100;
 int _joystickAxisPin; // Pin int
 bool _joystickAxisXY; // joystickAxis X or Y (0/1)
 int _joystickAxisValue; // joystickAxis current value
@@ -35,7 +35,7 @@ int joystickAxis::_joystickAxisToggleCheck(){
 
 	// If joystickAxis value lower than lower threshold
 	} else if (_joystickAxisValue < threshold_low){ 
-		return 2;
+		return -1;
 
 	// If joystickAxis value between thresholds
 	} else { 
@@ -54,8 +54,8 @@ void joystickAxis::_joystickAxisUpdateMsg(){
 			joystickAxisMessage = "Down";
 		}
 
-	} else if (joystickAxisCurrentState == 2){
-		if (_joystickAxisXY == 0){
+	} else if (joystickAxisCurrentState == -1){
+		if (_joystickAxisXY == 1){
 			joystickAxisMessage = "Left";
 		} else {
 			joystickAxisMessage = "Up";

@@ -5,7 +5,8 @@
 #include "joystick.h"
 #include "joystickAxis.h"
 
-const unsigned long joystickDebounceTime = 250; // In ms
+const unsigned long joystickUpdateTime = 750; // In ms
+const unsigned long joystickDebounceTime = 500; 
 
 String joystickMessage;
 
@@ -36,18 +37,20 @@ bool joystick::joystickStateTrigger(){
   _joystickUpdateState();
   unsigned long current_time = millis();
 
-  // If there is an update in state, return 1 and save the time the state update happened
-  if (_joystickCurValues != _joystickPrevValues){
+  // If there is an update in state and the time elapsed since last update is longer than debounce time
+  // Return 1 and update _joystickCurValues
+  if ((_joystickCurValues != _joystickPrevValues) && (current_time - _joystickRecentStateUpdateTime > joystickDebounceTime)){
     _joystickRecentStateUpdateTime = current_time;
-    _joystickPrevValues.swap(_joystickCurValues);
+    _joystickPrevValues = _joystickCurValues;
     return 1;
   }
 
   // Else if time elapsed between last update and current time is greater than debounce time
+  // and last state isn't full neutral
   // return 1 and update time since last update
-  if (current_time - _joystickRecentStateUpdateTime >= joystickDebounceTime){
+  if ((current_time - _joystickRecentStateUpdateTime >= joystickDebounceTime) && (_joystickPrevValues[0] || _joystickPrevValues[1])){
     _joystickRecentStateUpdateTime = current_time;
-    _joystickPrevValues.swap(_joystickCurValues); 
+    _joystickPrevValues = _joystickCurValues; 
     return 1;
 
   // Else no update has happened, proceed as usual
@@ -59,15 +62,13 @@ bool joystick::joystickStateTrigger(){
 // joystickMessageCheck
 // Returns message with additional check for whether trigger is pulled
 String joystick::joystickMessageCheck(){
-  if (joystickStateTrigger()){
-    joystickMessage = joyX.joystickAxisMessage + " + " + joyY.joystickAxisMessage;
-    return joystickMessage;
-  }
+  joystickMessage = joyX.joystickAxisMessage + " + " + joyY.joystickAxisMessage;
+  return joystickMessage;
 }
 
 //joystickReturnState
 //Returns state of joystick to main loop (messing around with pointers here)
-std::array joystick::joystickReturnState(){
+std::array<int, 2> joystick::joystickReturnState(){
   return _joystickCurValues;
 }
 
