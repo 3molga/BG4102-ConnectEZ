@@ -4,7 +4,6 @@
 #include <Arduino.h>
 #include <array>
 #include "joystick.h"
-//#include "joystickAxis.h"
 
 // joystick variables
 const unsigned long joystickHoldTime = 750; 
@@ -22,7 +21,6 @@ bool _joystickAxisXY; // joystickAxis X or Y (0/1)
 int _joystickAxisValue; // joystickAxis current value
 int joystickAxisCurrentState; // joystickAxis current state
 String joystickAxisMessage; // stores message to be sent out
-
 
 //---------------------------------PUBLIC---------------------------------
 // Constructors
@@ -88,7 +86,7 @@ String joystick::joystickMessageCheck(){
 }
 
 //joystickReturnState
-//Returns state of joystick to main loop (messing around with pointers here)
+//Returns state of joystick to main loop
 std::vector<int> joystick::joystickReturnState(){
   return _joystickCurValues;
 }
