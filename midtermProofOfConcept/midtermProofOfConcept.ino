@@ -24,8 +24,8 @@ ezButton buttonReturn(19);
 const int touchPin = 13;
 
 // Wifi setup
-const char* ssid = "Zane’s iPhone"; // Wi-Fi ID
-const char* password = "zane1234"; // Wi-Fi password
+const char* ssid = "tmt"; // Wi-Fi ID
+const char* password = "yeah8913"; // Wi-Fi password
 #define BOTtoken "6606670486:AAGP24iLfP047ysZ7yaAUHyv3cOf-iLKMqE" // Telegram bot API token
 #define CHAT_ID "-4016407865" // "Chat with esp32" telegram group ID
 WiFiClientSecure client;
