@@ -5,8 +5,8 @@
 #include "joystick.h"
 #include "joystickAxis.h"
 
-const unsigned long joystickUpdateTime = 750; // In ms
-const unsigned long joystickDebounceTime = 500; 
+const unsigned long joystickUpdateTime = 1000; // In ms
+const unsigned long joystickDebounceTime = 250; 
 
 String joystickMessage;
 
@@ -45,10 +45,10 @@ bool joystick::joystickStateTrigger(){
     return 1;
   }
 
-  // Else if time elapsed between last update and current time is greater than debounce time
+  // Else if time elapsed between last update and current time is greater than minimum update time
   // and last state isn't full neutral
   // return 1 and update time since last update
-  if ((current_time - _joystickRecentStateUpdateTime >= joystickDebounceTime) && (_joystickPrevValues[0] || _joystickPrevValues[1])){
+  if ((current_time - _joystickRecentStateUpdateTime >= joystickUpdateTime) && (_joystickPrevValues[0] || _joystickPrevValues[1])){
     _joystickRecentStateUpdateTime = current_time;
     _joystickPrevValues = _joystickCurValues; 
     return 1;
