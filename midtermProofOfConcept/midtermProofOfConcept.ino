@@ -16,10 +16,12 @@
 #include <ArduinoJson.h>
 using namespace std;
 
-// Creating objects
+// Input objects
 joystick joystick(13, 12);
-ezButton buttonConfirm(1); // Fill this in later ya dumb cunt
-ezButton buttonReturn(2);
+ezButton buttonConfirm(18); // Fill this in later ya dumb cunt
+ezButton buttonReturn(19);
+#define BUTTON_PIN 21;
+const int touchPin = 13;
 
 // Wifi setup
 const char* ssid = "Zane’s iPhone"; // Wi-Fi ID
@@ -37,17 +39,14 @@ std::vector<int> userInputs; // Stores inputs from user
 
 // Wi-Fi is connected confirmation LED
 #define ONBOARD_LED  2 // ON_BOARD LED value is 2
-
-// Button to send message
-#define BUTTON_PIN 21  // GPIO21 pin connected to button
 int lastState = LOW;  // the previous state from the input pin
 int currentState;     // the current reading from the input pin
 
 // set pin numbers
-const int touchPin = 4; // Capacitance touch to detect if person is afk or not
+// Capacitance touch to detect if person is afk or not
 int touchValue; // Variable for storing the touch pin value 
 const int threshold = 30; // Capacitance touch value lower than this will indicate the person is touching the device
-const int ledPin = 22; // External LED is 
+const int ledPin = 26; // External LED is 
 bool ledState = LOW; // Set initial state as low 
 
 // -----------------------------------------SETUP-------------------------------------------
