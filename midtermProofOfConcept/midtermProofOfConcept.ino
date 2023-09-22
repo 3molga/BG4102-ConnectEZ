@@ -18,11 +18,11 @@ using namespace std;
 
 // Input objects
 joystick joystick(32, 35);
-ezButton buttonConfirm(18);  // Fill this in later ya dumb cunt
-ezButton buttonReturn(19);
-#define BUTTON_PIN 21
+ezButton buttonConfirm(27);  // Fill this in later ya dumb cunt
+ezButton buttonReturn(26);
+#define BUTTON_PIN 25
 const int touchPinInput = 13;
-const int touchPinLED = 26;  // External LED is at Pin 26
+const int touchPinLED = 12;  // External LED is at Pin 26
 #define ONBOARD_LED 2        // ON_BOARD LED value is 2
 
 // Wifi setup
@@ -52,7 +52,7 @@ const int touchThreshold = 30;  // Capacitance touch value lower than this will 
 
 // -----------------------------------------SETUP-------------------------------------------
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(115200);
   joystick.joystickSetup();
   buttonConfirm.setDebounceTime(500);
   buttonReturn.setDebounceTime(500);
