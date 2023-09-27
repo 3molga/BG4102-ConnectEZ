@@ -177,24 +177,13 @@ void TelePoll(void *pvParameters)
   //------------------------------------FUNCTIONS------------------------------------
   // Function to update user state (temporary, maybe move into class later)
   // Takes user inputs and upper bound of array size (assume array is square for now?)
-  void updateInputs()
-  {
-    if (WiFi.status() != WL_CONNECTED)
-    {
-      // Wi-Fi is not connected LED
-      digitalWrite(ONBOARD_LED, LOW);
-      return;
-    }
-    else
-    {
-      // Wi-Fi is connected LED
-      digitalWrite(ONBOARD_LED, HIGH);
-      Serial.println("Checkpoint 1");
-      botController.handleUpdates();
-      Serial.println("Checkpoint 2");
-      if (buttonTele.isPressed())
-      {
-        bot.sendMessage(CHAT_ID, "HELP! I AM IN DANGER!");
+  void updateInputs() {
+    for (int i = 0; i < userState.size(); i++) {
+      userState[i] = userState[i] + userInput[i];
+      if (userState[i] < 0) {
+        userState[i] = 0;
+      } else if (userState[i] > matrixSize[i]) {
+        userState[i] = matrixSize[i];
       }
     }
   }
