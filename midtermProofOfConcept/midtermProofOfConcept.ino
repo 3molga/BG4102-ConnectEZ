@@ -38,7 +38,7 @@ unsigned long lastTimeBotRan;
 // Joystick variables
 std::vector<int> userState{ 0, 0 };  // Stores x and y coords of where the user currently is on the UI
 std::vector<int> userInput{ 0, 0 };  // Stores inputs from user
-int matrixSize = 3;                  // Arbitrary assumption for maximum size of array (+1)
+std::vector<int> matrixSize = {3, 10};                  // Arbitrary assumption for maximum size of array (+1)
 bool joystickUpdateTrigger;
 const String newLineBar = "-----------------------------------------------------------------------------------------------";
 
@@ -121,7 +121,7 @@ void loop() {
   // Get and print joystick state and returned message
   if (joystickUpdateTrigger) {
     userInput = joystick.joystickReturnState();
-    updateInputs(matrixSize);
+    updateInputs();
 
     // Print everything
     Serial.println(joystick.joystickMessageCheck());
@@ -165,13 +165,13 @@ void loop() {
 //------------------------------------FUNCTIONS------------------------------------
 // Function to update user state (temporary, maybe move into class later)
 // Takes user inputs and upper bound of array size (assume array is square for now?)
-void updateInputs(int upper_bound) {
+void updateInputs() {
   for (int i = 0; i < userState.size(); i++) {
     userState[i] = userState[i] + userInput[i];
     if (userState[i] < 0) {
       userState[i] = 0;
-    } else if (userState[i] > upper_bound) {
-      userState[i] = upper_bound;
+    } else if (userState[i] > matrixSize[i]) {
+      userState[i] = matrixSize[i];
     }
   }
 }
