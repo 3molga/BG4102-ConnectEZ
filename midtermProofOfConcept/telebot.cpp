@@ -15,9 +15,8 @@ extern String CHAT_ID;
 
 //---------------------------------PUBLIC---------------------------------
 // Constructor
-telebot::telebot(UniversalTelegramBot &bot) : 
-botRequestDelay(1000)
-{
+telebot::telebot(UniversalTelegramBot &bot)
+  : botRequestDelay(1000) {
   this->bot = &bot;
 }
 
@@ -29,7 +28,6 @@ void telebot::handleUpdates() {
 
     while (numNewMessages) {
       handleNewMessages(numNewMessages);
-      numNewMessages = bot->getUpdates(bot->last_message_received + 1);
     }
     lastTimeBotRan = millis();
   }
