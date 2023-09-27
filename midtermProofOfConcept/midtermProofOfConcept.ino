@@ -20,9 +20,9 @@ using namespace std;
 joystick joystick(32, 35);
 ezButton buttonConfirm(27);  // Fill this in later ya dumb cunt
 ezButton buttonReturn(26);
-#define BUTTON_PIN 25
-const int touchPinInput = 13;
-const int touchPinLED = 12;  // External LED is at Pin 26
+ezButton buttonTele(25);
+#define touchPinInput 13
+#define touchPinLED 12  // External LED is at Pin 26
 #define ONBOARD_LED 2        // ON_BOARD LED value is 2
 
 // Wifi setup
@@ -42,10 +42,6 @@ std::vector<int> matrixSize = {3, 10};                  // Arbitrary assumption 
 bool joystickUpdateTrigger;
 const String newLineBar = "-----------------------------------------------------------------------------------------------";
 
-// Wi-Fi
-int lastState = LOW;  // the previous state from the input pin
-int currentState;     // the current reading from the input pin
-
 // Capacitance touch to detect if person is afk or not
 int touchValue;                 // Variable for storing the touch pin value
 const int touchThreshold = 30;  // Capacitance touch value lower than this will indicate the person is touching the device
@@ -54,15 +50,16 @@ const int touchThreshold = 30;  // Capacitance touch value lower than this will 
 void setup() {
   Serial.begin(115200);
   joystick.joystickSetup();
-  buttonConfirm.setDebounceTime(500);
-  buttonReturn.setDebounceTime(500);
+  buttonConfirm.setDebounceTime(50);
+  buttonReturn.setDebounceTime(50);
+  buttonTele.setDebounceTime(50);
 
   // Connect to Wi-Fi
   WiFi.mode(WIFI_STA);
   WiFi.disconnect();
   WiFi.begin(ssid, password);
   client.setCACert(TELEGRAM_CERTIFICATE_ROOT);
-  while (millis() < 10000) {
+  while (millis() < 5000) {
     if (WiFi.status() == WL_CONNECTED) {
       Serial.println("WiFi connected");
       bot.sendMessage(CHAT_ID, "Hello everyone, I am connected!");
@@ -75,7 +72,6 @@ void setup() {
 
   // Setup button, Wi-Fi confirmaton LED and afk LED
   pinMode(ONBOARD_LED, OUTPUT);
-  pinMode(BUTTON_PIN, INPUT_PULLUP);
   pinMode(touchPinLED, OUTPUT);
   digitalWrite(touchPinLED, 0);
 }
@@ -84,6 +80,7 @@ void setup() {
 void loop() {
   buttonConfirm.loop();
   buttonReturn.loop();
+  buttonTele.loop();
   joystickUpdateTrigger = joystick.joystickStateTrigger();
 
   // Check if the touchValue is below the threshold, check if the person is touching the device
@@ -93,30 +90,21 @@ void loop() {
   } else {
     digitalWrite(touchPinLED, LOW);
   }
-  /*
-  // If there is no update from joystick or either button, return early and don't execute the following code
-  if (!(joystick.joystickStateTrigger() || buttonConfirm.isPressed() || buttonReturn.isPressed())) {
-    return;
-  }
 
   // User input from button has higher precendence than joystick
-  // If for whatever reason both confirm and return are pressed at the same time, return early
-  if (buttonConfirm.isPressed() && buttonReturn.isPressed()) {
-    Serial.println("Both confirm and return buttons pressed");
-    return;
-  }
-
-  // Else have individual actions for either confirm or return
+  // Have individual actions for either confirm or return
   if (buttonConfirm.isPressed()) {
     Serial.println("Confirm button pressed");
-    return;
   }
 
   if (buttonReturn.isPressed()) {
     Serial.println("Return button pressed");
-    return;
   }
-*/
+
+  if (buttonTele.isPressed()) {
+    Serial.println("Tele button pressed");
+  }
+
   // Lowest priority state: only joystick input
   // Get and print joystick state and returned message
   if (joystickUpdateTrigger) {
@@ -151,14 +139,12 @@ void loop() {
     }
 
     // Send message when button is pressed
-    currentState = digitalRead(BUTTON_PIN);
-    if (lastState == HIGH && currentState == LOW) {
+    if (buttonTele.isPressed()) {
       Serial.println("The button is pressed");
       bot.sendMessage(CHAT_ID, "HELP! I AM IN DANGER!");
-    } else if (lastState == LOW && currentState == HIGH) {
+    } else if (buttonTele.isReleased()) {
       Serial.println("The button is released");
     }
-    lastState = currentState;
   }
 }
 
