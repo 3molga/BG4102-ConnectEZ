@@ -12,7 +12,7 @@ class telebot {
 // Public stuff
 public:
 	// Constructor
-	telebot(UniversalTelegramBot& bot);
+	telebot(UniversalTelegramBot &bot);
 
 	// Functions
 	void handleUpdates();
@@ -25,13 +25,14 @@ private:
 	// Variables
 	unsigned long lastTimeBotRan;
 	int numNewMessages;
-	extern bool touchBool;
+	bool touchBool;
+  String CHAT_ID;
 
 	// Functions
 	void handleNewMessages(int numNewMessages);
 
 	// External objects
-	UniversalTelegramBot& bot;
+	UniversalTelegramBot *bot;
 
 };
 

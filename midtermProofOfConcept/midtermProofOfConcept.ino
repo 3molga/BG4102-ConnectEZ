@@ -30,7 +30,7 @@ ezButton buttonTele(25);
 const char *ssid = "tmt";                                          // Wi-Fi ID
 const char *password = "yeah8913";                                 // Wi-Fi password
 #define BOTtoken "6606670486:AAGP24iLfP047ysZ7yaAUHyv3cOf-iLKMqE"  // Telegram bot API token
-#define CHAT_ID "-4016407865"                                      // "Chat with esp32" telegram group ID
+String CHAT_ID = "-4016407865";                                // "Chat with esp32" telegram group ID
 WiFiClientSecure client;
 UniversalTelegramBot bot(BOTtoken, client);
 telebot botController(bot);
@@ -87,10 +87,10 @@ void loop() {
   // Check if the touchValue is below the threshold, check if the person is touching the device
   touchValue = touchRead(touchPinInput);
   if (touchValue < touchThreshold) {
-    touchBool = TRUE;
+    touchBool = true;
     digitalWrite(touchPinLED, HIGH);
   } else {
-    touchBool = FALSE;
+    touchBool = false;
     digitalWrite(touchPinLED, LOW);
   }
 
@@ -129,7 +129,9 @@ void loop() {
   } else {
     // Wi-Fi is connected LED
     digitalWrite(ONBOARD_LED, HIGH);
-    telebot.handleUpdates();
+    Serial.println("Checkpoint 1");
+    botController.handleUpdates();
+    Serial.println("Checkpoint 2");
     if (buttonTele.isPressed()) {
       bot.sendMessage(CHAT_ID, "HELP! I AM IN DANGER!");
     }
@@ -161,6 +163,7 @@ void loop() {
   }
   */
   }
+}
 
   //------------------------------------FUNCTIONS------------------------------------
   // Function to update user state (temporary, maybe move into class later)
