@@ -3,6 +3,8 @@
 #ifndef telebot_h
 #define telebot_h
 #include <Arduino.h>
+#include <string>
+#include <vector>
 #include <UniversalTelegramBot.h>
 #include <ArduinoJson.h>
 
@@ -12,24 +14,27 @@ class telebot {
 // Public stuff
 public:
 	// Constructor
-	telebot(UniversalTelegramBot &bot);
+	telebot(UniversalTelegramBot &bot, String chat_id);
 
 	// Functions
-	void handleUpdates();
+	void handleActiveUpdates();
+	void handlePassiveUpdates();
+	void queueMessage(std::string messageQueued);
 
 // Private stuff
 private:
 	// Constants
 	const int botRequestDelay;
+  const String chat_id;
 
 	// Variables
 	unsigned long lastTimeBotRan;
-	int numNewMessages;
-	bool touchBool;
-  String CHAT_ID;
+	int numMessagesReceived;
+	int numMessagesQueued;
+	std::vector<std::string> messageQueue;
 
 	// Functions
-	void handleNewMessages(int numNewMessages);
+	void handleMessagesReceived(int numMessagesReceived);
 
 	// External objects
 	UniversalTelegramBot *bot;
