@@ -17,37 +17,37 @@
 #include <ArduinoJson.h>
 using namespace std;
 
-// Input objects
+// Input objects/pins
 joystick joystick(32, 35);
 ezButton buttonConfirm(27);  // Fill this in later ya dumb cunt
 ezButton buttonReturn(26);
 ezButton buttonTele(25);
+
+// Output pins
 #define touchPinInput 13
 #define touchPinLED 12  // External LED is at Pin 26
-#define ONBOARD_LED 2   // ON_BOARD LED value is 2
+#define ONBOARD_LED 2   // ON_BOARD LED is at Pin 2
 
-// Wifi setup
+// Wifi and Telegram setup
 const char *ssid = "tmt";                                          // Wi-Fi ID
 const char *password = "yeah8913";                                 // Wi-Fi password
 #define BOTtoken "6606670486:AAGP24iLfP047ysZ7yaAUHyv3cOf-iLKMqE"  // Telegram bot API token
-#define CHAT_ID "-4016407865"                                    // "Chat with esp32" telegram group ID
+#define CHAT_ID "-4016407865"                                      // "Chat with esp32" telegram group ID
 WiFiClientSecure client;
 UniversalTelegramBot bot(BOTtoken, client);
 telebot botController(bot, CHAT_ID);
 
-// Joystick variables
+// Joystick/array controlling variables
 std::vector<int> userState{ 0, 0 };       // Stores x and y coords of where the user currently is on the UI
 std::vector<int> userInput{ 0, 0 };       // Stores inputs from user
 std::vector<int> matrixSize = { 3, 10 };  // Arbitrary assumption for maximum size of array (+1)
 bool joystickUpdateTrigger;
 const String newLineBar = "-----------------------------------------------------------------------------------------------";
 
-// Capacitance touch to detect if person is afk or not
+// Capacitance touch variables
 int touchValue;                 // Variable for storing the touch pin value
 const int touchThreshold = 30;  // Capacitance touch value lower than this will indicate the person is touching the device
 bool touchBool;
-
-TaskHandle_t Task1;
 
 // -----------------------------------------SETUP-------------------------------------------
 void setup() {
@@ -80,27 +80,18 @@ void setup() {
 
   // Set up parallel processing task to handle Telegram reading
   xTaskCreatePinnedToCore(
-    TeleHandler,               /* Task function. */
+    TeleHandler,            /* Task function. */
     "Telegram Bot Handler", /* name of task. */
     100000,                 /* Stack size of task */
     NULL,                   /* parameter of the task */
     1,                      /* priority of the task */
     NULL,                   /* Task handle to keep track of created task */
     1);                     /* pin task to core 0 */
-
-//  xTaskCreatePinnedToCore(
-//    MainLoop,               /* Task function. */
-//    "Main Loop", /* name of task. */
-//    100000,                 /* Stack size of task */
-//   NULL,                   /* parameter of the task */
-//    1,                      /* priority of the task */
-//    NULL,                   /* Task handle to keep track of created task */
-//    1);                      /* pin task to core 0 */
-
 }
 
 // -----------------------------------------LOOPS-------------------------------------------
-// Empty main loop (only required because Arduino IDE requires it)
+/* Main loop to handle all active user inputs
+ie. joystick and button updates, queueing messages to send through Telegram */
 void loop() {
   buttonConfirm.loop();
   buttonReturn.loop();
@@ -117,10 +108,24 @@ void loop() {
     digitalWrite(touchPinLED, LOW);
   }
 
-  // User input from button has higher precendence than joystick
-  // Have individual actions for either confirm or return
+  // Get and print joystick state and returned message
+  if (joystickUpdateTrigger) {
+    userInput = joystick.joystickReturnState();
+    updateInputs();
+
+    // Print everything to serial (for debugging)
+    Serial.println(joystick.joystickMessageCheck());
+    Serial.println(intToString(userInput));
+    Serial.println(intToString(userState));
+    Serial.println(newLineBar);
+  }
+
+  // Handle user input from buttons
   if (buttonConfirm.isPressed()) {
     Serial.println("Confirm button pressed");
+    if (WiFi.status() == WL_CONNECTED) {
+      botController.queueMessage(std::string(intToString(userState)));
+    }
   }
 
   if (buttonReturn.isPressed()) {
@@ -130,37 +135,15 @@ void loop() {
   if (buttonTele.isPressed()) {
     Serial.println("Tele button pressed");
     if (WiFi.status() == WL_CONNECTED) {
-      Serial.println("Check");
       botController.queueMessage(std::string("Help, I am in danger!"));
     }
   }
-
-  // Get and print joystick state and returned message
-  if (joystickUpdateTrigger) {
-    userInput = joystick.joystickReturnState();
-    updateInputs();
-
-    // Print everything
-    Serial.println(joystick.joystickMessageCheck());
-    Serial.println(intToString(userInput));
-    Serial.println(intToString(userState));
-    Serial.println(newLineBar);
-  }
 }
 
-/*Actual main loop to handle active events (ie. triggered by the user)
-Includes: joystick and button updates, queueing telegram messages
-*/ 
-//void MainLoop(void *pvParameters) {
-  //while(1){
-  
-  // Lowest priority state: only joystick input
-//}
-
-/*2nd Loop
+/* 2nd Loop
 Handles all Telegram-related actions
 ie. polling the API for chat updates, automatically responding to them, sending messages queued by the user
-Separate from the main loop for performance purposes (this stuff takes a while)*/
+Separate from the main loop for performance purposes (this stuff takes a while to process) */
 void TeleHandler(void *pvParameters) {
   while (1) {
     if (WiFi.status() != WL_CONNECTED) {
@@ -177,7 +160,7 @@ void TeleHandler(void *pvParameters) {
 
 //------------------------------------FUNCTIONS------------------------------------
 // Function to update user state (temporary, maybe move into class later)
-// Takes user inputs and upper bound of array size (assume array is square for now?)
+// Takes user inputs and upper bound of array size 
 void updateInputs() {
   for (int i = 0; i < userState.size(); i++) {
     userState[i] = userState[i] + userInput[i];
