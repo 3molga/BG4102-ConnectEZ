@@ -14,7 +14,7 @@ class telebot {
 // Public stuff
 public:
 	// Constructor
-	telebot(UniversalTelegramBot &bot);
+	telebot(UniversalTelegramBot &bot, String chat_id);
 
 	// Functions
 	void handleActiveUpdates();
@@ -25,13 +25,13 @@ public:
 private:
 	// Constants
 	const int botRequestDelay;
+  const String chat_id;
 
 	// Variables
 	unsigned long lastTimeBotRan;
 	int numMessagesReceived;
 	int numMessagesQueued;
-	extern bool touchBool;
-	std::vector<string> messageQueue;
+	std::vector<std::string> messageQueue;
 
 	// Functions
 	void handleMessagesReceived(int numMessagesReceived);

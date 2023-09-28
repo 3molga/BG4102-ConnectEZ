@@ -11,15 +11,16 @@
 unsigned long lastTimeBotRan;
 int numMessagesReceived;
 int numMessagesQueued; 
-std::vector<string> messageQueue;
+std::vector<std::string> messageQueue;
 
 // External pins
 extern bool touchBool;
 
 //---------------------------------PUBLIC---------------------------------
 // Constructor
-telebot::telebot(UniversalTelegramBot &bot)
-  : botRequestDelay(1000) {
+telebot::telebot(UniversalTelegramBot &bot, String CHAT_ID)
+  : botRequestDelay(1000), 
+  chat_id(CHAT_ID) {
   this->bot = &bot;
 }
 
@@ -30,7 +31,7 @@ void telebot::handleActiveUpdates(){
     while (numMessagesQueued){
       // Send first message in queue
       // Convert from std::string to String for UniversalTelegramBot
-      String messageToSend = to_string(messageQueue[0]);
+      String messageToSend = String(messageQueue[0].c_str());
       bot->sendMessage(chat_id, messageToSend, "");
 
       // Update queue and number
