@@ -10,7 +10,7 @@
 // Private Variables
 unsigned long lastTimeBotRan;
 int numMessagesReceived;
-int numMessagesQueued; 
+int numMessagesQueued;
 std::vector<std::string> messageQueue;
 
 // External pins
@@ -19,16 +19,16 @@ extern bool touchBool;
 //---------------------------------PUBLIC---------------------------------
 // Constructor
 telebot::telebot(UniversalTelegramBot &bot, String CHAT_ID)
-  : botRequestDelay(1000), 
-  chat_id(CHAT_ID) {
+  : botRequestDelay(1000),
+    chat_id(CHAT_ID) {
   this->bot = &bot;
 }
 
 // handleActiveUpdates
 // Sends all queued messages in the queue
-void telebot::handleActiveUpdates(){
-  if (numMessagesQueued){
-    while (numMessagesQueued){
+void telebot::handleActiveUpdates() {
+  if (numMessagesQueued) {
+    while (numMessagesQueued) {
       // Send first message in queue
       // Convert from std::string to String for UniversalTelegramBot
       String messageToSend = String(messageQueue[0].c_str());
@@ -57,7 +57,7 @@ void telebot::handlePassiveUpdates() {
 
 // queueMessage
 // Queues another message to be sent by bot
-void telebot::queueMessage(std::string messageToQueue){
+void telebot::queueMessage(std::string messageToQueue) {
   numMessagesQueued += 1;
   messageQueue.push_back(messageToQueue);
 }
@@ -98,7 +98,7 @@ void telebot::handleMessagesReceived(int numMessagesReceived) {
       return;
     }
 
-    // To query if the person is touching the device by questioning is the touchPinLED HIGH or LOW
+    // To query if the person is touching the device
     if (text == "/afk") {
       if (touchBool) {
         bot->sendMessage(chat_id, "Person is touching the device", "");

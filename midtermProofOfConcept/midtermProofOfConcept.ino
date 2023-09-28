@@ -19,13 +19,13 @@ using namespace std;
 
 // Input objects/pins
 joystick joystick(32, 35);
-ezButton buttonConfirm(27);  // Fill this in later ya dumb cunt
+ezButton buttonConfirm(27);  
 ezButton buttonReturn(26);
 ezButton buttonTele(25);
+#define touchPinInput 13
 
 // Output pins
-#define touchPinInput 13
-#define touchPinLED 12  // External LED is at Pin 26
+#define touchPinLED 15  // External LED is at Pin 15
 #define ONBOARD_LED 2   // ON_BOARD LED is at Pin 2
 
 // Wifi and Telegram setup
@@ -124,7 +124,7 @@ void loop() {
   if (buttonConfirm.isPressed()) {
     Serial.println("Confirm button pressed");
     if (WiFi.status() == WL_CONNECTED) {
-      botController.queueMessage(std::string(intToString(userState)));
+      botController.queueMessage(std::string("User is currently on: ") + intToString(userState));
     }
   }
 
@@ -160,7 +160,7 @@ void TeleHandler(void *pvParameters) {
 
 //------------------------------------FUNCTIONS------------------------------------
 // Function to update user state (temporary, maybe move into class later)
-// Takes user inputs and upper bound of array size 
+// Takes user inputs and upper bound of array size
 void updateInputs() {
   for (int i = 0; i < userState.size(); i++) {
     userState[i] = userState[i] + userInput[i];
@@ -178,7 +178,5 @@ std::string intToString(std::vector<int> intVector) {
   for (int i = 1; i < intVector.size(); i++) {
     tempOutput = tempOutput + " , " + to_string(intVector[i]);
   }
-  // String tempOutputString = String(tempOutput.data());
-  // return tempOutputString;
   return tempOutput;
 }
