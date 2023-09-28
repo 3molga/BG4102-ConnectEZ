@@ -32,9 +32,8 @@ const char *password = "yeah8913";                                 // Wi-Fi pass
 #define BOTtoken "6606670486:AAGP24iLfP047ysZ7yaAUHyv3cOf-iLKMqE"  // Telegram bot API token
 #define CHAT_ID "-4016407865"                                    // "Chat with esp32" telegram group ID
 WiFiClientSecure client;
-UniversalTelegramBot botActive(BOTtoken, client);
-UniversalTelegramBot botPassive(BOTtoken, client);
-telebot botController(botPassive);
+UniversalTelegramBot bot(BOTtoken, client);
+telebot botController(bot);
 
 // Joystick variables
 std::vector<int> userState{ 0, 0 };       // Stores x and y coords of where the user currently is on the UI
@@ -66,7 +65,7 @@ void setup() {
   while (millis() < 5000) {
     if (WiFi.status() == WL_CONNECTED) {
       Serial.println("WiFi connected");
-      botActive.sendMessage(CHAT_ID, "Hello everyone, I am connected!", "");
+      botController.queueMessage(std::string "Hello everyone, I am connected!")
       break;
     } else {
       delay(500);
@@ -81,13 +80,13 @@ void setup() {
 
   // Set up parallel processing task to handle Telegram reading
   xTaskCreatePinnedToCore(
-    TelePoll,               /* Task function. */
-    "Telegram Poll Return", /* name of task. */
+    TeleHandler,               /* Task function. */
+    "Telegram Bot Handler", /* name of task. */
     100000,                 /* Stack size of task */
     NULL,                   /* parameter of the task */
     1,                      /* priority of the task */
     NULL,                   /* Task handle to keep track of created task */
-    0);                     /* pin task to core 0 */
+    1);                     /* pin task to core 0 */
 
   xTaskCreatePinnedToCore(
     MainLoop,               /* Task function. */
@@ -99,10 +98,14 @@ void setup() {
     1);                     /* pin task to core 0 */
 }
 
-// -----------------------------------------LOOP-------------------------------------------
+// -----------------------------------------LOOPS-------------------------------------------
+// Empty main loop (only required because Arduino IDE requires it)
 void loop() {
 }
 
+/*Actual main loop to handle active events (ie. triggered by the user)
+Includes: joystick and button updates, queueing telegram messages
+*/ 
 void MainLoop(void *pvParameters) {
   while(1){
   buttonConfirm.loop();
@@ -134,7 +137,7 @@ void MainLoop(void *pvParameters) {
     Serial.println("Tele button pressed");
     if (WiFi.status() == WL_CONNECTED) {
       Serial.println("Check");
-      botActive.sendMessage(CHAT_ID, "HELP! I AM IN DANGER!", "");
+      botController.queueMessage(std::string "Help, I am in danger!")
     }
   }
 
@@ -152,11 +155,12 @@ void MainLoop(void *pvParameters) {
   }
 }
 }
+
 /*2nd Loop
-Handles all passive Telegram-related actions
-ie. polling the API for chat updates and automatically responding to them.
-Separate from the active Telegram-related actions (ie. initiated by the user.)*/
-void TelePoll(void *pvParameters) {
+Handles all Telegram-related actions
+ie. polling the API for chat updates, automatically responding to them, sending messages queued by the user
+Separate from the main loop for performance purposes (this stuff takes a while)*/
+void TeleHandler(void *pvParameters) {
   while (1) {
     if (WiFi.status() != WL_CONNECTED) {
       // Wi-Fi is not connected LED
@@ -164,7 +168,8 @@ void TelePoll(void *pvParameters) {
     } else {
       // Wi-Fi is connected LED
       digitalWrite(ONBOARD_LED, HIGH);
-      botController.handleUpdates();
+      botController.handleActiveUpdates();
+      botController.handlePassiveUpdates();
     }
   }
 }

@@ -3,6 +3,8 @@
 #ifndef telebot_h
 #define telebot_h
 #include <Arduino.h>
+#include <string>
+#include <vector>
 #include <UniversalTelegramBot.h>
 #include <ArduinoJson.h>
 
@@ -15,7 +17,9 @@ public:
 	telebot(UniversalTelegramBot &bot);
 
 	// Functions
-	void handleUpdates();
+	void handleActiveUpdates();
+	void handlePassiveUpdates();
+	void queueMessage(std::string messageQueued);
 
 // Private stuff
 private:
@@ -24,11 +28,13 @@ private:
 
 	// Variables
 	unsigned long lastTimeBotRan;
-	int numNewMessages;
-	bool touchBool;
+	int numMessagesReceived;
+	int numMessagesQueued;
+	extern bool touchBool;
+	std::vector<string> messageQueue;
 
 	// Functions
-	void handleNewMessages(int numNewMessages);
+	void handleMessagesReceived(int numMessagesReceived);
 
 	// External objects
 	UniversalTelegramBot *bot;
