@@ -115,8 +115,8 @@ void loop() {
 
     // Print everything to serial (for debugging)
     Serial.println(joystick.joystickMessageCheck());
-    Serial.println(intToString(userInput));
-    Serial.println(intToString(userState));
+    Serial.println(intToString(userInput).c_str());
+    Serial.println(intToString(userState).c_str());
     Serial.println(newLineBar);
   }
 
@@ -172,12 +172,13 @@ void updateInputs() {
   }
 }
 
-// Function to convert int vector into a string to print
-String intToString(std::vector<int> intVector) {
+// Function to convert int vector into a std::string to print
+std::string intToString(std::vector<int> intVector) {
   std::string tempOutput = to_string(intVector[0]);
   for (int i = 1; i < intVector.size(); i++) {
     tempOutput = tempOutput + " , " + to_string(intVector[i]);
   }
-  String tempOutputString = String(tempOutput.data());
-  return tempOutputString;
+  // String tempOutputString = String(tempOutput.data());
+  // return tempOutputString;
+  return tempOutput;
 }
