@@ -13,8 +13,9 @@ int numMessagesReceived;
 int numMessagesQueued;
 std::vector<std::string> messageQueue;
 
-// External pins
+// External variables from main sketch
 extern bool touchBool;
+extern std::vector<int> userState; 
 
 //---------------------------------PUBLIC---------------------------------
 // Constructor
@@ -75,38 +76,44 @@ void telebot::handleMessagesReceived(int numMessagesReceived) {
     // Change this message accordingly to the device function
     if (text == "/start") {
       String welcome = "Welcome, " + from_name + ".\n";
-      welcome += "Use the following commands to control your outputs.\n\n";
-      welcome += "/hello to say hello with bot \n";
-      welcome += "/name to to ask bot's name \n";
-      welcome += "/mode to ask is bot happy or not \n";
-      welcome += "/afk to ask whether user holding the device \n";
+      welcome += "Use the following commands to control your outputs:\n\n";
+      welcome += "/info for information about our device;\n";
+      welcome += "/query for information about the current state of the user;\n"; 
+      welcome += "/afk to query if the user is currently in contact with the device. \n";
+      // welcome += "/easter for a surprise easter egg!"
       bot->sendMessage(chat_id, welcome, "");
     }
 
-    if (text == "/hello") {
-      bot->sendMessage(chat_id, "Hello, people", "");
+    // Returns information about our device
+    if (text == "/info") {
+      bot->sendMessage(chat_id, "This is the ConnectEZ, an AAC device designed to prioritize user personalization and maximise social interaction!", "");
       return;
-    }
-
-    if (text == "/name") {
-      bot->sendMessage(chat_id, "My name is Zane Bot!", "");
-      return;
-    }
-
-    if (text == "/mode") {
-      bot->sendMessage(chat_id, "I am happy!", "");
+      }
+    
+    // To query about where the user currently is on the grid
+    if (text == "/query") {
+      char queryGridMessage[50];
+      sprintf(queryGridMessage, "User is currently on: %i, %i.", userState[0], userState[1]);
+      String queryGridMessageS = queryGridMessage;
+      bot->sendMessage(chat_id, queryGridMessageS, "");
       return;
     }
 
     // To query if the person is touching the device
     if (text == "/afk") {
       if (touchBool) {
-        bot->sendMessage(chat_id, "Person is touching the device", "");
+        bot->sendMessage(chat_id, "User is touching the device now.", "");
         return;
       } else {
-        bot->sendMessage(chat_id, "Person is afk", "");
+        bot->sendMessage(chat_id, "User is currently AFK.", "");
         return;
       }
+    }
+
+    // Easter egg :)
+    if (text == "/easter") {
+      bot->sendMessage(chat_id, ":3", "");
+      return;
     }
   }
 }

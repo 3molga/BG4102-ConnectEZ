@@ -65,7 +65,7 @@ void setup() {
   while (millis() < 5000) {
     if (WiFi.status() == WL_CONNECTED) {
       Serial.println("WiFi connected");
-      botController.queueMessage(std::string("Hello everyone, I am connected!"));
+      botController.queueMessage(std::string("Hello everyone, I am connected!\nUse /start for commands to control me!"));
       break;
     } else {
       delay(500);
@@ -124,7 +124,7 @@ void loop() {
   if (buttonConfirm.isPressed()) {
     Serial.println("Confirm button pressed");
     if (WiFi.status() == WL_CONNECTED) {
-      botController.queueMessage(std::string("User is currently on: ") + intToString(userState));
+      botController.queueMessage(std::string("User is sending: ") + intToString(userState) + ".");
     }
   }
 
@@ -176,7 +176,7 @@ void updateInputs() {
 std::string intToString(std::vector<int> intVector) {
   std::string tempOutput = to_string(intVector[0]);
   for (int i = 1; i < intVector.size(); i++) {
-    tempOutput = tempOutput + " , " + to_string(intVector[i]);
+    tempOutput = tempOutput + ", " + to_string(intVector[i]);
   }
   return tempOutput;
 }
