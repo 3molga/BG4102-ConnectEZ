@@ -11,7 +11,6 @@ int numNewMessages;
 
 // External pins
 extern bool touchBool;
-extern String CHAT_ID;
 
 //---------------------------------PUBLIC---------------------------------
 // Constructor
@@ -28,6 +27,7 @@ void telebot::handleUpdates() {
 
     while (numNewMessages) {
       handleNewMessages(numNewMessages);
+      numNewMessages = bot->getUpdates(bot->last_message_received + 1);
     }
     lastTimeBotRan = millis();
   }
@@ -38,10 +38,6 @@ void telebot::handleNewMessages(int numNewMessages) {
   for (int i = 0; i < numNewMessages; i++) {
     // Check the chat id of the requester
     String chat_id = String(bot->messages[i].chat_id);
-    if (chat_id != CHAT_ID) {
-      bot->sendMessage(chat_id, "Unauthorized user", "");
-      continue;
-    }
 
     // Print the received message to strings
     String text = bot->messages[i].text;

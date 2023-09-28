@@ -26,7 +26,6 @@ private:
 	unsigned long lastTimeBotRan;
 	int numNewMessages;
 	bool touchBool;
-  String CHAT_ID;
 
 	// Functions
 	void handleNewMessages(int numNewMessages);

@@ -30,7 +30,7 @@ ezButton buttonTele(25);
 const char *ssid = "tmt";                                          // Wi-Fi ID
 const char *password = "yeah8913";                                 // Wi-Fi password
 #define BOTtoken "6606670486:AAGP24iLfP047ysZ7yaAUHyv3cOf-iLKMqE"  // Telegram bot API token
-String CHAT_ID = "-4016407865";                                    // "Chat with esp32" telegram group ID
+#define CHAT_ID "-4016407865"                                    // "Chat with esp32" telegram group ID
 WiFiClientSecure client;
 UniversalTelegramBot botActive(BOTtoken, client);
 UniversalTelegramBot botPassive(BOTtoken, client);
@@ -66,7 +66,7 @@ void setup() {
   while (millis() < 5000) {
     if (WiFi.status() == WL_CONNECTED) {
       Serial.println("WiFi connected");
-      botActive.sendMessage(CHAT_ID, "Hello everyone, I am connected!");
+      botActive.sendMessage(CHAT_ID, "Hello everyone, I am connected!", "");
       break;
     } else {
       delay(500);
@@ -87,11 +87,24 @@ void setup() {
     NULL,                   /* parameter of the task */
     1,                      /* priority of the task */
     NULL,                   /* Task handle to keep track of created task */
-    1);                     /* pin task to core 1 */
+    0);                     /* pin task to core 0 */
+
+  xTaskCreatePinnedToCore(
+    MainLoop,               /* Task function. */
+    "Main Loop", /* name of task. */
+    100000,                 /* Stack size of task */
+    NULL,                   /* parameter of the task */
+    1,                      /* priority of the task */
+    NULL,                   /* Task handle to keep track of created task */
+    1);                     /* pin task to core 0 */
 }
 
 // -----------------------------------------LOOP-------------------------------------------
 void loop() {
+}
+
+void MainLoop(void *pvParameters) {
+  while(1){
   buttonConfirm.loop();
   buttonReturn.loop();
   buttonTele.loop();
@@ -120,7 +133,8 @@ void loop() {
   if (buttonTele.isPressed()) {
     Serial.println("Tele button pressed");
     if (WiFi.status() == WL_CONNECTED) {
-      botActive.sendMessage(CHAT_ID, "HELP! I AM IN DANGER!");
+      Serial.println("Check");
+      botActive.sendMessage(CHAT_ID, "HELP! I AM IN DANGER!", "");
     }
   }
 
@@ -136,10 +150,8 @@ void loop() {
     Serial.println(intToString(userState));
     Serial.println(newLineBar);
   }
-
-  // Check Wifi connection
 }
-
+}
 /*2nd Loop
 Handles all passive Telegram-related actions
 ie. polling the API for chat updates and automatically responding to them.
@@ -149,7 +161,6 @@ void TelePoll(void *pvParameters) {
     if (WiFi.status() != WL_CONNECTED) {
       // Wi-Fi is not connected LED
       digitalWrite(ONBOARD_LED, LOW);
-      return;
     } else {
       // Wi-Fi is connected LED
       digitalWrite(ONBOARD_LED, HIGH);
@@ -158,19 +169,21 @@ void TelePoll(void *pvParameters) {
   }
 }
 
-  //------------------------------------FUNCTIONS------------------------------------
-  // Function to update user state (temporary, maybe move into class later)
-  // Takes user inputs and upper bound of array size (assume array is square for now?)
-  void updateInputs()
-    for (int i = 0; i < userState.size(); i++) {
-      userState[i] = userState[i] + userInput[i];
-      if (userState[i] < 0) {
-        userState[i] = 0;
-      } else if (userState[i] > matrixSize[i]) {
-        userState[i] = matrixSize[i];
+//------------------------------------FUNCTIONS------------------------------------
+// Function to update user state (temporary, maybe move into class later)
+// Takes user inputs and upper bound of array size (assume array is square for now?)
+void updateInputs() {
+  for (int i = 0; i < userState.size(); i++) {
+    userState[i] = userState[i] + userInput[i];
+    if (userState[i] < 0) {
+      userState[i] = 0;
+    } else if (userState[i] > matrixSize[i]) {
+      userState[i] = matrixSize[i];
+    }
   }
+}
 
-// Funcion to convert int vector into a string to print
+// Function to convert int vector into a string to print
 String intToString(std::vector<int> intVector) {
   std::string tempOutput = to_string(intVector[0]);
   for (int i = 1; i < intVector.size(); i++) {
