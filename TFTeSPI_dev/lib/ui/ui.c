@@ -23,11 +23,22 @@ lv_obj_t *ui_welcome_text1;
 // SCREEN: ui_main_screen
 void ui_main_screen_screen_init(void);
 lv_obj_t *ui_main_screen;
-lv_obj_t *ui_hewwo;
-void ui_event_back2home( lv_event_t * e);
-lv_obj_t *ui_back2home;
-lv_obj_t *ui_goobye;
+void ui_event_returntostart( lv_event_t * e);
+lv_obj_t *ui_returntostart;
+lv_obj_t *ui_mainpanel;
+/*
+lv_obj_t *ui_testbutton1;
+lv_obj_t *ui_testbutton2;
+lv_obj_t *ui_testbutton3;
+lv_obj_t *ui_testbutton4;
+lv_obj_t *ui_testbutton5;
+lv_obj_t *ui_testbutton6;
+lv_group_t *ui_testgroupbuttons;
+*/
+lv_obj_t *buttonmatrixtest;
+lv_group_t *btnmatrixgrp;
 lv_obj_t *ui____initial_actions0;
+lv_indev_t *indev_joystick;
 
 ///////////////////// TEST LVGL SETTINGS ////////////////////
 #if LV_COLOR_DEPTH != 16
@@ -44,12 +55,14 @@ void ui_event_init_button1( lv_event_t * e) {
     lv_event_code_t event_code = lv_event_get_code(e);lv_obj_t * target = lv_event_get_target(e);
 if ( event_code == LV_EVENT_CLICKED) {
       _ui_screen_change( &ui_main_screen, LV_SCR_LOAD_ANIM_FADE_ON, 500, 0, &ui_main_screen_screen_init);
+      _ui_screen_delete( &ui_start_screen);
 }
 }
-void ui_event_back2home( lv_event_t * e) {
+void ui_event_returntostart( lv_event_t * e) {
     lv_event_code_t event_code = lv_event_get_code(e);lv_obj_t * target = lv_event_get_target(e);
-if ( event_code == LV_EVENT_PRESSED) {
+if ( event_code == LV_EVENT_CLICKED) {
       _ui_screen_change( &ui_start_screen, LV_SCR_LOAD_ANIM_FADE_ON, 500, 0, &ui_start_screen_screen_init);
+      _ui_screen_delete( &ui_main_screen);
 }
 }
 
@@ -65,4 +78,6 @@ ui_start_screen_screen_init();
 ui_main_screen_screen_init();
 ui____initial_actions0 = lv_obj_create(NULL);
 lv_disp_load_scr( ui_start_screen);
+
+
 }

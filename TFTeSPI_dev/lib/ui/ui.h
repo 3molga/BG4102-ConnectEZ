@@ -38,11 +38,23 @@ extern lv_obj_t *ui_welcome_text1;
 // SCREEN: ui_main_screen
 void ui_main_screen_screen_init(void);
 extern lv_obj_t *ui_main_screen;
-extern lv_obj_t *ui_hewwo;
-void ui_event_back2home( lv_event_t * e);
-extern lv_obj_t *ui_back2home;
-extern lv_obj_t *ui_goobye;
+void ui_event_returntostart( lv_event_t * e);
+extern lv_obj_t *ui_returntostart;
+extern lv_obj_t *ui_mainpanel;
+/*
+extern lv_obj_t *ui_testbutton1;
+extern lv_obj_t *ui_testbutton2;
+extern lv_obj_t *ui_testbutton3;
+extern lv_obj_t *ui_testbutton4;
+extern lv_obj_t *ui_testbutton5;
+extern lv_obj_t *ui_testbutton6;
+// Custom group
+extern lv_group_t *ui_testgroupbuttons;
+*/
+extern lv_obj_t *buttonmatrixtest;
+extern lv_group_t *btnmatrixgrp;
 extern lv_obj_t *ui____initial_actions0;
+extern lv_indev_t *indev_joystick;
 
 LV_IMG_DECLARE( ui_img_1_bg_png);   // assets\1_bg.png
 LV_IMG_DECLARE( ui_img_logo_png);   // assets\logo.png
