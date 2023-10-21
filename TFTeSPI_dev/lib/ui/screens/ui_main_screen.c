@@ -97,7 +97,7 @@ lv_obj_set_style_border_width(ui_testbutton6, 1, LV_PART_MAIN| LV_STATE_DEFAULT)
 // Custom buttonmatrix code
 static const char * btnm_map[] = {"1", "2", "\n",
                                   "3", "4", "\n",
-                                  "4", "5", 
+                                  "5", "6", 
                                    ""
                                  };
 
@@ -107,7 +107,6 @@ lv_btnmatrix_set_btn_ctrl_all(buttonmatrixtest, LV_BTNMATRIX_CTRL_NO_REPEAT);
 lv_btnmatrix_set_btn_ctrl_all(buttonmatrixtest, LV_BTNMATRIX_CTRL_CHECKABLE);
 lv_btnmatrix_set_one_checked(buttonmatrixtest, true);
 lv_obj_set_width(buttonmatrixtest, lv_pct(100));
-lv_btnmatrix_set_btn_ctrl(buttonmatrixtest, 0, LV_BTNMATRIX_CTRL_CHECKED);
 
 // Add buttonmatrixtest to joystick input
 btnmatrixgrp = lv_group_create();

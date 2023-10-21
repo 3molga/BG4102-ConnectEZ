@@ -378,7 +378,7 @@ static void lv_btnmatrix_constructor(const lv_obj_class_t * class_p, lv_obj_t * 
     lv_btnmatrix_t * btnm = (lv_btnmatrix_t *)obj;
     btnm->btn_cnt        = 0;
     btnm->row_cnt        = 0;
-    btnm->btn_id_sel     = LV_BTNMATRIX_BTN_NONE;
+    btnm->btn_id_sel     = 0; // Modification: initialize with 1st button selected
     btnm->button_areas   = NULL;
     btnm->ctrl_bits      = NULL;
     btnm->map_p          = NULL;
@@ -585,12 +585,12 @@ static void lv_btnmatrix_event(const lv_obj_class_t * class_p, lv_event_t * e)
         if(c == LV_KEY_RIGHT) {
             if(btnm->btn_id_sel == LV_BTNMATRIX_BTN_NONE)  btnm->btn_id_sel = 0;
             else btnm->btn_id_sel++;
-            if(btnm->btn_id_sel >= btnm->btn_cnt) btnm->btn_id_sel = 0;
+            if(btnm->btn_id_sel >= btnm->btn_cnt) btnm->btn_id_sel = btnm->btn_cnt - 1; // Modification: stay on last index
 
             uint16_t btn_id_start = btnm->btn_id_sel;
             while(button_is_hidden(btnm->ctrl_bits[btnm->btn_id_sel]) || button_is_inactive(btnm->ctrl_bits[btnm->btn_id_sel])) {
                 btnm->btn_id_sel++;
-                if(btnm->btn_id_sel >= btnm->btn_cnt) btnm->btn_id_sel = 0;
+                if(btnm->btn_id_sel >= btnm->btn_cnt) btnm->btn_id_sel = btnm->btn_cnt - 1; // Modification: stay on last index
 
                 if(btnm->btn_id_sel == btn_id_start) {
                     btnm->btn_id_sel = LV_BTNMATRIX_BTN_NONE;
@@ -601,7 +601,7 @@ static void lv_btnmatrix_event(const lv_obj_class_t * class_p, lv_event_t * e)
         else if(c == LV_KEY_LEFT) {
             if(btnm->btn_id_sel == LV_BTNMATRIX_BTN_NONE) btnm->btn_id_sel = 0;
 
-            if(btnm->btn_id_sel == 0) btnm->btn_id_sel = btnm->btn_cnt - 1;
+            if(btnm->btn_id_sel == 0) btnm->btn_id_sel = 0; // Modification: stay on first index
             else if(btnm->btn_id_sel > 0) btnm->btn_id_sel--;
 
             uint16_t btn_id_start = btnm->btn_id_sel;
