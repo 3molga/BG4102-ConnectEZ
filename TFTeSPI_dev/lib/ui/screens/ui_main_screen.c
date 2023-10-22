@@ -80,7 +80,7 @@ void ui_main_screen_setindev()
 {
     // Add buttonmatrixtest to joystick input
     lv_indev_set_group(indev_joystick, btnmatrixgrp);
-    // lv_btnmatrix_set_selected_btn(buttonmatrixtest, 0);
+    lv_btnmatrix_set_selected_btn(buttonmatrixtest, 0);
 }
 
 // Attempt at clearing indev

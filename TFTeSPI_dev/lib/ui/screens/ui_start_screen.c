@@ -43,7 +43,7 @@ void ui_start_screen_screen_init(void)
     lv_obj_set_y(ui_init_button1, lv_pct(30));
     lv_obj_set_align(ui_init_button1, LV_ALIGN_CENTER);
     lv_obj_add_style(ui_init_button1, &btndefstyle, 0);
-    lv_obj_add_style(ui_init_button1, &btnselstyle, LV_STATE_FOCUS_KEY | LV_STATE_PRESSED | LV_STATE_CHECKED);
+    lv_obj_add_style(ui_init_button1, &btnselstyle, LV_STATE_FOCUSED | LV_STATE_FOCUS_KEY | LV_STATE_PRESSED | LV_STATE_CHECKED);
 
     ui_welcome_text1 = lv_label_create(ui_init_button1);
     lv_obj_set_width(ui_welcome_text1, LV_SIZE_CONTENT);  /// 1
