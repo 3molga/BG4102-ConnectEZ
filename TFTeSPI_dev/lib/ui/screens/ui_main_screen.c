@@ -4,6 +4,7 @@
 // Project name: UI_test
 
 #include "../ui.h"
+#include <Arduino.h>
 
 void ui_main_screen_screen_init(void)
 {
@@ -43,6 +44,7 @@ void ui_main_screen_screen_init(void)
     lv_obj_set_style_border_width(ui_mainpanel, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_outline_width(ui_mainpanel, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_outline_pad(ui_mainpanel, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_pad_all(ui_mainpanel, 8, 0);
 
     // Custom buttonmatrix code
     static const char *btnm_map[] = {"1", "2", "\n",
@@ -52,10 +54,6 @@ void ui_main_screen_screen_init(void)
 
     buttonmatrixtest = lv_btnmatrix_create(ui_mainpanel);
 
-    // Apply buttonmatrix styles
-    lv_obj_add_style(buttonmatrixtest, &btnmatrix_mainstyle, 0);
-    lv_obj_add_style(buttonmatrixtest, &btnmatrix_btnstyle, LV_PART_ITEMS);
-
     // Apply controls
     lv_btnmatrix_set_map(buttonmatrixtest, btnm_map);
     lv_btnmatrix_set_btn_ctrl_all(buttonmatrixtest, LV_BTNMATRIX_CTRL_NO_REPEAT);
@@ -63,10 +61,30 @@ void ui_main_screen_screen_init(void)
     lv_btnmatrix_set_one_checked(buttonmatrixtest, true);
     lv_btnmatrix_set_selected_btn(buttonmatrixtest, 0); // Start with first button selected
 
-    // Add buttonmatrixtest to joystick input
+    // Apply buttonmatrix styles
+    lv_obj_add_style(buttonmatrixtest, &btnmatrix_mainstyle, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_add_style(buttonmatrixtest, &btnmatrix_mainstyle, LV_PART_MAIN | LV_STATE_FOCUS_KEY); // Remove the annoying outline
+    lv_obj_add_style(buttonmatrixtest, &btnmatrix_btndefstyle, LV_PART_ITEMS | LV_STATE_DEFAULT);
+    lv_obj_add_style(buttonmatrixtest, &btnmatrix_btnselstyle, LV_PART_ITEMS | LV_STATE_FOCUS_KEY);
+    lv_obj_add_style(buttonmatrixtest, &btnmatrix_btnprestyle, LV_PART_ITEMS | LV_STATE_PRESSED | LV_STATE_CHECKED);
+
+    // Create btnmatrix grp
     btnmatrixgrp = lv_group_create();
     lv_group_add_obj(btnmatrixgrp, buttonmatrixtest);
-    lv_indev_set_group(indev_joystick, btnmatrixgrp);
 
     lv_obj_add_event_cb(ui_returntostart, ui_event_returntostart, LV_EVENT_ALL, NULL);
+}
+
+// Attempt at setting indev 
+void ui_main_screen_setindev()
+{
+    // Add buttonmatrixtest to joystick input
+    lv_indev_set_group(indev_joystick, btnmatrixgrp);
+    // lv_btnmatrix_set_selected_btn(buttonmatrixtest, 0);
+}
+
+// Attempt at clearing indev
+void ui_main_screen_delindev()
+{
+    lv_indev_set_group(indev_joystick, NULL);
 }

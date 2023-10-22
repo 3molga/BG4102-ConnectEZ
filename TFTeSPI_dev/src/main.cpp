@@ -20,6 +20,7 @@ static const uint16_t screenHeight = 240;
 static lv_disp_draw_buf_t draw_buf;
 static lv_color_t buf1[screenHeight * 10];
 static lv_color_t buf2[screenHeight * 10];
+lv_indev_t * indev_joystick;
 
 uint8_t debugCount;
 

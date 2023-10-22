@@ -42,25 +42,8 @@ void ui_start_screen_screen_init(void)
     lv_obj_set_x(ui_init_button1, 0);
     lv_obj_set_y(ui_init_button1, lv_pct(30));
     lv_obj_set_align(ui_init_button1, LV_ALIGN_CENTER);
-    lv_obj_clear_flag(ui_init_button1, LV_OBJ_FLAG_PRESS_LOCK | LV_OBJ_FLAG_CLICK_FOCUSABLE | LV_OBJ_FLAG_GESTURE_BUBBLE | LV_OBJ_FLAG_SNAPPABLE | LV_OBJ_FLAG_SCROLLABLE | LV_OBJ_FLAG_SCROLL_ELASTIC | LV_OBJ_FLAG_SCROLL_MOMENTUM | LV_OBJ_FLAG_SCROLL_CHAIN); /// Flags
-    lv_obj_set_scrollbar_mode(ui_init_button1, LV_SCROLLBAR_MODE_OFF);
-    lv_obj_set_style_bg_color(ui_init_button1, lv_color_hex(0x3044FA), LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_set_style_bg_opa(ui_init_button1, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_set_style_border_color(ui_init_button1, lv_color_hex(0x000000), LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_set_style_border_opa(ui_init_button1, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_set_style_border_width(ui_init_button1, 2, LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_set_style_shadow_width(ui_init_button1, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_set_style_shadow_spread(ui_init_button1, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_set_style_shadow_ofs_x(ui_init_button1, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_set_style_shadow_ofs_y(ui_init_button1, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_set_style_bg_color(ui_init_button1, lv_color_hex(0x3044FA), LV_PART_MAIN | LV_STATE_CHECKED);
-    lv_obj_set_style_bg_opa(ui_init_button1, 255, LV_PART_MAIN | LV_STATE_CHECKED);
-    lv_obj_set_style_bg_color(ui_init_button1, lv_color_hex(0x000AC2), LV_PART_MAIN | LV_STATE_PRESSED);
-    lv_obj_set_style_bg_opa(ui_init_button1, 255, LV_PART_MAIN | LV_STATE_PRESSED);
-    lv_obj_set_style_border_color(ui_init_button1, lv_color_hex(0x000000), LV_PART_MAIN | LV_STATE_PRESSED);
-    lv_obj_set_style_border_opa(ui_init_button1, 255, LV_PART_MAIN | LV_STATE_PRESSED);
-    lv_obj_set_style_border_width(ui_init_button1, 3, LV_PART_MAIN | LV_STATE_PRESSED);
-    lv_obj_set_style_border_side(ui_init_button1, LV_BORDER_SIDE_FULL, LV_PART_MAIN | LV_STATE_PRESSED);
+    lv_obj_add_style(ui_init_button1, &btndefstyle, 0);
+    lv_obj_add_style(ui_init_button1, &btnselstyle, LV_STATE_FOCUS_KEY | LV_STATE_PRESSED | LV_STATE_CHECKED);
 
     ui_welcome_text1 = lv_label_create(ui_init_button1);
     lv_obj_set_width(ui_welcome_text1, LV_SIZE_CONTENT);  /// 1
@@ -73,5 +56,22 @@ void ui_start_screen_screen_init(void)
     lv_obj_set_style_border_opa(ui_welcome_text1, 255, LV_PART_MAIN | LV_STATE_PRESSED);
     lv_obj_set_style_border_width(ui_welcome_text1, 1, LV_PART_MAIN | LV_STATE_PRESSED);
 
+    // Create btn group
+    btngrp = lv_group_create();
+    lv_group_add_obj(btngrp, ui_init_button1);
+
     lv_obj_add_event_cb(ui_init_button1, ui_event_init_button1, LV_EVENT_ALL, NULL);
+}
+
+// Attempt at setting indev 
+void ui_start_screen_setindev()
+{
+    // Add buttonmatrixtest to joystick input
+    lv_indev_set_group(indev_joystick, btngrp);
+}
+
+// Attempt at clearing indev
+void ui_start_screen_delindev()
+{
+    lv_indev_set_group(indev_joystick, NULL);
 }

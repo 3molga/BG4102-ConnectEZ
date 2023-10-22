@@ -7,10 +7,13 @@
 #include "ui_helpers.h"
 
 ///////////////////// VARIABLES ////////////////////
+lv_indev_t *indev_joystick;
 
 // SCREEN: ui_start_screen
 void ui_start_screen_screen_init(void);
 void ui_event_init_button1(lv_event_t *e);
+void ui_start_screen_setindev();
+void ui_start_screen_delindev();
 
 lv_obj_t *ui_start_screen;
 lv_obj_t *ui_bg;
@@ -18,20 +21,27 @@ lv_obj_t *ui_mainlogo;
 lv_obj_t *ui_development_label;
 lv_obj_t *ui_init_button1;
 lv_obj_t *ui_welcome_text1;
+lv_group_t *btngrp;
+
+lv_style_t btndefstyle;
+lv_style_t btnselstyle;
 
 // SCREEN: ui_main_screen
 void ui_main_screen_screen_init(void);
 void ui_event_returntostart(lv_event_t *e);
+void ui_main_screen_setindev();
+void ui_main_screen_delindev();
 
 lv_obj_t *ui_main_screen;
 lv_obj_t *ui_returntostart;
 lv_obj_t *ui_mainpanel;
 lv_obj_t *buttonmatrixtest;
 lv_group_t *btnmatrixgrp;
-lv_indev_t *indev_joystick;
 
 lv_style_t btnmatrix_mainstyle;
-lv_style_t btnmatrix_btnstyle;
+lv_style_t btnmatrix_btndefstyle;
+lv_style_t btnmatrix_btnselstyle;
+lv_style_t btnmatrix_btnprestyle;
 
 ///////////////////// TEST LVGL SETTINGS ////////////////////
 #if LV_COLOR_DEPTH != 16
@@ -50,7 +60,9 @@ void ui_event_init_button1(lv_event_t *e)
     lv_obj_t *target = lv_event_get_target(e);
     if (event_code == LV_EVENT_CLICKED)
     {
-        _ui_screen_change(&ui_main_screen, LV_SCR_LOAD_ANIM_FADE_ON, 500, 0, &ui_main_screen_screen_init);
+        // ui_start_screen_delindev();
+        _ui_screen_change(&ui_main_screen, LV_SCR_LOAD_ANIM_FADE_ON, 100, 0, &ui_main_screen_screen_init);
+        ui_main_screen_setindev();
         _ui_screen_delete(&ui_start_screen);
     }
 }
@@ -60,7 +72,9 @@ void ui_event_returntostart(lv_event_t *e)
     lv_obj_t *target = lv_event_get_target(e);
     if (event_code == LV_EVENT_CLICKED)
     {
-        _ui_screen_change(&ui_start_screen, LV_SCR_LOAD_ANIM_FADE_ON, 500, 0, &ui_start_screen_screen_init);
+        // ui_main_screen_delindev();
+        _ui_screen_change(&ui_start_screen, LV_SCR_LOAD_ANIM_FADE_ON, 100, 0, &ui_start_screen_screen_init);
+        ui_start_screen_setindev();
         _ui_screen_delete(&ui_main_screen);
     }
 }
@@ -75,18 +89,67 @@ void ui_init(void)
     lv_theme_t *theme = lv_theme_default_init(dispp, lv_palette_main(LV_PALETTE_BLUE), lv_palette_main(LV_PALETTE_RED), false, LV_FONT_DEFAULT);
     lv_disp_set_theme(dispp, theme);
 
-    // Set buttonmatrix styles
-    // Can't use const styles (that breaks for whatever dumbfk reason)
-    // so use standard styles but make only 1 that applies to every buttonmatrix
-    lv_style_init(&btnmatrix_mainstyle);
-    lv_style_set_bg_opa(&btnmatrix_mainstyle, 0);          // Make BG transparent
-    lv_style_set_border_opa(&btnmatrix_mainstyle, 0);      // Make border transparent
-    lv_style_set_width(&btnmatrix_mainstyle, lv_pct(100)); // Set width to 100% of parent
-
-    lv_style_init(&btnmatrix_mainstyle);
-    lv_style_set_height(&btnmatrix_btnstyle, lv_pct(20)); // Try this value for now?
+    init_styles();
 
     ui_start_screen_screen_init();
     ui_main_screen_screen_init();
+    ui_start_screen_setindev();
     lv_disp_load_scr(ui_start_screen);
+
+    /*
+    ui_start_screen_screen_init();
+    ui_start_screen_setindev();
+    lv_disp_load_scr(ui_start_screen);
+    */
+}
+
+void init_styles()
+{
+    // Initiate styles
+    // Default button style (wrt background and borders)
+    lv_style_init(&btndefstyle);
+    lv_style_set_bg_color(&btndefstyle, lv_color_hex(0x3044FA));
+    lv_style_set_border_width(&btndefstyle, 2);
+    lv_style_set_border_color(&btndefstyle, lv_color_hex(0x000000));
+    lv_style_set_outline_width(&btndefstyle, 0);
+    lv_style_set_shadow_width(&btndefstyle, 0);
+
+    // btn style when "hovered"/selected by joystick
+    lv_style_init(&btnselstyle);
+    lv_style_set_border_width(&btnselstyle, 4);
+    lv_style_set_outline_width(&btnselstyle, 0);
+
+    // Default btnmatrix background style - shouldn't ever change
+    lv_style_init(&btnmatrix_mainstyle);
+    lv_style_set_bg_opa(&btnmatrix_mainstyle, 0);           // Make BG transparent
+    lv_style_set_border_width(&btnmatrix_mainstyle, 0);     // Make border transparent
+    lv_style_set_outline_width(&btnmatrix_mainstyle, 0);    // Make outline transparent
+    lv_style_set_width(&btnmatrix_mainstyle, lv_pct(100));  // Set width to 100% of parent
+    lv_style_set_height(&btnmatrix_mainstyle, lv_pct(100)); // Set height to 100% of parent
+    lv_style_set_pad_top(&btnmatrix_mainstyle, 0);          // Set paddings to 03 px
+    lv_style_set_pad_bottom(&btnmatrix_mainstyle, 0);
+    lv_style_set_pad_right(&btnmatrix_mainstyle, 0);
+    lv_style_set_pad_left(&btnmatrix_mainstyle, 0);
+
+    // Default btnmatrix btn style
+    lv_style_init(&btnmatrix_btndefstyle);
+    lv_style_set_shadow_width(&btnmatrix_btndefstyle, 0);                     // Remove shadow
+    lv_style_set_border_width(&btnmatrix_btndefstyle, 0);                     // Remove border
+    lv_style_set_outline_width(&btnmatrix_btndefstyle, 0);                    // Remove outline
+    lv_style_set_bg_color(&btnmatrix_btndefstyle, lv_color_make(33, 40, 63)); // Internal button color
+    lv_style_set_text_color(&btnmatrix_btndefstyle, lv_color_make(255, 255, 255));
+    lv_style_set_pad_top(&btnmatrix_btndefstyle, 3); // Add padding of 3 px on all sides
+    lv_style_set_pad_bottom(&btnmatrix_btndefstyle, 3);
+    lv_style_set_pad_right(&btnmatrix_btndefstyle, 3);
+    lv_style_set_pad_left(&btnmatrix_btndefstyle, 3);
+
+    // btnmatrix btn style when "hovered"/selected by joystick
+    lv_style_init(&btnmatrix_btnselstyle);
+    lv_style_set_border_width(&btnmatrix_btnselstyle, 4);                            // Add 2-pixel-wide outline
+    lv_style_set_border_color(&btnmatrix_btnselstyle, lv_color_make(128, 128, 128)); // Add grey outline
+    lv_style_set_outline_width(&btnmatrix_btnselstyle, 0);
+
+    // btnmatrix btn style when "selected"/pressed (and after being selected)
+    lv_style_init(&btnmatrix_btnprestyle);
+    lv_style_set_bg_color(&btnmatrix_btnprestyle, lv_color_make(56, 69, 255)); // Make bg color lighter
 }
