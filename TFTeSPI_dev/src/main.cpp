@@ -1,7 +1,5 @@
 /* Test file to try running the UI
 TESTING TFT_eSPI LIBRARY*/
-#define LV_CONF_SKIP
-
 #include <iostream>
 #include <vector>
 #include <string>
@@ -167,11 +165,11 @@ void joystick_read(lv_indev_drv_t *indev_driver, lv_indev_data_t *data)
   uint8_t bufferElement;
   joystick_dev.returnBufferElement(&bufferElement);
   uint8_t action = 0;
+  data->continue_reading = 1;
 
   // If joystick is triggered, get earliest user input
   if (bufferElement)
   {
-    data->continue_reading = 1;
     data->state = LV_INDEV_STATE_PR;
 
     /*Debugging:*/ 

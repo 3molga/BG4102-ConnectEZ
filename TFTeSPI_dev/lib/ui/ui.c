@@ -11,34 +11,31 @@
 
 // SCREEN: ui_start_screen
 void ui_start_screen_screen_init(void);
+void ui_event_init_button1( lv_event_t * e);
+
 lv_obj_t *ui_start_screen;
 lv_obj_t *ui_bg;
 lv_obj_t *ui_main_logo;
 lv_obj_t *ui_development_label;
-void ui_event_init_button1( lv_event_t * e);
 lv_obj_t *ui_init_button1;
 lv_obj_t *ui_welcome_text1;
 
-
 // SCREEN: ui_main_screen
 void ui_main_screen_screen_init(void);
-lv_obj_t *ui_main_screen;
 void ui_event_returntostart( lv_event_t * e);
+
+lv_obj_t *ui_main_screen;
 lv_obj_t *ui_returntostart;
 lv_obj_t *ui_mainpanel;
-/*
-lv_obj_t *ui_testbutton1;
-lv_obj_t *ui_testbutton2;
-lv_obj_t *ui_testbutton3;
-lv_obj_t *ui_testbutton4;
-lv_obj_t *ui_testbutton5;
-lv_obj_t *ui_testbutton6;
-lv_group_t *ui_testgroupbuttons;
-*/
 lv_obj_t *buttonmatrixtest;
 lv_group_t *btnmatrixgrp;
 lv_obj_t *ui____initial_actions0;
 lv_indev_t *indev_joystick;
+
+const lv_style_t *btnmatrix_mainstyle;
+const lv_style_t *btnmatrix_btnstyle;
+const lv_style_const_prop_t *btnmatrix_mainstyle_props;
+const lv_style_const_prop_t *btnmatrix_btnstyle_props;
 
 ///////////////////// TEST LVGL SETTINGS ////////////////////
 #if LV_COLOR_DEPTH != 16

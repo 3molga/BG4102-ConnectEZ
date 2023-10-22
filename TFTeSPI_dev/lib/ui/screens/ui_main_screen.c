@@ -44,56 +44,6 @@ lv_obj_set_style_border_width(ui_mainpanel, 0, LV_PART_MAIN| LV_STATE_DEFAULT);
 lv_obj_set_style_outline_width(ui_mainpanel, 0, LV_PART_MAIN| LV_STATE_DEFAULT);
 lv_obj_set_style_outline_pad(ui_mainpanel, 0, LV_PART_MAIN| LV_STATE_DEFAULT);
 
-/*
-ui_testbutton1 = lv_btn_create(ui_mainpanel);
-lv_obj_set_width( ui_testbutton1, lv_pct(45));
-lv_obj_set_height( ui_testbutton1, lv_pct(30));
-lv_obj_set_x( ui_testbutton1, lv_pct(2) );
-lv_obj_set_y( ui_testbutton1, lv_pct(-1) );
-lv_obj_clear_flag( ui_testbutton1, LV_OBJ_FLAG_PRESS_LOCK | LV_OBJ_FLAG_CLICK_FOCUSABLE | LV_OBJ_FLAG_GESTURE_BUBBLE | LV_OBJ_FLAG_SNAPPABLE | LV_OBJ_FLAG_SCROLLABLE | LV_OBJ_FLAG_SCROLL_ELASTIC | LV_OBJ_FLAG_SCROLL_MOMENTUM | LV_OBJ_FLAG_SCROLL_CHAIN );    /// Flags
-lv_obj_set_style_border_width(ui_testbutton1, 1, LV_PART_MAIN| LV_STATE_DEFAULT);
-
-ui_testbutton2 = lv_btn_create(ui_mainpanel);
-lv_obj_set_width( ui_testbutton2, lv_pct(45));
-lv_obj_set_height( ui_testbutton2, lv_pct(30));
-lv_obj_set_x( ui_testbutton2, lv_pct(55) );
-lv_obj_set_y( ui_testbutton2, lv_pct(-1) );
-lv_obj_clear_flag( ui_testbutton2, LV_OBJ_FLAG_PRESS_LOCK | LV_OBJ_FLAG_CLICK_FOCUSABLE | LV_OBJ_FLAG_GESTURE_BUBBLE | LV_OBJ_FLAG_SNAPPABLE | LV_OBJ_FLAG_SCROLLABLE | LV_OBJ_FLAG_SCROLL_ELASTIC | LV_OBJ_FLAG_SCROLL_MOMENTUM | LV_OBJ_FLAG_SCROLL_CHAIN );    /// Flags
-lv_obj_set_style_border_width(ui_testbutton2, 1, LV_PART_MAIN| LV_STATE_DEFAULT);
-
-ui_testbutton3 = lv_btn_create(ui_mainpanel);
-lv_obj_set_width( ui_testbutton3, lv_pct(45));
-lv_obj_set_height( ui_testbutton3, lv_pct(30));
-lv_obj_set_x( ui_testbutton3, lv_pct(55) );
-lv_obj_set_y( ui_testbutton3, lv_pct(35) );
-lv_obj_clear_flag( ui_testbutton3, LV_OBJ_FLAG_PRESS_LOCK | LV_OBJ_FLAG_CLICK_FOCUSABLE | LV_OBJ_FLAG_GESTURE_BUBBLE | LV_OBJ_FLAG_SNAPPABLE | LV_OBJ_FLAG_SCROLLABLE | LV_OBJ_FLAG_SCROLL_ELASTIC | LV_OBJ_FLAG_SCROLL_MOMENTUM | LV_OBJ_FLAG_SCROLL_CHAIN );    /// Flags
-lv_obj_set_style_border_width(ui_testbutton3, 1, LV_PART_MAIN| LV_STATE_DEFAULT);
-
-ui_testbutton4 = lv_btn_create(ui_mainpanel);
-lv_obj_set_width( ui_testbutton4, lv_pct(45));
-lv_obj_set_height( ui_testbutton4, lv_pct(30));
-lv_obj_set_x( ui_testbutton4, lv_pct(2) );
-lv_obj_set_y( ui_testbutton4, lv_pct(35) );
-lv_obj_clear_flag( ui_testbutton4, LV_OBJ_FLAG_PRESS_LOCK | LV_OBJ_FLAG_CLICK_FOCUSABLE | LV_OBJ_FLAG_GESTURE_BUBBLE | LV_OBJ_FLAG_SNAPPABLE | LV_OBJ_FLAG_SCROLLABLE | LV_OBJ_FLAG_SCROLL_ELASTIC | LV_OBJ_FLAG_SCROLL_MOMENTUM | LV_OBJ_FLAG_SCROLL_CHAIN );    /// Flags
-lv_obj_set_style_border_width(ui_testbutton4, 1, LV_PART_MAIN| LV_STATE_DEFAULT);
-
-ui_testbutton5 = lv_btn_create(ui_mainpanel);
-lv_obj_set_width( ui_testbutton5, lv_pct(45));
-lv_obj_set_height( ui_testbutton5, lv_pct(30));
-lv_obj_set_x( ui_testbutton5, lv_pct(2) );
-lv_obj_set_y( ui_testbutton5, lv_pct(70) );
-lv_obj_clear_flag( ui_testbutton5, LV_OBJ_FLAG_PRESS_LOCK | LV_OBJ_FLAG_CLICK_FOCUSABLE | LV_OBJ_FLAG_GESTURE_BUBBLE | LV_OBJ_FLAG_SNAPPABLE | LV_OBJ_FLAG_SCROLLABLE | LV_OBJ_FLAG_SCROLL_ELASTIC | LV_OBJ_FLAG_SCROLL_MOMENTUM | LV_OBJ_FLAG_SCROLL_CHAIN );    /// Flags
-lv_obj_set_style_border_width(ui_testbutton5, 1, LV_PART_MAIN| LV_STATE_DEFAULT);
-
-ui_testbutton6 = lv_btn_create(ui_mainpanel);
-lv_obj_set_width( ui_testbutton6, lv_pct(45));
-lv_obj_set_height( ui_testbutton6, lv_pct(30));
-lv_obj_set_x( ui_testbutton6, lv_pct(55) );
-lv_obj_set_y( ui_testbutton6, lv_pct(70) );
-lv_obj_clear_flag( ui_testbutton6, LV_OBJ_FLAG_PRESS_LOCK | LV_OBJ_FLAG_CLICK_FOCUSABLE | LV_OBJ_FLAG_GESTURE_BUBBLE | LV_OBJ_FLAG_SNAPPABLE | LV_OBJ_FLAG_SCROLLABLE | LV_OBJ_FLAG_SCROLL_ELASTIC | LV_OBJ_FLAG_SCROLL_MOMENTUM | LV_OBJ_FLAG_SCROLL_CHAIN );    /// Flags
-lv_obj_set_style_border_width(ui_testbutton6, 1, LV_PART_MAIN| LV_STATE_DEFAULT);
-*/
-
 // Custom buttonmatrix code
 static const char * btnm_map[] = {"1", "2", "\n",
                                   "3", "4", "\n",
@@ -106,24 +56,29 @@ lv_btnmatrix_set_map(buttonmatrixtest, btnm_map);
 lv_btnmatrix_set_btn_ctrl_all(buttonmatrixtest, LV_BTNMATRIX_CTRL_NO_REPEAT);
 lv_btnmatrix_set_btn_ctrl_all(buttonmatrixtest, LV_BTNMATRIX_CTRL_CHECKABLE);
 lv_btnmatrix_set_one_checked(buttonmatrixtest, true);
-lv_obj_set_width(buttonmatrixtest, lv_pct(100));
+
+// Set buttonmatrix styles
+const lv_style_const_prop_t btnmatrix_mainstyle_props[] = {
+    LV_STYLE_CONST_WIDTH(lv_pct(100)), // Set width to 100%
+    LV_STYLE_CONST_BG_OPA(0), // Set background opacity to 0
+    LV_STYLE_CONST_BORDER_OPA(0) // Set border opacity to 0
+};
+
+const lv_style_const_prop_t btnmatrix_btnstyle_props[] = {
+    LV_STYLE_CONST_HEIGHT(60)
+};
+
+LV_STYLE_CONST_INIT(btnmatrix_mainstyle, btnmatrix_mainstyle_props);
+LV_STYLE_CONST_INIT(btnmatrix_btnstyle, btnmatrix_btnstyle_props);
+
+// Apply buttonmatrix styles
+lv_obj_add_style(buttonmatrixtest, &btnmatrix_mainstyle, LV_PART_MAIN);
+lv_obj_add_style(buttonmatrixtest, &btnmatrix_btnstyle, LV_PART_ITEMS);
 
 // Add buttonmatrixtest to joystick input
 btnmatrixgrp = lv_group_create();
 lv_group_add_obj(btnmatrixgrp, buttonmatrixtest);
 lv_indev_set_group(indev_joystick, btnmatrixgrp);
-
-// Try group if this doesn't work?
-/*
-lv_group_t * ui_testgroupbuttons = lv_group_create();
-lv_group_add_obj(ui_testgroupbuttons, ui_testbutton1);
-lv_group_add_obj(ui_testgroupbuttons, ui_testbutton2);
-lv_group_add_obj(ui_testgroupbuttons, ui_testbutton3);
-lv_group_add_obj(ui_testgroupbuttons, ui_testbutton4);
-lv_group_add_obj(ui_testgroupbuttons, ui_testbutton5);
-lv_group_add_obj(ui_testgroupbuttons, ui_testbutton6);
-*/
-
 
 lv_obj_add_event_cb(ui_returntostart, ui_event_returntostart, LV_EVENT_ALL, NULL);
 

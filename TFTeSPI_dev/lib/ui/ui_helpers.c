@@ -82,10 +82,6 @@ void _ui_slider_increment( lv_obj_t *target, int val, int anm)
    lv_event_send(target,LV_EVENT_VALUE_CHANGED, 0);
 }
 
-void _ui_keyboard_set_target( lv_obj_t *keyboard, lv_obj_t *textarea) 
-{
-   lv_keyboard_set_textarea(keyboard, textarea);
-}
 
 void _ui_flag_modify( lv_obj_t *target, int32_t flag, int value)
 {
@@ -244,11 +240,4 @@ void _ui_checked_set_text_value( lv_obj_t *trg, lv_obj_t *src, const char *txt_o
     else lv_label_set_text(trg,txt_off);
 }
 
-void _ui_spinbox_step(lv_obj_t * target, int val)
-{
-	if(val > 0) lv_spinbox_increment(target);
-	else lv_spinbox_decrement(target);
-
-	lv_event_send(target,LV_EVENT_VALUE_CHANGED, 0);
-}
 
