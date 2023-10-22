@@ -33,7 +33,7 @@ void ui_event_init_button1( lv_event_t * e);
 
 extern lv_obj_t *ui_start_screen;
 extern lv_obj_t *ui_bg;
-extern lv_obj_t *ui_main_logo;
+extern lv_obj_t *ui_mainlogo;
 extern lv_obj_t *ui_development_label;
 extern lv_obj_t *ui_init_button1;
 extern lv_obj_t *ui_welcome_text1;
@@ -51,17 +51,12 @@ extern lv_obj_t *buttonmatrixtest;
 extern lv_group_t *btnmatrixgrp;
 extern lv_obj_t *ui____initial_actions0;
 extern lv_indev_t *indev_joystick;
-extern const lv_style_t *btnmatrix_mainstyle;
-extern const lv_style_t *btnmatrix_btnstyle;
-extern const lv_style_const_prop_t *btnmatrix_mainstyle_props;
-extern const lv_style_const_prop_t *btnmatrix_btnstyle_props;
-
 
 LV_IMG_DECLARE( ui_img_1_bg_png);   // assets\1_bg.png
 LV_IMG_DECLARE( ui_img_logo_png);   // assets\logo.png
 
-
-
+lv_style_t btnmatrix_mainstyle;
+lv_style_t btnmatrix_btnstyle;
 void ui_init(void);
 
 #ifdef __cplusplus

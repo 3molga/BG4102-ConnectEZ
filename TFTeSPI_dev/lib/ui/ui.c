@@ -8,73 +8,85 @@
 
 ///////////////////// VARIABLES ////////////////////
 
-
 // SCREEN: ui_start_screen
 void ui_start_screen_screen_init(void);
-void ui_event_init_button1( lv_event_t * e);
+void ui_event_init_button1(lv_event_t *e);
 
 lv_obj_t *ui_start_screen;
 lv_obj_t *ui_bg;
-lv_obj_t *ui_main_logo;
+lv_obj_t *ui_mainlogo;
 lv_obj_t *ui_development_label;
 lv_obj_t *ui_init_button1;
 lv_obj_t *ui_welcome_text1;
 
 // SCREEN: ui_main_screen
 void ui_main_screen_screen_init(void);
-void ui_event_returntostart( lv_event_t * e);
+void ui_event_returntostart(lv_event_t *e);
 
 lv_obj_t *ui_main_screen;
 lv_obj_t *ui_returntostart;
 lv_obj_t *ui_mainpanel;
 lv_obj_t *buttonmatrixtest;
 lv_group_t *btnmatrixgrp;
-lv_obj_t *ui____initial_actions0;
 lv_indev_t *indev_joystick;
 
-const lv_style_t *btnmatrix_mainstyle;
-const lv_style_t *btnmatrix_btnstyle;
-const lv_style_const_prop_t *btnmatrix_mainstyle_props;
-const lv_style_const_prop_t *btnmatrix_btnstyle_props;
+lv_style_t btnmatrix_mainstyle;
+lv_style_t btnmatrix_btnstyle;
 
 ///////////////////// TEST LVGL SETTINGS ////////////////////
 #if LV_COLOR_DEPTH != 16
-    #error "LV_COLOR_DEPTH should be 16bit to match SquareLine Studio's settings"
+#error "LV_COLOR_DEPTH should be 16bit to match SquareLine Studio's settings"
 #endif
-#if LV_COLOR_16_SWAP !=0
-    #error "LV_COLOR_16_SWAP should be 0 to match SquareLine Studio's settings"
+#if LV_COLOR_16_SWAP != 0
+#error "LV_COLOR_16_SWAP should be 0 to match SquareLine Studio's settings"
 #endif
 
 ///////////////////// ANIMATIONS ////////////////////
 
 ///////////////////// FUNCTIONS ////////////////////
-void ui_event_init_button1( lv_event_t * e) {
-    lv_event_code_t event_code = lv_event_get_code(e);lv_obj_t * target = lv_event_get_target(e);
-if ( event_code == LV_EVENT_CLICKED) {
-      _ui_screen_change( &ui_main_screen, LV_SCR_LOAD_ANIM_FADE_ON, 500, 0, &ui_main_screen_screen_init);
-      _ui_screen_delete( &ui_start_screen);
+void ui_event_init_button1(lv_event_t *e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+    lv_obj_t *target = lv_event_get_target(e);
+    if (event_code == LV_EVENT_CLICKED)
+    {
+        _ui_screen_change(&ui_main_screen, LV_SCR_LOAD_ANIM_FADE_ON, 500, 0, &ui_main_screen_screen_init);
+        _ui_screen_delete(&ui_start_screen);
+    }
 }
-}
-void ui_event_returntostart( lv_event_t * e) {
-    lv_event_code_t event_code = lv_event_get_code(e);lv_obj_t * target = lv_event_get_target(e);
-if ( event_code == LV_EVENT_CLICKED) {
-      _ui_screen_change( &ui_start_screen, LV_SCR_LOAD_ANIM_FADE_ON, 500, 0, &ui_start_screen_screen_init);
-      _ui_screen_delete( &ui_main_screen);
-}
+void ui_event_returntostart(lv_event_t *e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+    lv_obj_t *target = lv_event_get_target(e);
+    if (event_code == LV_EVENT_CLICKED)
+    {
+        _ui_screen_change(&ui_start_screen, LV_SCR_LOAD_ANIM_FADE_ON, 500, 0, &ui_start_screen_screen_init);
+        _ui_screen_delete(&ui_main_screen);
+    }
 }
 
 ///////////////////// SCREENS ////////////////////
 
-void ui_init( void )
-{LV_EVENT_GET_COMP_CHILD = lv_event_register_id();
+void ui_init(void)
+{
+    LV_EVENT_GET_COMP_CHILD = lv_event_register_id();
 
-lv_disp_t *dispp = lv_disp_get_default();
-lv_theme_t *theme = lv_theme_default_init(dispp, lv_palette_main(LV_PALETTE_BLUE), lv_palette_main(LV_PALETTE_RED), false, LV_FONT_DEFAULT);
-lv_disp_set_theme(dispp, theme);
-ui_start_screen_screen_init();
-ui_main_screen_screen_init();
-ui____initial_actions0 = lv_obj_create(NULL);
-lv_disp_load_scr( ui_start_screen);
+    lv_disp_t *dispp = lv_disp_get_default();
+    lv_theme_t *theme = lv_theme_default_init(dispp, lv_palette_main(LV_PALETTE_BLUE), lv_palette_main(LV_PALETTE_RED), false, LV_FONT_DEFAULT);
+    lv_disp_set_theme(dispp, theme);
 
+    // Set buttonmatrix styles
+    // Can't use const styles (that breaks for whatever dumbfk reason)
+    // so use standard styles but make only 1 that applies to every buttonmatrix
+    lv_style_init(&btnmatrix_mainstyle);
+    lv_style_set_bg_opa(&btnmatrix_mainstyle, 0);          // Make BG transparent
+    lv_style_set_border_opa(&btnmatrix_mainstyle, 0);      // Make border transparent
+    lv_style_set_width(&btnmatrix_mainstyle, lv_pct(100)); // Set width to 100% of parent
 
+    lv_style_init(&btnmatrix_mainstyle);
+    lv_style_set_height(&btnmatrix_btnstyle, lv_pct(20)); // Try this value for now?
+
+    ui_start_screen_screen_init();
+    ui_main_screen_screen_init();
+    lv_disp_load_scr(ui_start_screen);
 }
