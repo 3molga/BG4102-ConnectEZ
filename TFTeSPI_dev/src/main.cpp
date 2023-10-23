@@ -22,10 +22,9 @@ joystick joystick_dev(13, 12, 1); // X pin, Y pin, buffer use bool
 ezButton button_sel(27);
 ezButton button_esc(28);
 
-// Define LVGL/TFT_eSPI variables and objects
+// Define LVGL/TFT_eSPI variables and declare objects/functions
 static const uint16_t screenWidth = 320;
 static const uint16_t screenHeight = 240;
-static lv_disp_draw_buf_t draw_buf;
 static lv_color_t buf1[screenHeight * 10];
 static lv_color_t buf2[screenHeight * 10];
 static uint8_t const SCREEN_ROTATION = 3;
@@ -35,14 +34,16 @@ XPT2046_Calibrated ts(TS_CS_PIN);
 
 lv_indev_t *indev_joystick;
 lv_indev_t *indev_button;
+static lv_disp_draw_buf_t draw_buf;
 
-// Define LVGL/TFT_eSPI functions
+// Declare LVGL/TFT_eSPI functions
 void display_flush(lv_disp_drv_t *disp, const lv_area_t *area, lv_color_t *color_p);
 void touchpad_read(lv_indev_drv_t *indev_driver, lv_indev_data_t *data);
 void joystick_read(lv_indev_drv_t *indev_driver, lv_indev_data_t *data);
 void button_read(lv_indev_drv_t *indev_driver, lv_indev_data_t *data);
 void button_read_esc(lv_indev_drv_t *indev_driver, lv_indev_data_t *data);
 void touchscreen_cal(XPT2046_Calibrated &touchscreen);
+void lvgl_init_functional_objects();
 
 uint8_t debugCount;
 

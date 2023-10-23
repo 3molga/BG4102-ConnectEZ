@@ -28,26 +28,28 @@ extern "C" {
 #include "ui_events.h"
 
 extern lv_indev_t *indev_joystick;
+extern lv_indev_t *indev_button;
 void init_styles();
+void ui_init(void);
 
 // SCREEN: ui_start_screen
-void ui_start_screen_screen_init(void);
-void ui_event_init_button1( lv_event_t * e);
-void ui_start_screen_setindev();
+void ui_start_screen_init(void);
+void ui_start_screen_setindev(lv_group_t *group);
+void ui_event_init_button( lv_event_t * e);
 
 extern lv_obj_t *ui_start_screen;
 extern lv_obj_t *ui_bg;
 extern lv_obj_t *ui_mainlogo;
 extern lv_obj_t *ui_development_label;
-extern lv_obj_t *ui_init_button1;
-extern lv_obj_t *ui_welcome_text1;
-extern lv_group_t *btngrp;
+extern lv_obj_t *ui_init_button;
+extern lv_obj_t *ui_welcome_text;
+extern lv_group_t *ui_grp_init_button;
 
-extern lv_style_t btndefstyle;
-extern lv_style_t btnselstyle;
+extern lv_style_t ui_btndefstyle;
+extern lv_style_t ui_btnselstyle;
 
 // SCREEN: ui_main_screen
-void ui_main_screen_screen_init(void);
+void ui_main_screen_init(void);
 void ui_main_screen_setindev();
 void ui_event_returntostart( lv_event_t * e);
 
@@ -56,18 +58,16 @@ extern lv_obj_t *ui_returntostart;
 extern lv_obj_t *ui_mainpanel;
 
 // Button matrix stuff
-extern lv_obj_t *buttonmatrixtest;
-extern lv_group_t *btnmatrixgrp;
+extern lv_obj_t *ui_mainpanel_btnmatrix;
+extern lv_group_t *ui_grp_btnmatrix;
 
-extern lv_style_t btnmatrix_mainstyle;
-extern lv_style_t btnmatrix_btndefstyle;
-extern lv_style_t btnmatrix_btnselstyle;
-extern lv_style_t btnmatrix_btnprestyle;
+extern lv_style_t ui_mainpanel_btnmatrix_mainstyle;
+extern lv_style_t ui_mainpanel_btnmatrix_btndefstyle;
+extern lv_style_t ui_mainpanel_btnmatrix_btnselstyle;
+extern lv_style_t ui_mainpanel_btnmatrix_btnprestyle;
 
-LV_IMG_DECLARE( ui_img_1_bg_png);   // assets\1_bg.png
-LV_IMG_DECLARE( ui_img_logo_png);   // assets\logo.png
-
-void ui_init(void);
+LV_IMG_DECLARE(ui_img_1_bg_png);   // assets\1_bg.png
+LV_IMG_DECLARE(ui_img_logo_png);   // assets\logo.png
 
 #ifdef __cplusplus
 } /*extern "C"*/

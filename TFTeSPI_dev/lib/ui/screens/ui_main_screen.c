@@ -5,7 +5,7 @@
 
 #include "../ui.h"
 
-void ui_main_screen_screen_init(void)
+void ui_main_screen_init(void)
 {
     ui_main_screen = lv_obj_create(NULL);
     lv_obj_clear_flag(ui_main_screen, LV_OBJ_FLAG_SCROLLABLE); /// Flags
@@ -51,25 +51,25 @@ void ui_main_screen_screen_init(void)
                                      "5", "6",
                                      ""};
 
-    buttonmatrixtest = lv_btnmatrix_create(ui_mainpanel);
+    ui_mainpanel_btnmatrix = lv_btnmatrix_create(ui_mainpanel);
 
     // Apply controls
-    lv_btnmatrix_set_map(buttonmatrixtest, btnm_map);
-    lv_btnmatrix_set_btn_ctrl_all(buttonmatrixtest, LV_BTNMATRIX_CTRL_NO_REPEAT);
-    lv_btnmatrix_set_btn_ctrl_all(buttonmatrixtest, LV_BTNMATRIX_CTRL_CHECKABLE);
-    lv_btnmatrix_set_one_checked(buttonmatrixtest, true);
-    lv_btnmatrix_set_selected_btn(buttonmatrixtest, 0); // Start with first button selected
+    lv_btnmatrix_set_map(ui_mainpanel_btnmatrix, btnm_map);
+    lv_btnmatrix_set_btn_ctrl_all(ui_mainpanel_btnmatrix, LV_BTNMATRIX_CTRL_NO_REPEAT);
+    lv_btnmatrix_set_btn_ctrl_all(ui_mainpanel_btnmatrix, LV_BTNMATRIX_CTRL_CHECKABLE);
+    lv_btnmatrix_set_one_checked(ui_mainpanel_btnmatrix, true);
+    lv_btnmatrix_set_selected_btn(ui_mainpanel_btnmatrix, 0); // Start with first button selected
 
     // Apply buttonmatrix styles
-    lv_obj_add_style(buttonmatrixtest, &btnmatrix_mainstyle, LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_add_style(buttonmatrixtest, &btnmatrix_mainstyle, LV_PART_MAIN | LV_STATE_FOCUS_KEY); // Remove the annoying outline
-    lv_obj_add_style(buttonmatrixtest, &btnmatrix_btndefstyle, LV_PART_ITEMS | LV_STATE_DEFAULT);
-    lv_obj_add_style(buttonmatrixtest, &btnmatrix_btnselstyle, LV_PART_ITEMS | LV_STATE_FOCUS_KEY);
-    lv_obj_add_style(buttonmatrixtest, &btnmatrix_btnprestyle, LV_PART_ITEMS | LV_STATE_PRESSED | LV_STATE_CHECKED);
+    lv_obj_add_style(ui_mainpanel_btnmatrix, &ui_mainpanel_btnmatrix_mainstyle, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_add_style(ui_mainpanel_btnmatrix, &ui_mainpanel_btnmatrix_mainstyle, LV_PART_MAIN | LV_STATE_FOCUS_KEY); // Remove the annoying outline
+    lv_obj_add_style(ui_mainpanel_btnmatrix, &ui_mainpanel_btnmatrix_btndefstyle, LV_PART_ITEMS | LV_STATE_DEFAULT);
+    lv_obj_add_style(ui_mainpanel_btnmatrix, &ui_mainpanel_btnmatrix_btnselstyle, LV_PART_ITEMS | LV_STATE_FOCUS_KEY);
+    lv_obj_add_style(ui_mainpanel_btnmatrix, &ui_mainpanel_btnmatrix_btnprestyle, LV_PART_ITEMS | LV_STATE_PRESSED | LV_STATE_CHECKED);
 
     // Create btnmatrix grp
-    btnmatrixgrp = lv_group_create();
-    lv_group_add_obj(btnmatrixgrp, buttonmatrixtest);
+    ui_grp_btnmatrix = lv_group_create();
+    lv_group_add_obj(ui_grp_btnmatrix, ui_mainpanel_btnmatrix);
 
     lv_obj_add_event_cb(ui_returntostart, ui_event_returntostart, LV_EVENT_ALL, NULL);
 }
@@ -77,9 +77,9 @@ void ui_main_screen_screen_init(void)
 // Set indev to whatever group it has to be
 void ui_main_screen_setindev(lv_group_t *group)
 {
-    // Add buttonmatrixtest to joystick input
+    // Add ui_mainpanel_btnmatrix to joystick input
     lv_indev_set_group(indev_joystick, group);
 
     // To do: add trigger to reset based on type of group?
-    lv_btnmatrix_set_selected_btn(buttonmatrixtest, 0);
+    lv_btnmatrix_set_selected_btn(ui_mainpanel_btnmatrix, 0);
 }
