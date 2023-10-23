@@ -63,15 +63,9 @@ void ui_start_screen_screen_init(void)
     lv_obj_add_event_cb(ui_init_button1, ui_event_init_button1, LV_EVENT_ALL, NULL);
 }
 
-// Attempt at setting indev 
-void ui_start_screen_setindev()
+// Set indev to whatever group it has to be
+void ui_start_screen_setindev(lv_group_t *group)
 {
     // Add buttonmatrixtest to joystick input
-    lv_indev_set_group(indev_joystick, btngrp);
-}
-
-// Attempt at clearing indev
-void ui_start_screen_delindev()
-{
-    lv_indev_set_group(indev_joystick, NULL);
+    lv_indev_set_group(indev_joystick, group);
 }

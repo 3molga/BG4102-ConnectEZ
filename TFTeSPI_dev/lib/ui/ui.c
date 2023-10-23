@@ -12,8 +12,7 @@ lv_indev_t *indev_joystick;
 // SCREEN: ui_start_screen
 void ui_start_screen_screen_init(void);
 void ui_event_init_button1(lv_event_t *e);
-void ui_start_screen_setindev();
-void ui_start_screen_delindev();
+void ui_start_screen_setindev(lv_group_t *group);
 
 lv_obj_t *ui_start_screen;
 lv_obj_t *ui_bg;
@@ -29,8 +28,7 @@ lv_style_t btnselstyle;
 // SCREEN: ui_main_screen
 void ui_main_screen_screen_init(void);
 void ui_event_returntostart(lv_event_t *e);
-void ui_main_screen_setindev();
-void ui_main_screen_delindev();
+void ui_main_screen_setindev(lv_group_t *group);
 
 lv_obj_t *ui_main_screen;
 lv_obj_t *ui_returntostart;
@@ -60,9 +58,8 @@ void ui_event_init_button1(lv_event_t *e)
     lv_obj_t *target = lv_event_get_target(e);
     if (event_code == LV_EVENT_CLICKED)
     {
-        // ui_start_screen_delindev();
         _ui_screen_change(&ui_main_screen, LV_SCR_LOAD_ANIM_FADE_ON, 100, 0, &ui_main_screen_screen_init);
-        ui_main_screen_setindev();
+        ui_main_screen_setindev(btnmatrixgrp);
         _ui_screen_delete(&ui_start_screen);
     }
 }
@@ -74,7 +71,7 @@ void ui_event_returntostart(lv_event_t *e)
     {
         // ui_main_screen_delindev();
         _ui_screen_change(&ui_start_screen, LV_SCR_LOAD_ANIM_FADE_ON, 100, 0, &ui_start_screen_screen_init);
-        ui_start_screen_setindev();
+        ui_start_screen_setindev(btngrp);
         _ui_screen_delete(&ui_main_screen);
     }
 }
@@ -91,16 +88,11 @@ void ui_init(void)
 
     init_styles();
 
+    // For whatever reason, init-ing the screens in this order seems to work
     ui_start_screen_screen_init();
     ui_main_screen_screen_init();
-    ui_start_screen_setindev();
+    ui_start_screen_setindev(btngrp);
     lv_disp_load_scr(ui_start_screen);
-
-    /*
-    ui_start_screen_screen_init();
-    ui_start_screen_setindev();
-    lv_disp_load_scr(ui_start_screen);
-    */
 }
 
 void init_styles()
@@ -145,11 +137,14 @@ void init_styles()
 
     // btnmatrix btn style when "hovered"/selected by joystick
     lv_style_init(&btnmatrix_btnselstyle);
-    lv_style_set_border_width(&btnmatrix_btnselstyle, 4);                            // Add 2-pixel-wide outline
-    lv_style_set_border_color(&btnmatrix_btnselstyle, lv_color_make(128, 128, 128)); // Add grey outline
+    lv_style_set_border_width(&btnmatrix_btnselstyle, 2);                       // Add 2px-wide border
+    lv_style_set_border_color(&btnmatrix_btnselstyle, lv_color_make(10, 0, 0)); // Add black outline
     lv_style_set_outline_width(&btnmatrix_btnselstyle, 0);
+    lv_style_set_bg_color(&btnmatrix_btnselstyle, lv_color_make(56, 69, 255)); // Make bg color lighter
 
     // btnmatrix btn style when "selected"/pressed (and after being selected)
     lv_style_init(&btnmatrix_btnprestyle);
-    lv_style_set_bg_color(&btnmatrix_btnprestyle, lv_color_make(56, 69, 255)); // Make bg color lighter
+    lv_style_set_bg_color(&btnmatrix_btnprestyle, lv_color_make(56, 69, 255));  // Make bg color lighter
+    lv_style_set_border_width(&btnmatrix_btnselstyle, 3);                       // Add 3px-wide border
+    lv_style_set_border_color(&btnmatrix_btnselstyle, lv_color_make(10, 0, 0)); // Add black outline
 }

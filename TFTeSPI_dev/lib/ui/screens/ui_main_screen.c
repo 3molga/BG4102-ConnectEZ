@@ -4,7 +4,6 @@
 // Project name: UI_test
 
 #include "../ui.h"
-#include <Arduino.h>
 
 void ui_main_screen_screen_init(void)
 {
@@ -75,16 +74,12 @@ void ui_main_screen_screen_init(void)
     lv_obj_add_event_cb(ui_returntostart, ui_event_returntostart, LV_EVENT_ALL, NULL);
 }
 
-// Attempt at setting indev 
-void ui_main_screen_setindev()
+// Set indev to whatever group it has to be
+void ui_main_screen_setindev(lv_group_t *group)
 {
     // Add buttonmatrixtest to joystick input
-    lv_indev_set_group(indev_joystick, btnmatrixgrp);
-    lv_btnmatrix_set_selected_btn(buttonmatrixtest, 0);
-}
+    lv_indev_set_group(indev_joystick, group);
 
-// Attempt at clearing indev
-void ui_main_screen_delindev()
-{
-    lv_indev_set_group(indev_joystick, NULL);
+    // To do: add trigger to reset based on type of group?
+    lv_btnmatrix_set_selected_btn(buttonmatrixtest, 0);
 }

@@ -34,7 +34,6 @@ void init_styles();
 void ui_start_screen_screen_init(void);
 void ui_event_init_button1( lv_event_t * e);
 void ui_start_screen_setindev();
-void ui_start_screen_delindev();
 
 extern lv_obj_t *ui_start_screen;
 extern lv_obj_t *ui_bg;
@@ -50,7 +49,6 @@ extern lv_style_t btnselstyle;
 // SCREEN: ui_main_screen
 void ui_main_screen_screen_init(void);
 void ui_main_screen_setindev();
-void ui_main_screen_delindev();
 void ui_event_returntostart( lv_event_t * e);
 
 extern lv_obj_t *ui_main_screen;
