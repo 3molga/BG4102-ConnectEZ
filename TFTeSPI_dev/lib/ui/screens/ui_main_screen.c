@@ -56,16 +56,16 @@ void ui_main_screen_init(void)
     // Apply controls
     lv_btnmatrix_set_map(ui_mainpanel_btnmatrix, btnm_map);
     lv_btnmatrix_set_btn_ctrl_all(ui_mainpanel_btnmatrix, LV_BTNMATRIX_CTRL_NO_REPEAT);
-    lv_btnmatrix_set_btn_ctrl_all(ui_mainpanel_btnmatrix, LV_BTNMATRIX_CTRL_CHECKABLE);
     lv_btnmatrix_set_one_checked(ui_mainpanel_btnmatrix, true);
     lv_btnmatrix_set_selected_btn(ui_mainpanel_btnmatrix, 0); // Start with first button selected
 
     // Apply buttonmatrix styles
-    lv_obj_add_style(ui_mainpanel_btnmatrix, &ui_mainpanel_btnmatrix_mainstyle, LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_add_style(ui_mainpanel_btnmatrix, &ui_mainpanel_btnmatrix_mainstyle, LV_PART_MAIN | LV_STATE_FOCUS_KEY); // Remove the annoying outline
+    lv_obj_add_style(ui_mainpanel_btnmatrix, &ui_mainpanel_btnmatrix_mainstyle, 0);
+    lv_obj_add_style(ui_mainpanel_btnmatrix, &ui_mainpanel_btnmatrix_mainstyle, LV_PART_MAIN | LV_STATE_DEFAULT | LV_STATE_FOCUS_KEY);
     lv_obj_add_style(ui_mainpanel_btnmatrix, &ui_mainpanel_btnmatrix_btndefstyle, LV_PART_ITEMS | LV_STATE_DEFAULT);
-    lv_obj_add_style(ui_mainpanel_btnmatrix, &ui_mainpanel_btnmatrix_btnselstyle, LV_PART_ITEMS | LV_STATE_FOCUS_KEY);
-    lv_obj_add_style(ui_mainpanel_btnmatrix, &ui_mainpanel_btnmatrix_btnprestyle, LV_PART_ITEMS | LV_STATE_PRESSED | LV_STATE_CHECKED);
+    lv_obj_add_style(ui_mainpanel_btnmatrix, &ui_mainpanel_btnmatrix_btnselstyle, LV_PART_ITEMS | LV_STATE_DEFAULT | LV_STATE_FOCUS_KEY);
+    lv_obj_add_style(ui_mainpanel_btnmatrix, &ui_mainpanel_btnmatrix_btnselstyle, LV_PART_ITEMS | LV_STATE_PRESSED);
+    // lv_obj_add_style(ui_mainpanel_btnmatrix, &ui_mainpanel_btnmatrix_btnprestyle, LV_PART_ITEMS | LV_STATE_PRESSED);
 
     // Create btnmatrix grp
     ui_grp_btnmatrix = lv_group_create();
@@ -77,9 +77,10 @@ void ui_main_screen_init(void)
 // Set indev to whatever group it has to be
 void ui_main_screen_setindev(lv_group_t *group)
 {
-    // Add ui_mainpanel_btnmatrix to joystick input
+ // Add indevs to group
     lv_indev_set_group(indev_joystick, group);
+    lv_indev_set_group(indev_button, group);    
 
-    // To do: add trigger to reset based on type of group?
+    // Reset selected button
     lv_btnmatrix_set_selected_btn(ui_mainpanel_btnmatrix, 0);
 }

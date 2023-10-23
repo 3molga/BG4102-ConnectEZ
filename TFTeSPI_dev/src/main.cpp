@@ -74,6 +74,40 @@ void setup()
   // Init LVGL functional elements in general
   lvgl_init_functional_objects();
 
+  // Init general LVGL stuff
+  lv_init();
+  lv_disp_draw_buf_init(&draw_buf, buf1, buf2, screenHeight * 10);
+
+  // Init LV display
+  static lv_disp_drv_t disp_drv;
+  lv_disp_drv_init(&disp_drv);
+  disp_drv.hor_res = screenWidth;
+  disp_drv.ver_res = screenHeight;
+  disp_drv.flush_cb = display_flush;
+  disp_drv.draw_buf = &draw_buf;
+  lv_disp_drv_register(&disp_drv);
+
+  // Touchpad device
+  static lv_indev_drv_t indev_touchpad;
+  lv_indev_drv_init(&indev_touchpad);
+  indev_touchpad.type = LV_INDEV_TYPE_POINTER;
+  indev_touchpad.read_cb = touchpad_read;
+  lv_indev_drv_register(&indev_touchpad);
+
+  // Joystick device
+  static lv_indev_drv_t indev_joystick_drv;
+  lv_indev_drv_init(&indev_joystick_drv);
+  indev_joystick_drv.type = LV_INDEV_TYPE_KEYPAD;
+  indev_joystick_drv.read_cb = joystick_read;
+  indev_joystick = lv_indev_drv_register(&indev_joystick_drv);
+
+  // Button device (for both sel and esc buttons)
+  static lv_indev_drv_t indev_button_drv;
+  lv_indev_drv_init(&indev_button_drv);
+  indev_button_drv.type = LV_INDEV_TYPE_KEYPAD;
+  indev_button_drv.read_cb = button_read;
+  indev_button = lv_indev_drv_register(&indev_button_drv);
+
   // Init UI elements
   ui_init();
 }
@@ -86,6 +120,16 @@ void loop()
   // Read button inputs
   button_sel.loop();
   button_esc.loop();
+
+  // Debugging
+  if (button_sel.isPressed())
+  {
+    Serial.println("Button pressed");
+  }
+  else if (button_sel.isReleased())
+  {
+    Serial.println("Button released");
+  }
 
   // Call LVGL to do its thing
   lv_timer_handler();
@@ -140,6 +184,9 @@ void joystick_read(lv_indev_drv_t *indev_driver, lv_indev_data_t *data)
   // Read the earliest element of the buffer
   uint8_t bufferElement;
   joystick_dev.returnBufferElement(&bufferElement);
+
+  // Set up
+  static uint8_t last_key_joystick = 0;
   uint8_t action = 0;
   data->continue_reading = 1;
 
@@ -173,6 +220,10 @@ void joystick_read(lv_indev_drv_t *indev_driver, lv_indev_data_t *data)
 
     // Clear said buffer element
     joystick_dev.clearBufferElement();
+    last_key_joystick = action;
+
+    /* Debugging */
+    Serial.printf("Action: %02d \n", action);
   }
   else
   {
@@ -180,40 +231,42 @@ void joystick_read(lv_indev_drv_t *indev_driver, lv_indev_data_t *data)
     data->continue_reading = 0;
   }
 
-  data->key = action;
-
-  /*  Debugging:
-  if (action)
-  {
-    Serial.printf("Action: %02d \n", action);
-  }
-  */
+  data->key = last_key_joystick;
 }
 
 /*  Button callback to read ezButton objects
     Similar to joystick_read, but with only one key
     Assume this one callback is for both sel and esc buttons
-    Also assume that if both buttons are pressed at the same time, nothing happens? */
+    Based on counts instead of isPressed() due to consistency issues */
 void button_read(lv_indev_drv_t *indev_driver, lv_indev_data_t *data)
 {
-  uint8_t action = 0;
+  // Static variables
+  static uint8_t last_key_btn = 0;
+  static unsigned long last_count_sel = 0;
+  static unsigned long last_count_esc = 0;
 
-  if (button_sel.isPressed() && button_esc.isReleased())
+  if (button_sel.getCount() > last_count_sel)
   {
     data->state = LV_INDEV_STATE_PR;
-    action = LV_KEY_ENTER;
-    data->key = action;
+    last_key_btn = LV_KEY_ENTER;
+    last_count_sel = button_sel.getCount();
+
+    // Debugging
+    Serial.println("Action registered");
   }
-  else if (button_esc.isPressed() && button_sel.isReleased())
+  else if (button_esc.getCount() > last_count_sel)
   {
     data->state = LV_INDEV_STATE_PR;
-    action = LV_KEY_ESC;
-    data->key = action;
+    last_key_btn = LV_KEY_ESC;
+    last_count_esc = button_esc.getCount();
   }
   else
   {
     data->state = LV_INDEV_STATE_REL;
   }
+
+  // Assign key
+  data->key = last_key_btn;
 }
 
 /*  Touchscreen calibration function
@@ -257,37 +310,4 @@ void touchscreen_cal(XPT2046_Calibrated &touchscreen)
     Add them here instead of in the main loop for A E S T H E T I C S */
 void lvgl_init_functional_objects()
 {
-  // Init general LVGL stuff
-  lv_init();
-  lv_disp_draw_buf_init(&draw_buf, buf1, buf2, screenHeight * 10);
-
-  // Init LV display
-  static lv_disp_drv_t disp_drv;
-  lv_disp_drv_init(&disp_drv);
-  disp_drv.hor_res = screenWidth;
-  disp_drv.ver_res = screenHeight;
-  disp_drv.flush_cb = display_flush;
-  disp_drv.draw_buf = &draw_buf;
-  lv_disp_drv_register(&disp_drv);
-
-  // Touchpad device
-  static lv_indev_drv_t indev_touchpad;
-  lv_indev_drv_init(&indev_touchpad);
-  indev_touchpad.type = LV_INDEV_TYPE_POINTER;
-  indev_touchpad.read_cb = touchpad_read;
-  lv_indev_drv_register(&indev_touchpad);
-
-  // Joystick device
-  static lv_indev_drv_t indev_joystick_drv;
-  lv_indev_drv_init(&indev_joystick_drv);
-  indev_joystick_drv.type = LV_INDEV_TYPE_KEYPAD;
-  indev_joystick_drv.read_cb = joystick_read;
-  indev_joystick = lv_indev_drv_register(&indev_joystick_drv);
-
-  // Button device (for both sel and esc buttons)
-  static lv_indev_drv_t indev_button_drv;
-  lv_indev_drv_init(&indev_button_drv);
-  indev_button_drv.type = LV_INDEV_TYPE_KEYPAD;
-  indev_button_drv.read_cb = button_read;
-  indev_button = lv_indev_drv_register(&indev_button_drv);
 }

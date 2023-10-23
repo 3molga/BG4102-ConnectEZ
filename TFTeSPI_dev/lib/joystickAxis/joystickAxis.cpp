@@ -4,7 +4,7 @@
 #include "joystickAxis.h"
 
 // joystickAxis thresholds
-const int threshold_high = 4000;
+const int threshold_high = 3500;
 const int threshold_low = 500;
 int _joystickAxisPin;		  // Pin int
 bool _joystickAxisXY;		  // joystickAxis X or Y (0/1)

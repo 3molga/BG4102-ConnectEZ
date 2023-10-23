@@ -47,25 +47,12 @@ lv_style_t ui_mainpanel_btnmatrix_btnprestyle;
 /* ---------------------------------------------------------------------------------
                                     FUNCTIONS
    ---------------------------------------------------------------------------------*/
-void ui_event_init_button(lv_event_t *e)
-{
-    lv_event_code_t event_code = lv_event_get_code(e);
-    lv_obj_t *target = lv_event_get_target(e);
-    if (event_code == LV_EVENT_CLICKED)
-    {
-        _ui_screen_change(&ui_main_screen, LV_SCR_LOAD_ANIM_FADE_ON, 100, 0, &ui_main_screen_init);
-        ui_main_screen_setindev(ui_grp_btnmatrix);
-        _ui_screen_delete(&ui_start_screen);
-    }
-}
-
 void ui_event_returntostart(lv_event_t *e)
 {
     lv_event_code_t event_code = lv_event_get_code(e);
     lv_obj_t *target = lv_event_get_target(e);
     if (event_code == LV_EVENT_CLICKED)
     {
-        // ui_main_screen_delindev();
         _ui_screen_change(&ui_start_screen, LV_SCR_LOAD_ANIM_FADE_ON, 100, 0, &ui_start_screen_init);
         ui_start_screen_setindev(ui_grp_init_button);
         _ui_screen_delete(&ui_main_screen);
@@ -92,18 +79,13 @@ void ui_init(void)
 void init_styles()
 {
     // Initiate styles
-    // Default button style (wrt background and borders)
+    // Default button style (wrt background and borders) (it'll always be focused by the keypad objects, so that's the default)
     lv_style_init(&ui_btndefstyle);
     lv_style_set_bg_color(&ui_btndefstyle, lv_color_hex(0x3044FA));
     lv_style_set_border_width(&ui_btndefstyle, 2);
     lv_style_set_border_color(&ui_btndefstyle, lv_color_hex(0x000000));
     lv_style_set_outline_width(&ui_btndefstyle, 0);
     lv_style_set_shadow_width(&ui_btndefstyle, 0);
-
-    // btn style when "hovered"/selected by joystick
-    lv_style_init(&ui_btnselstyle);
-    lv_style_set_border_width(&ui_btnselstyle, 4);
-    lv_style_set_outline_width(&ui_btnselstyle, 0);
 
     // Default btnmatrix background style - shouldn't ever change
     lv_style_init(&ui_mainpanel_btnmatrix_mainstyle);
@@ -131,14 +113,9 @@ void init_styles()
 
     // btnmatrix btn style when "hovered"/selected by joystick
     lv_style_init(&ui_mainpanel_btnmatrix_btnselstyle);
-    lv_style_set_border_width(&ui_mainpanel_btnmatrix_btnselstyle, 2);                       // Add 2px-wide border
+    lv_style_set_border_width(&ui_mainpanel_btnmatrix_btnselstyle, 3);                       // Add 2px-wide border
     lv_style_set_border_color(&ui_mainpanel_btnmatrix_btnselstyle, lv_color_make(10, 0, 0)); // Add black outline
-    lv_style_set_outline_width(&ui_mainpanel_btnmatrix_btnselstyle, 0);
     lv_style_set_bg_color(&ui_mainpanel_btnmatrix_btnselstyle, lv_color_make(56, 69, 255)); // Make bg color lighter
+    lv_style_set_outline_width(&ui_mainpanel_btnmatrix_btnselstyle, 0);
 
-    // btnmatrix btn style when "selected"/pressed (and after being selected)
-    lv_style_init(&ui_mainpanel_btnmatrix_btnprestyle);
-    lv_style_set_bg_color(&ui_mainpanel_btnmatrix_btnprestyle, lv_color_make(56, 69, 255));  // Make bg color lighter
-    lv_style_set_border_width(&ui_mainpanel_btnmatrix_btnselstyle, 3);                       // Add 3px-wide border
-    lv_style_set_border_color(&ui_mainpanel_btnmatrix_btnselstyle, lv_color_make(10, 0, 0)); // Add black outline
 }
