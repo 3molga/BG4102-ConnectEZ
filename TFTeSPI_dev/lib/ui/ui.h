@@ -33,7 +33,8 @@ extern lv_indev_t *indev_button;
 
 void ui_init(void);
 void init_styles();
-bool check_inputs_sel(lv_event_code_t event_code);
+bool check_inputs_sel(lv_event_t *event);
+bool check_inputs_del(lv_event_t *event);
 
 // SCREEN: ui_start_screen
 void ui_start_screen_init(void);
@@ -55,7 +56,9 @@ extern lv_style_t ui_btnselstyle;
 void ui_main_screen_init(void);
 void ui_main_screen_setindev(lv_group_t *group, lv_obj_t *btnmatrix);
 void ui_event_returntostart( lv_event_t * e);
-void ui_event_leftpanel( lv_event_t *e );
+void ui_event_mainpanel_esc( lv_event_t *e);
+void ui_event_leftpanel_sel( lv_event_t *e );
+void ui_event_leftpanel_esc(lv_event_t *e);
 
 extern lv_obj_t *ui_main_screen;
 extern lv_obj_t *ui_returntostart;

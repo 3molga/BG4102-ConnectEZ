@@ -11,7 +11,8 @@
 lv_indev_t *indev_joystick;
 lv_indev_t *indev_button;
 
-bool check_inputs_sel(lv_event_code_t event_code);
+bool check_inputs_sel(lv_event_t *event);
+bool check_inputs_del(lv_event_t *event);
 
 //  SCREEN: ui_start_screen
 void ui_start_screen_init(void);
@@ -33,6 +34,9 @@ lv_style_t ui_btnselstyle;
 void ui_main_screen_init(void);
 void ui_main_screen_setindev(lv_group_t *group, lv_obj_t *btnmatrix);
 void ui_event_returntostart(lv_event_t *e);
+void ui_event_mainpanel_esc(lv_event_t *e);
+void ui_event_leftpanel_sel(lv_event_t *e);
+void ui_event_leftpanel_esc(lv_event_t *e);
 
 lv_obj_t *ui_main_screen;
 lv_obj_t *ui_returntostart;
@@ -113,9 +117,22 @@ void init_styles()
 
 //  Function to combine and simplify checking for touchpad click and button_sel press
 //  Nevermind, turns out the original implementation was buggy - just use CLICKED
-bool check_inputs_sel(lv_event_code_t event_code)
+bool check_inputs_sel(lv_event_t *event)
 {
-    if (event_code == LV_EVENT_CLICKED)
+    if (lv_event_get_code(event) == LV_EVENT_CLICKED)
+    {
+        return 1;
+    }
+    else
+    {
+        return 0;
+    }
+}
+
+// Similar function to check_inputs_sel but for the esc button instead
+bool check_inputs_del(lv_event_t *event)
+{
+    if (lv_event_get_code(event) == LV_EVENT_KEY && (lv_event_get_key(event) == LV_KEY_ESC))
     {
         return 1;
     }

@@ -20,7 +20,7 @@
 #define TS_CS_PIN 5
 joystick joystick_dev(13, 12, 1); // X pin, Y pin, buffer use bool
 ezButton button_sel(27);
-ezButton button_esc(28);
+ezButton button_esc(26);
 
 // Define LVGL/TFT_eSPI variables and declare objects/functions
 static const uint16_t screenWidth = 320;
@@ -209,7 +209,7 @@ void joystick_read(lv_indev_drv_t *indev_driver, lv_indev_data_t *data)
 void button_read(lv_indev_drv_t *indev_driver, lv_indev_data_t *data)
 {
   // Static variables
-  static uint8_t last_key_btn = LV_KEY_HOME; // Arbitrary unused key
+  static uint8_t last_key_btn = 0; 
   static unsigned long last_count_sel = 0;
   static unsigned long last_count_esc = 0;
 
@@ -220,13 +220,16 @@ void button_read(lv_indev_drv_t *indev_driver, lv_indev_data_t *data)
     last_count_sel = button_sel.getCount();
 
     // Debugging
-    Serial.println("Action registered");
+    Serial.printf("Action registered: select \n");
   }
-  else if (button_esc.getCount() > last_count_sel)
+  else if (button_esc.getCount() > last_count_esc)
   {
     data->state = LV_INDEV_STATE_PR;
     last_key_btn = LV_KEY_ESC;
     last_count_esc = button_esc.getCount();
+
+    // Debugging
+    Serial.printf("Action registered: escape \n");
   }
   else
   {

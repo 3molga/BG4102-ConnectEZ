@@ -90,7 +90,10 @@ void ui_main_screen_init(void)
 
     // Add callbacks
     lv_obj_add_event_cb(ui_returntostart, ui_event_returntostart, LV_EVENT_ALL, NULL);
-    lv_obj_add_event_cb(ui_leftpanel_btnmatrix, ui_event_leftpanel, LV_EVENT_ALL, NULL);
+    lv_obj_add_event_cb(ui_leftpanel_btnmatrix, ui_event_leftpanel_sel, LV_EVENT_ALL, NULL);
+    lv_obj_add_event_cb(ui_leftpanel_btnmatrix, ui_event_leftpanel_esc, LV_EVENT_ALL, NULL);
+    lv_obj_add_event_cb(ui_mainpanel_btnmatrix, ui_event_mainpanel_esc, LV_EVENT_ALL, NULL);
+
 }
 
 // Set indev to whatever group it has to be + reset button matrix
@@ -107,10 +110,9 @@ void ui_main_screen_setindev(lv_group_t *group, lv_obj_t *btnmatrix)
 /*  Callback for pressing left panel buttons
     Removes indevs from left panel, adds them to main panel, and sets selected button ID to 0 
     Eventually, add functionality to filter panel that is loaded based on ID of button pressed in left panel? */ 
-void ui_event_leftpanel(lv_event_t *e)
+void ui_event_leftpanel_sel(lv_event_t *e)
 {
-    lv_event_code_t event_code = lv_event_get_code(e);
-    if (check_inputs_sel(event_code))
+    if (check_inputs_sel(e))
     {
         // Set indevs
         ui_main_screen_setindev(ui_grp_mp_btnmatrix, ui_mainpanel_btnmatrix);
@@ -124,8 +126,30 @@ void ui_event_leftpanel(lv_event_t *e)
     Returns user to main screen */
 void ui_event_returntostart(lv_event_t *e)
 {
-    lv_event_code_t event_code = lv_event_get_code(e);
-    if (check_inputs_sel(event_code))
+    if (check_inputs_sel(e))
+    {
+        _ui_screen_change(&ui_start_screen, LV_SCR_LOAD_ANIM_FADE_ON, 200, 0, &ui_start_screen_init);
+        ui_start_screen_setindev(ui_grp_init_button);
+        _ui_screen_delete(&ui_main_screen);
+    }
+}
+
+/*  Callback for main panel + esc button
+    There's a POSSIBILITY of a bug here but fuck it we ball */
+void ui_event_mainpanel_esc(lv_event_t *e)
+{
+    if (check_inputs_del(e))
+    {
+        ui_main_screen_setindev(ui_grp_lp_btnmatrix, ui_leftpanel_btnmatrix);
+        lv_btnmatrix_set_selected_btn(ui_mainpanel_btnmatrix, LV_BTNMATRIX_BTN_NONE);
+    }
+}
+
+/*  Callback for left panel + esc button
+    Pretty much a copy of the red button, might delete the red button in the future? Before release */
+void ui_event_leftpanel_esc(lv_event_t *e)
+{
+    if (check_inputs_del(e))
     {
         _ui_screen_change(&ui_start_screen, LV_SCR_LOAD_ANIM_FADE_ON, 200, 0, &ui_start_screen_init);
         ui_start_screen_setindev(ui_grp_init_button);
