@@ -27,10 +27,13 @@ extern "C" {
 #include "components/ui_comp_hook.h"
 #include "ui_events.h"
 
+// Global-ish UI objects and functions
 extern lv_indev_t *indev_joystick;
 extern lv_indev_t *indev_button;
-void init_styles();
+
 void ui_init(void);
+void init_styles();
+bool check_inputs_sel(lv_event_code_t event_code);
 
 // SCREEN: ui_start_screen
 void ui_start_screen_init(void);
@@ -56,10 +59,13 @@ void ui_event_returntostart( lv_event_t * e);
 extern lv_obj_t *ui_main_screen;
 extern lv_obj_t *ui_returntostart;
 extern lv_obj_t *ui_mainpanel;
+extern lv_obj_t *ui_leftpanel;
 
 // Button matrix stuff
 extern lv_obj_t *ui_mainpanel_btnmatrix;
-extern lv_group_t *ui_grp_btnmatrix;
+extern lv_obj_t *ui_leftpanel_btnmatrix;
+extern lv_group_t *ui_grp_mp_btnmatrix;
+extern lv_group_t *ui_grp_lp_btnmatrix;
 
 extern lv_style_t ui_mainpanel_btnmatrix_mainstyle;
 extern lv_style_t ui_mainpanel_btnmatrix_btndefstyle;

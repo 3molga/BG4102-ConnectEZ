@@ -11,6 +11,8 @@
 lv_indev_t *indev_joystick;
 lv_indev_t *indev_button;
 
+bool check_inputs_sel(lv_event_code_t event_code);
+
 //  SCREEN: ui_start_screen
 void ui_start_screen_init(void);
 void ui_start_screen_setindev(lv_group_t *group);
@@ -35,30 +37,21 @@ void ui_event_returntostart(lv_event_t *e);
 lv_obj_t *ui_main_screen;
 lv_obj_t *ui_returntostart;
 lv_obj_t *ui_mainpanel;
+lv_obj_t *ui_leftpanel;
+
 lv_obj_t *ui_mainpanel_btnmatrix;
-lv_group_t *ui_grp_btnmatrix;
+lv_obj_t *ui_leftpanel_btnmatrix;
+lv_group_t *ui_grp_mp_btnmatrix; // Assign this dynamically
+lv_group_t *ui_grp_lp_btnmatrix;
 
 lv_style_t ui_mainpanel_btnmatrix_mainstyle;
 lv_style_t ui_mainpanel_btnmatrix_btndefstyle;
 lv_style_t ui_mainpanel_btnmatrix_btnselstyle;
 lv_style_t ui_mainpanel_btnmatrix_btnprestyle;
 
-
 /* ---------------------------------------------------------------------------------
                                     FUNCTIONS
    ---------------------------------------------------------------------------------*/
-void ui_event_returntostart(lv_event_t *e)
-{
-    lv_event_code_t event_code = lv_event_get_code(e);
-    lv_obj_t *target = lv_event_get_target(e);
-    if (event_code == LV_EVENT_CLICKED)
-    {
-        _ui_screen_change(&ui_start_screen, LV_SCR_LOAD_ANIM_FADE_ON, 100, 0, &ui_start_screen_init);
-        ui_start_screen_setindev(ui_grp_init_button);
-        _ui_screen_delete(&ui_main_screen);
-    }
-}
-
 void ui_init(void)
 {
     LV_EVENT_GET_COMP_CHILD = lv_event_register_id();
@@ -115,7 +108,24 @@ void init_styles()
     lv_style_init(&ui_mainpanel_btnmatrix_btnselstyle);
     lv_style_set_border_width(&ui_mainpanel_btnmatrix_btnselstyle, 3);                       // Add 2px-wide border
     lv_style_set_border_color(&ui_mainpanel_btnmatrix_btnselstyle, lv_color_make(10, 0, 0)); // Add black outline
-    lv_style_set_bg_color(&ui_mainpanel_btnmatrix_btnselstyle, lv_color_make(56, 69, 255)); // Make bg color lighter
+    lv_style_set_bg_color(&ui_mainpanel_btnmatrix_btnselstyle, lv_color_make(56, 69, 255));  // Make bg color lighter
     lv_style_set_outline_width(&ui_mainpanel_btnmatrix_btnselstyle, 0);
+}
 
+// Function to combine and simplify checking for touchpad click and button_sel press
+// Kind of hard-codes the keypad indev to indev_button, but that shouldn't be an issue in this scope?
+bool check_inputs_sel(lv_event_code_t event_code)
+{
+    if (event_code == LV_EVENT_CLICKED)
+    {
+        return 1;
+    }
+    else if (event_code == LV_EVENT_KEY && lv_indev_get_key(indev_button) == LV_KEY_ENTER)
+    {
+        return 1;
+    }
+    else
+    {
+        return 0;
+    }
 }

@@ -74,40 +74,6 @@ void setup()
   // Init LVGL functional elements in general
   lvgl_init_functional_objects();
 
-  // Init general LVGL stuff
-  lv_init();
-  lv_disp_draw_buf_init(&draw_buf, buf1, buf2, screenHeight * 10);
-
-  // Init LV display
-  static lv_disp_drv_t disp_drv;
-  lv_disp_drv_init(&disp_drv);
-  disp_drv.hor_res = screenWidth;
-  disp_drv.ver_res = screenHeight;
-  disp_drv.flush_cb = display_flush;
-  disp_drv.draw_buf = &draw_buf;
-  lv_disp_drv_register(&disp_drv);
-
-  // Touchpad device
-  static lv_indev_drv_t indev_touchpad;
-  lv_indev_drv_init(&indev_touchpad);
-  indev_touchpad.type = LV_INDEV_TYPE_POINTER;
-  indev_touchpad.read_cb = touchpad_read;
-  lv_indev_drv_register(&indev_touchpad);
-
-  // Joystick device
-  static lv_indev_drv_t indev_joystick_drv;
-  lv_indev_drv_init(&indev_joystick_drv);
-  indev_joystick_drv.type = LV_INDEV_TYPE_KEYPAD;
-  indev_joystick_drv.read_cb = joystick_read;
-  indev_joystick = lv_indev_drv_register(&indev_joystick_drv);
-
-  // Button device (for both sel and esc buttons)
-  static lv_indev_drv_t indev_button_drv;
-  lv_indev_drv_init(&indev_button_drv);
-  indev_button_drv.type = LV_INDEV_TYPE_KEYPAD;
-  indev_button_drv.read_cb = button_read;
-  indev_button = lv_indev_drv_register(&indev_button_drv);
-
   // Init UI elements
   ui_init();
 }
@@ -310,4 +276,37 @@ void touchscreen_cal(XPT2046_Calibrated &touchscreen)
     Add them here instead of in the main loop for A E S T H E T I C S */
 void lvgl_init_functional_objects()
 {
+  // Init general LVGL stuff
+  lv_init();
+  lv_disp_draw_buf_init(&draw_buf, buf1, buf2, screenHeight * 10);
+
+  // Init LV display
+  static lv_disp_drv_t disp_drv;
+  lv_disp_drv_init(&disp_drv);
+  disp_drv.hor_res = screenWidth;
+  disp_drv.ver_res = screenHeight;
+  disp_drv.flush_cb = display_flush;
+  disp_drv.draw_buf = &draw_buf;
+  lv_disp_drv_register(&disp_drv);
+
+  // Touchpad device
+  static lv_indev_drv_t indev_touchpad;
+  lv_indev_drv_init(&indev_touchpad);
+  indev_touchpad.type = LV_INDEV_TYPE_POINTER;
+  indev_touchpad.read_cb = touchpad_read;
+  lv_indev_drv_register(&indev_touchpad);
+
+  // Joystick device
+  static lv_indev_drv_t indev_joystick_drv;
+  lv_indev_drv_init(&indev_joystick_drv);
+  indev_joystick_drv.type = LV_INDEV_TYPE_KEYPAD;
+  indev_joystick_drv.read_cb = joystick_read;
+  indev_joystick = lv_indev_drv_register(&indev_joystick_drv);
+
+  // Button device (for both sel and esc buttons)
+  static lv_indev_drv_t indev_button_drv;
+  lv_indev_drv_init(&indev_button_drv);
+  indev_button_drv.type = LV_INDEV_TYPE_KEYPAD;
+  indev_button_drv.read_cb = button_read;
+  indev_button = lv_indev_drv_register(&indev_button_drv);
 }
