@@ -39,14 +39,14 @@
 #include "./FirebaseFS.h"
 #include "./FB_Const.h"
 
-#if defined(ESP8266)
-#include <SPI.h>
-#include <time.h>
-#include <vector>
-#include <functional>
-#include <Schedule.h>
-#include <ets_sys.h>
-#endif
+// #if defined(ESP8266)
+// #include <SPI.h>
+// #include <time.h>
+// #include <vector>
+// #include <functional>
+// #include <Schedule.h>
+// #include <ets_sys.h>
+// #endif
 
 #include "FB_Utils.h"
 #include "client/FB_TCP_Client.h"
