@@ -31,7 +31,7 @@ lv_style_t ui_btnselstyle;
 
 // SCREEN: ui_main_screen
 void ui_main_screen_init(void);
-void ui_main_screen_setindev(lv_group_t *group);
+void ui_main_screen_setindev(lv_group_t *group, lv_obj_t *btnmatrix);
 void ui_event_returntostart(lv_event_t *e);
 
 lv_obj_t *ui_main_screen;
@@ -82,15 +82,14 @@ void init_styles()
 
     // Default btnmatrix background style - shouldn't ever change
     lv_style_init(&ui_mainpanel_btnmatrix_mainstyle);
-    lv_style_set_bg_opa(&ui_mainpanel_btnmatrix_mainstyle, 0);           // Make BG transparent
-    lv_style_set_border_width(&ui_mainpanel_btnmatrix_mainstyle, 0);     // Make border transparent
+    lv_style_set_bg_color(&ui_mainpanel_btnmatrix_mainstyle, lv_color_make(110, 185, 240));
+    lv_style_set_border_width(&ui_mainpanel_btnmatrix_mainstyle, 2);     // Make border 2 px wide
+    lv_style_set_border_color(&ui_mainpanel_btnmatrix_mainstyle, lv_color_make(0, 0, 0));
     lv_style_set_outline_width(&ui_mainpanel_btnmatrix_mainstyle, 0);    // Make outline transparent
-    lv_style_set_width(&ui_mainpanel_btnmatrix_mainstyle, lv_pct(100));  // Set width to 100% of parent
-    lv_style_set_height(&ui_mainpanel_btnmatrix_mainstyle, lv_pct(100)); // Set height to 100% of parent
-    lv_style_set_pad_top(&ui_mainpanel_btnmatrix_mainstyle, 0);          // Set paddings to 03 px
-    lv_style_set_pad_bottom(&ui_mainpanel_btnmatrix_mainstyle, 0);
-    lv_style_set_pad_right(&ui_mainpanel_btnmatrix_mainstyle, 0);
-    lv_style_set_pad_left(&ui_mainpanel_btnmatrix_mainstyle, 0);
+    lv_style_set_pad_top(&ui_mainpanel_btnmatrix_mainstyle, 8);          // Set paddings 
+    lv_style_set_pad_bottom(&ui_mainpanel_btnmatrix_mainstyle, 4);       // (top and left should be 4px wider than bot/right, for some reason)
+    lv_style_set_pad_right(&ui_mainpanel_btnmatrix_mainstyle, 4);
+    lv_style_set_pad_left(&ui_mainpanel_btnmatrix_mainstyle, 8);
 
     // Default btnmatrix btn style
     lv_style_init(&ui_mainpanel_btnmatrix_btndefstyle);
@@ -99,10 +98,10 @@ void init_styles()
     lv_style_set_outline_width(&ui_mainpanel_btnmatrix_btndefstyle, 0);                    // Remove outline
     lv_style_set_bg_color(&ui_mainpanel_btnmatrix_btndefstyle, lv_color_make(33, 40, 63)); // Internal button color
     lv_style_set_text_color(&ui_mainpanel_btnmatrix_btndefstyle, lv_color_make(255, 255, 255));
-    lv_style_set_pad_top(&ui_mainpanel_btnmatrix_btndefstyle, 3); // Add padding of 3 px on all sides
-    lv_style_set_pad_bottom(&ui_mainpanel_btnmatrix_btndefstyle, 3);
-    lv_style_set_pad_right(&ui_mainpanel_btnmatrix_btndefstyle, 3);
-    lv_style_set_pad_left(&ui_mainpanel_btnmatrix_btndefstyle, 3);
+    lv_style_set_pad_top(&ui_mainpanel_btnmatrix_btndefstyle, 0);                          // Add padding of 0 px on all sides
+    lv_style_set_pad_bottom(&ui_mainpanel_btnmatrix_btndefstyle, 0);
+    lv_style_set_pad_right(&ui_mainpanel_btnmatrix_btndefstyle, 0);
+    lv_style_set_pad_left(&ui_mainpanel_btnmatrix_btndefstyle, 0);
 
     // btnmatrix btn style when "hovered"/selected by joystick
     lv_style_init(&ui_mainpanel_btnmatrix_btnselstyle);

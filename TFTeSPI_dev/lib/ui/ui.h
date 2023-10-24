@@ -53,7 +53,7 @@ extern lv_style_t ui_btnselstyle;
 
 // SCREEN: ui_main_screen
 void ui_main_screen_init(void);
-void ui_main_screen_setindev();
+void ui_main_screen_setindev(lv_group_t *group, lv_obj_t *btnmatrix);
 void ui_event_returntostart( lv_event_t * e);
 
 extern lv_obj_t *ui_main_screen;

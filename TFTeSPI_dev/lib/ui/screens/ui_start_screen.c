@@ -74,7 +74,7 @@ void ui_event_init_button(lv_event_t *e)
     if (check_inputs_sel(event_code))
     {
         _ui_screen_change(&ui_main_screen, LV_SCR_LOAD_ANIM_FADE_ON, 100, 0, &ui_main_screen_init);
-        ui_main_screen_setindev(ui_grp_mp_btnmatrix);
+        ui_main_screen_setindev(ui_grp_lp_btnmatrix, ui_leftpanel_btnmatrix);
         _ui_screen_delete(&ui_start_screen);
     }
 }
