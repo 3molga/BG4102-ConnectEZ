@@ -111,15 +111,11 @@ void init_styles()
     lv_style_set_outline_width(&ui_mainpanel_btnmatrix_btnselstyle, 0);
 }
 
-// Function to combine and simplify checking for touchpad click and button_sel press
-// Kind of hard-codes the keypad indev to indev_button, but that shouldn't be an issue in this scope?
+//  Function to combine and simplify checking for touchpad click and button_sel press
+//  Nevermind, turns out the original implementation was buggy - just use CLICKED
 bool check_inputs_sel(lv_event_code_t event_code)
 {
     if (event_code == LV_EVENT_CLICKED)
-    {
-        return 1;
-    }
-    else if (event_code == LV_EVENT_KEY && lv_indev_get_key(indev_button) == LV_KEY_ENTER)
     {
         return 1;
     }

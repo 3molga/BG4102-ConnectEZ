@@ -73,8 +73,13 @@ void ui_event_init_button(lv_event_t *e)
     lv_event_code_t event_code = lv_event_get_code(e);
     if (check_inputs_sel(event_code))
     {
-        _ui_screen_change(&ui_main_screen, LV_SCR_LOAD_ANIM_FADE_ON, 100, 0, &ui_main_screen_init);
-        ui_main_screen_setindev(ui_grp_lp_btnmatrix, ui_leftpanel_btnmatrix);
+        _ui_screen_change(&ui_main_screen, LV_SCR_LOAD_ANIM_FADE_ON, 200, 0, &ui_main_screen_init);
         _ui_screen_delete(&ui_start_screen);
+
+        // Set indevs
+        ui_main_screen_setindev(ui_grp_lp_btnmatrix, ui_leftpanel_btnmatrix);
+
+        // Reset buttons
+        lv_btnmatrix_set_selected_btn(ui_mainpanel_btnmatrix, LV_BTNMATRIX_BTN_NONE);
     }
 }

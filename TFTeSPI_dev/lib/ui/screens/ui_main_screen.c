@@ -87,8 +87,10 @@ void ui_main_screen_init(void)
     // Create btnmatrix grp
     ui_grp_mp_btnmatrix = lv_group_create();
     lv_group_add_obj(ui_grp_mp_btnmatrix, ui_mainpanel_btnmatrix);
-    
+
+    // Add callbacks
     lv_obj_add_event_cb(ui_returntostart, ui_event_returntostart, LV_EVENT_ALL, NULL);
+    lv_obj_add_event_cb(ui_leftpanel_btnmatrix, ui_event_leftpanel, LV_EVENT_ALL, NULL);
 }
 
 // Set indev to whatever group it has to be + reset button matrix
@@ -102,14 +104,30 @@ void ui_main_screen_setindev(lv_group_t *group, lv_obj_t *btnmatrix)
     lv_btnmatrix_set_selected_btn(btnmatrix, 0);
 }
 
+/*  Callback for pressing left panel buttons
+    Removes indevs from left panel, adds them to main panel, and sets selected button ID to 0 
+    Eventually, add functionality to filter panel that is loaded based on ID of button pressed in left panel? */ 
+void ui_event_leftpanel(lv_event_t *e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+    if (check_inputs_sel(event_code))
+    {
+        // Set indevs
+        ui_main_screen_setindev(ui_grp_mp_btnmatrix, ui_mainpanel_btnmatrix);
 
-//  Callback for the red button
+        // Reset buttons
+        lv_btnmatrix_set_selected_btn(ui_leftpanel_btnmatrix, LV_BTNMATRIX_BTN_NONE);
+    }
+}
+
+/*  Callback for pressing the red button
+    Returns user to main screen */
 void ui_event_returntostart(lv_event_t *e)
 {
     lv_event_code_t event_code = lv_event_get_code(e);
     if (check_inputs_sel(event_code))
     {
-        _ui_screen_change(&ui_start_screen, LV_SCR_LOAD_ANIM_FADE_ON, 100, 0, &ui_start_screen_init);
+        _ui_screen_change(&ui_start_screen, LV_SCR_LOAD_ANIM_FADE_ON, 200, 0, &ui_start_screen_init);
         ui_start_screen_setindev(ui_grp_init_button);
         _ui_screen_delete(&ui_main_screen);
     }

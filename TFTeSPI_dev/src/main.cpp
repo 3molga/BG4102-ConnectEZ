@@ -88,6 +88,7 @@ void loop()
   button_esc.loop();
 
   // Debugging
+  /*
   if (button_sel.isPressed())
   {
     Serial.println("Button pressed");
@@ -96,6 +97,7 @@ void loop()
   {
     Serial.println("Button released");
   }
+  */
 
   // Call LVGL to do its thing
   lv_timer_handler();
@@ -207,7 +209,7 @@ void joystick_read(lv_indev_drv_t *indev_driver, lv_indev_data_t *data)
 void button_read(lv_indev_drv_t *indev_driver, lv_indev_data_t *data)
 {
   // Static variables
-  static uint8_t last_key_btn = 0;
+  static uint8_t last_key_btn = LV_KEY_HOME; // Arbitrary unused key
   static unsigned long last_count_sel = 0;
   static unsigned long last_count_esc = 0;
 
