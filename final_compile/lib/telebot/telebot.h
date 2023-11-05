@@ -25,7 +25,7 @@ public:
 private:
 	// Constants
 	const int botRequestDelay;
-  const String chat_id;
+  	const String chat_id;
 
 	// Variables
 	unsigned long lastTimeBotRan;

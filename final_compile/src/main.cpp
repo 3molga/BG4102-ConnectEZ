@@ -7,6 +7,7 @@
                               SET UP VARIABLES AND OBJECTS
    ---------------------------------------------------------------------------------*/
 #include <vector>
+#include <string>
 #include <Arduino.h>
 #include <TFT_eSPI.h>
 #include <XPT2046_Calibrated.h>
@@ -15,9 +16,18 @@
 #include <joystick.h>
 #include <joystickAxis.h>
 #include <ezButton.h>
+#include <WiFi.h>
+#include <WiFiClientSecure.h>
+#include <telebot.h>
+#include <UniversalTelegramBot.h>
+#include <ArduinoJson.h>
+#include <googlefirebase.h>
 
 // Define input/output pins and create their objects
 #define TS_CS_PIN 10
+#define ONBOARD_LED 38
+#define ACCEL_SDA 1
+#define ACCEL_SCL 2
 joystick joystick_dev(4, 5, 1); // X pin, Y pin, buffer use bool
 ezButton button_sel(15);
 ezButton button_esc(16);
@@ -44,6 +54,24 @@ void button_read(lv_indev_drv_t *indev_driver, lv_indev_data_t *data);
 void button_read_esc(lv_indev_drv_t *indev_driver, lv_indev_data_t *data);
 void touchscreen_cal(XPT2046_Calibrated &touchscreen);
 void lvgl_init_functional_objects();
+
+// WiFi, Telegram and Firebase Setup
+const char *ssid = "tmt";                                         // Wi-Fi ID
+const char *password = "yeah8913";                                // Wi-Fi password
+#define BOTtoken "6606670486:AAGP24iLfP047ysZ7yaAUHyv3cOf-iLKMqE" // Telegram bot API token
+#define CHAT_ID "-4016407865"                                     // "Chat with esp32" telegram group ID
+WiFiClientSecure client;
+UniversalTelegramBot bot(BOTtoken, client);
+telebot botController(bot, CHAT_ID);
+
+#define API_KEY "AIzaSyC9IZqH7onhkDCxWYMoz4Hb_ZWK1eQJ7YM"   // Insert Firebase project API Key
+#define USER_EMAIL "zaneyong00@gmail.com"// Insert Authorized Email and Corresponding Password
+#define USER_PASSWORD "zane1234"
+#define DATABASE_URL "https://connectez-87c05-default-rtdb.asia-southeast1.firebasedatabase.app/" // Insert RTDB URLefine the RTDB URL
+googlefirebase fb;
+
+// Declare function for 2nd Telegram loop
+void TeleHandler(void *pvParameters);
 
 uint8_t debugCount;
 
@@ -76,6 +104,43 @@ void setup()
 
   // Init UI elements
   ui_init();
+
+  // Connect to Wi-Fi
+  WiFi.mode(WIFI_STA);
+  WiFi.disconnect();
+  WiFi.begin(ssid, password);
+  client.setCACert(TELEGRAM_CERTIFICATE_ROOT);
+  while (millis() < 5000)
+  {
+    if (WiFi.status() == WL_CONNECTED)
+    {
+      Serial.println("WiFi connected");
+      botController.queueMessage(std::string("Hello everyone, I am connected!\nUse /start for commands to control me!"));
+      break;
+    }
+    else
+    {
+      delay(500);
+      Serial.print(".");
+    }
+  }
+
+  // fb.initWiFi(WIFI_SSID, WIFI_PASSWORD); This shouldn't be required
+  // Serial.printf("Connected to %s Wifi", WIFI_SSID);
+  fb.setup(API_KEY, USER_EMAIL, USER_PASSWORD, DATABASE_URL);
+  Serial.printf("Connected to Google Firebase at %s", DATABASE_URL);
+  fb.begin(ACCEL_SDA, ACCEL_SCL);
+  Serial.printf("Accelerometer Initialized");
+
+  // Set up parallel processing task to handle Telegram reading
+  xTaskCreatePinnedToCore(
+      TeleHandler,            /* Task function. */
+      "Telegram Bot Handler", /* name of task. */
+      100000,                 /* Stack size of task */
+      NULL,                   /* parameter of the task */
+      1,                      /* priority of the task */
+      NULL,                   /* Task handle to keep track of created task */
+      1);                     /* pin task to core 0 */
 }
 
 void loop()
@@ -102,6 +167,26 @@ void loop()
   // Call LVGL to do its thing
   lv_timer_handler();
   delay(5); // 5 ms shouldn't lead to missing any inputs right? RIGHT?
+}
+
+// 2nd loop to handle Telegram operations
+void TeleHandler(void *pvParameters)
+{
+  while (1)
+  {
+    if (WiFi.status() != WL_CONNECTED)
+    {
+      // Wi-Fi is not connected LED
+      digitalWrite(ONBOARD_LED, LOW);
+    }
+    else
+    {
+      // Wi-Fi is connected LED
+      digitalWrite(ONBOARD_LED, HIGH);
+      botController.handleActiveUpdates();
+      botController.handlePassiveUpdates();
+    }
+  }
 }
 
 /* ---------------------------------------------------------------------------------
@@ -209,7 +294,7 @@ void joystick_read(lv_indev_drv_t *indev_driver, lv_indev_data_t *data)
 void button_read(lv_indev_drv_t *indev_driver, lv_indev_data_t *data)
 {
   // Static variables
-  static uint8_t last_key_btn = 0; 
+  static uint8_t last_key_btn = 0;
   static unsigned long last_count_sel = 0;
   static unsigned long last_count_esc = 0;
 

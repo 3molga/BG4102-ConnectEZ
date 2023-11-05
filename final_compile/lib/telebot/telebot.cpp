@@ -13,10 +13,6 @@ int numMessagesReceived;
 int numMessagesQueued;
 std::vector<std::string> messageQueue;
 
-// External variables from main sketch
-extern bool touchBool;
-extern std::vector<int> userState; 
-
 //---------------------------------PUBLIC---------------------------------
 // Constructor
 telebot::telebot(UniversalTelegramBot &bot, String CHAT_ID)
@@ -79,7 +75,6 @@ void telebot::handleMessagesReceived(int numMessagesReceived) {
       welcome += "Use the following commands to control your outputs:\n\n";
       welcome += "/info for information about our device;\n";
       welcome += "/query for information about the current state of the user;\n"; 
-      welcome += "/afk to query if the user is currently in contact with the device. \n";
       // welcome += "/easter for a surprise easter egg!"
       bot->sendMessage(chat_id, welcome, "");
     }
@@ -93,21 +88,9 @@ void telebot::handleMessagesReceived(int numMessagesReceived) {
     // To query about where the user currently is on the grid
     if (text == "/query") {
       char queryGridMessage[50];
-      sprintf(queryGridMessage, "User is currently on: %i, %i.", userState[0], userState[1]);
       String queryGridMessageS = queryGridMessage;
       bot->sendMessage(chat_id, queryGridMessageS, "");
       return;
-    }
-
-    // To query if the person is touching the device
-    if (text == "/afk") {
-      if (touchBool) {
-        bot->sendMessage(chat_id, "User is touching the device now.", "");
-        return;
-      } else {
-        bot->sendMessage(chat_id, "User is currently AFK.", "");
-        return;
-      }
     }
 
     // Easter egg :)
