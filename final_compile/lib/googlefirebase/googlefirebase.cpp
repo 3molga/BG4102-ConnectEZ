@@ -44,8 +44,11 @@ void googlefirebase::setup(String API_KEY, String USER_EMAIL, String USER_PASSWO
     uid = auth.token.uid.c_str(); // Print user UID
     Serial.print("User UID: ");
     Serial.println(uid);
-    databasePath = char("/UsersData/") + uid + char("/readings"); // Update database path
-}
+    // Using this low key kinda dumb method to remove an error message caused by clashing of operator+
+    databasePath = String("/UsersData/");
+    databasePath += uid;
+    databasePath += String("/readings"); // Update database path
+} 
 
 void googlefirebase::begin(int MPU6050_accelerometer_SDA, int MPU6050_accelerometer_SCL)
 {
@@ -158,7 +161,9 @@ void googlefirebase::fallDetection()
             Serial.println("Fall detected!");
             printAccelerationData();
             printGyroData();
-            parentPath = databasePath + "/" + String(timestamp);
+            parentPath = databasePath;
+            parentPath += String("/");
+            parentPath += String(timestamp);
             json.set(xPath.c_str(), String(x_acce));
             json.set(yPath.c_str(), String(y_acce));
             json.set(zPath.c_str(), String(z_acce));
