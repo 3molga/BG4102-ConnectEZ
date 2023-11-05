@@ -209,9 +209,6 @@
 // For ESP32 Dev board (only tested with ILI9341 display)
 // The hardware SPI can be mapped to any pins
 
-#define ESP32
-#define CONFIG_IDF_TARGET_ESP32S3
-
 #define TFT_MISO 11
 #define TFT_MOSI 12
 #define TFT_SCLK 13
