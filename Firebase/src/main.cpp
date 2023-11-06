@@ -19,8 +19,10 @@ MPU6050_accelerometer mpu;
 void setup() {
     fb.initWiFi(WIFI_SSID, WIFI_PASSWORD);
     Serial.printf("Connected to %s Wifi", WIFI_SSID);
+
     fb.setup(API_KEY, USER_EMAIL, USER_PASSWORD, DATABASE_URL);
     Serial.printf("Connected to Google Firebase at %s", DATABASE_URL);
+    
     mpu.begin(I2C_SDA, I2C_SCL);
     Serial.printf("Accelerometer Initialized");
 }

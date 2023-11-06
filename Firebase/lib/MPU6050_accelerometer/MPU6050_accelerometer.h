@@ -40,8 +40,8 @@ public:
     String total_acce;
     String total_gyro;
     int timestamp;
-    float upperAcceleration = 50.0;
-    float upperAngularVelocity = 2.0;
+    float upperAcceleration = 20.0;             // Threshold for fall detection
+    float upperAngularVelocity = 3.5;           // Threshold for fall detection
     unsigned long sendDataPrevMillis = 0;
     unsigned long timerDelay = 180000;
 
