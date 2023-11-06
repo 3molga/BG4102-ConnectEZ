@@ -27,22 +27,6 @@ void setup() {
 
 void loop() {
     mpu.readSensorData();
-    // Serial.println(mpu.totalAcceleration().c_str());
-    // Serial.println(mpu.totalAngularVelocity().c_str());
-    // Serial.println(mpu.whatTime().c_str());
-    Serial.print("Acceleration on x: ");
-    Serial.print(mpu.xAcceleration().c_str());
-    Serial.println("m/s2");
-    Serial.print("Acceleration on y: ");
-    Serial.print(mpu.yAcceleration().c_str());
-    Serial.println("m/s2");
-    Serial.print("Acceleration on z: ");
-    Serial.print(mpu.zAcceleration().c_str());
-    Serial.println("m/s2");
-    // Serial.println(mpu.xGyro().c_str());
-    // Serial.println(mpu.yGyro().c_str());
-    // Serial.println(mpu.zGyro().c_str());
-    // fb.fallDetection();
     if (mpu.fallDetection() == 1){
         fb.sendDataToDatabase(mpu.whatTime(), mpu.xAcceleration(), mpu.yAcceleration(), mpu.zAcceleration(), mpu.xGyro(), mpu.yGyro(), mpu.zGyro(), mpu.totalAcceleration(), mpu.totalAngularVelocity());
     }
