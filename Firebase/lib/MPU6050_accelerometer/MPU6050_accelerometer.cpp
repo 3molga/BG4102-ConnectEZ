@@ -12,7 +12,7 @@ void MPU6050_accelerometer::begin(int MPU6050_accelerometer_SDA, int MPU6050_acc
     while (!Serial) {
         delay(10);  // Will pause Zero, Leonardo, etc., until the serial console opens
     } 
-    Serial.println("Adafruit MPU6050 test");
+    Serial.println("MPU6050 Accelerometer and Gyrometer test");
 
     I2CMPU.begin(MPU6050_accelerometer_SDA, MPU6050_accelerometer_SCL, 400000);
     bool status;
@@ -24,7 +24,7 @@ void MPU6050_accelerometer::begin(int MPU6050_accelerometer_SDA, int MPU6050_acc
             delay(10);
         }
     }
-    Serial.println("MPU6050 Found");
+    // Serial.println("MPU6050-Accelerometer and Gyrometer Found");
 
     mpu.setAccelerometerRange(MPU6050_RANGE_8_G);
     mpu.setGyroRange(MPU6050_RANGE_500_DEG);
@@ -112,21 +112,15 @@ String MPU6050_accelerometer::whatTime(){
 bool MPU6050_accelerometer::fallDetection(){
     // readSensorData();
     sendDataPrevMillis = millis();
-    Serial.println("");
-
-    //Get current timestamp
-    timestamp = getTime();
-    Serial.print ("time: ");
-    Serial.println (timestamp);
-
-    printAccelerationData();
-    printGyroData();
     
     // Calculate total acceleration vector magnitude
     float totalAcc = sqrt(a.acceleration.x*a.acceleration.x + a.acceleration.y*a.acceleration.y + a.acceleration.z*a.acceleration.z);
 
     // Check if total acceleration is greater than the upper threshold
     if (totalAcc > upperAcceleration) {
+        timestamp = getTime();
+        Serial.print ("time: ");
+        Serial.println (timestamp);
         Serial.print("Acceleration exceed: ");
         Serial.print(totalAcc);
         Serial.println("m/s^2");
@@ -143,7 +137,7 @@ bool MPU6050_accelerometer::fallDetection(){
         }
     }
     else {
-        Serial.println("No Fall");
+        // Serial.println("No Fall");
         return 0;
     }
 }

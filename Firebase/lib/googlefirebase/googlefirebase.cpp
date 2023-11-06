@@ -13,6 +13,7 @@ void googlefirebase::initWiFi(String WIFI_SSID, String WIFI_PASSWORD) {
         Serial.print('.');
         delay(1000);
     }
+    Serial.println("");
 }
 
 void googlefirebase::setup(String API_KEY, String USER_EMAIL, String USER_PASSWORD, String DATABASE_URL) {

@@ -303,4 +303,7 @@
  C:/Users/ZYONG004/.platformio/packages/framework-arduinoespressif32/cores/esp32/esp32-hal.h \
  .pio/libdeps/esp32-s3-devkitc-1/Adafruit\ BusIO/Adafruit_SPIDevice.h \
  .pio/libdeps/esp32-s3-devkitc-1/Adafruit\ Unified\ Sensor/Adafruit_Sensor.h \
- lib/MPU6050_accelerometer/MPU6050_accelerometer.h
+ lib/MPU6050_accelerometer/MPU6050_accelerometer.h \
+ lib/MAX30102_heartratesensor/MAX30102_heartratesensor.h \
+ .pio/libdeps/esp32-s3-devkitc-1/SparkFun\ MAX3010x\ Pulse\ and\ Proximity\ Sensor\ Library/src/MAX30105.h \
+ .pio/libdeps/esp32-s3-devkitc-1/SparkFun\ MAX3010x\ Pulse\ and\ Proximity\ Sensor\ Library/src/heartRate.h
