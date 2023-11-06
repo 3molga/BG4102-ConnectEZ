@@ -1,9 +1,8 @@
 #include <MPU6050_accelerometer.h>
-#include <Wire.h> 
-#include <googlefirebase.h>
+#include <Wire.h>
+#include <string>
 
 TwoWire I2CMPU = TwoWire(0);
-googlefirebase firebaseInstance; // Create an instance of the firebase class
 
 MPU6050_accelerometer::MPU6050_accelerometer() {
 }
@@ -36,31 +35,55 @@ void MPU6050_accelerometer::begin(int MPU6050_accelerometer_SDA, int MPU6050_acc
 
 void MPU6050_accelerometer::readSensorData() {
     mpu.getEvent(&a, &g, &temp);
-    x_acce = a.acceleration.x;
-    y_acce = a.acceleration.y; 
-    z_acce = a.acceleration.z;
-    x_gyro = g.gyro.x;
-    y_gyro = g.gyro.y;
-    z_gyro = g.gyro.z;
+}
+
+String MPU6050_accelerometer::xAcceleration(){
+    String x_acce = String(a.acceleration.x);
+    return x_acce;
+}
+
+String MPU6050_accelerometer::yAcceleration(){
+    String y_acce = String(a.acceleration.y);
+    return y_acce;
+}
+
+String MPU6050_accelerometer::zAcceleration(){
+    String z_acce = String(a.acceleration.z);
+    return z_acce;
 }
 
 void MPU6050_accelerometer::printAccelerationData() {
     Serial.print("Acceleration X: ");
-    Serial.print(x_acce);
+    Serial.print(a.acceleration.x);
     Serial.print(", Y: ");
-    Serial.print(y_acce);
+    Serial.print(a.acceleration.y);
     Serial.print(", Z: ");
-    Serial.print(z_acce);
+    Serial.print(a.acceleration.z);
     Serial.println(" m/s^2");
+}
+
+String MPU6050_accelerometer::xGyro(){
+    String x_gyro = String(g.gyro.x);
+    return x_gyro;
+}
+
+String MPU6050_accelerometer::yGyro(){
+    String y_gyro = String(g.gyro.y);
+    return y_gyro;
+}
+
+String MPU6050_accelerometer::zGyro(){
+    String z_gyro = String(g.gyro.z);
+    return z_gyro;
 }
 
 void MPU6050_accelerometer::printGyroData() {
     Serial.print("Rotation X: ");
-    Serial.print(x_gyro);
+    Serial.print(g.gyro.x);
     Serial.print(", Y: ");
-    Serial.print(y_gyro);
+    Serial.print(g.gyro.y);
     Serial.print(", Z: ");
-    Serial.print(z_gyro);
+    Serial.print(g.gyro.z);
     Serial.println(" rad/s");
 }
 
@@ -81,39 +104,38 @@ unsigned long MPU6050_accelerometer::getTime() {
     return now;
 }
 
+String MPU6050_accelerometer::whatTime(){
+    String timestamp_String = String(getTime());
+    return timestamp_String;
+}
+
 bool MPU6050_accelerometer::fallDetection(){
-    readSensorData();
+    // readSensorData();
     sendDataPrevMillis = millis();
+    Serial.println("");
 
     //Get current timestamp
     timestamp = getTime();
     Serial.print ("time: ");
     Serial.println (timestamp);
 
-    // x_acce = a.acceleration.x;
-    // y_acce = a.acceleration.y; 
-    // z_acce = a.acceleration.z;
-    // x_gyro = g.gyro.x;
-    // y_gyro = g.gyro.y;
-    // z_gyro = g.gyro.z;
+    printAccelerationData();
+    printGyroData();
     
     // Calculate total acceleration vector magnitude
-    float totalAcc = sqrt(x_acce*x_acce + y_acce*y_acce + z_acce*z_acce);
+    float totalAcc = sqrt(a.acceleration.x*a.acceleration.x + a.acceleration.y*a.acceleration.y + a.acceleration.z*a.acceleration.z);
 
     // Check if total acceleration is greater than the upper threshold
     if (totalAcc > upperAcceleration) {
-        Serial.println("Acceleration exceed: ");
-        float W = sqrt(x_gyro*x_gyro + y_gyro*y_gyro + z_gyro*z_gyro);
-        Serial.print(W);
+        Serial.print("Acceleration exceed: ");
+        Serial.print(totalAcc);
         Serial.println("m/s^2");
-    
+        float W = sqrt(g.gyro.x*g.gyro.x + g.gyro.y*g.gyro.y + g.gyro.z*g.gyro.z);
+
         // Check if angular velocity is greater than the upper threshold
         if (W > upperAngularVelocity) {
             // Fall detected
             Serial.println("Fall detected!");
-            printAccelerationData();
-            printGyroData();
-            Serial.println("");
             return 1;
         }
         else {
@@ -124,5 +146,15 @@ bool MPU6050_accelerometer::fallDetection(){
         Serial.println("No Fall");
         return 0;
     }
+}
+
+String MPU6050_accelerometer::totalAcceleration(){
+    String total_acce = String(sqrt(a.acceleration.x*a.acceleration.x + a.acceleration.y*a.acceleration.y + a.acceleration.z*a.acceleration.z)) + "m/s2";
+    return total_acce;
+}
+
+String MPU6050_accelerometer::totalAngularVelocity(){
+    String total_gyro = String(sqrt(g.gyro.x*g.gyro.x + g.gyro.y*g.gyro.y + g.gyro.z*g.gyro.z)) + "rad/s";
+    return total_gyro;
 }
 
