@@ -388,7 +388,7 @@
 /*Optionally declare custom fonts here.
  *You can use these fonts as default font too and they will be available globally.
  *E.g. #define LV_FONT_CUSTOM_DECLARE   LV_FONT_DECLARE(my_font_1) LV_FONT_DECLARE(my_font_2)*/
-#define LV_FONT_CUSTOM_DECLARE
+#define LV_FONT_CUSTOM_DECLARE  LV_FONT_DECLARE(custom_emoji_leftpanel)
 
 /*Always set a default font*/
 #define LV_FONT_DEFAULT &lv_font_montserrat_14
@@ -686,7 +686,7 @@
 #define LV_USE_MONKEY 0
 
 /*1: Enable grid navigation*/
-#define LV_USE_GRIDNAV 1
+#define LV_USE_GRIDNAV 0
 
 /*1: Enable lv_obj fragment*/
 #define LV_USE_FRAGMENT 0

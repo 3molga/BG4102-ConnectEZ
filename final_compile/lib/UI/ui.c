@@ -60,7 +60,8 @@ lv_style_t ui_mainpanel_btnmatrix_wrapperstyle;
 lv_style_t ui_mainpanel_btnmatrix_mainstyle;
 lv_style_t ui_mainpanel_btnmatrix_btndefstyle;
 lv_style_t ui_mainpanel_btnmatrix_btnselstyle;
-lv_style_t ui_mainpanel_btnmatrix_btnprestyle;
+lv_style_t ui_leftpanel_btnmatrix_btndefstyle;
+lv_style_t ui_leftpanel_btnmatrix_btnselstyle;
 
 // Buttonmatrixes
 lv_obj_t **ui_mainpanels;
@@ -130,6 +131,28 @@ void init_styles()
     lv_style_set_border_color(&ui_mainpanel_btnmatrix_btnselstyle, lv_color_make(10, 0, 0)); // Add black outline
     lv_style_set_bg_color(&ui_mainpanel_btnmatrix_btnselstyle, lv_color_make(56, 69, 255));  // Make bg color lighter
     lv_style_set_outline_width(&ui_mainpanel_btnmatrix_btnselstyle, 0);
+
+    // LP btnmatrix btn style
+    // Basically the same but with custom emoji font, because it seems you can only define that in a style object
+    lv_style_init(&ui_leftpanel_btnmatrix_btndefstyle);
+    lv_style_set_shadow_width(&ui_leftpanel_btnmatrix_btndefstyle, 0);                     // Remove shadow
+    lv_style_set_border_width(&ui_leftpanel_btnmatrix_btndefstyle, 0);                     // Remove border
+    lv_style_set_outline_width(&ui_leftpanel_btnmatrix_btndefstyle, 0);                    // Remove outline
+    lv_style_set_bg_color(&ui_leftpanel_btnmatrix_btndefstyle, lv_color_make(33, 40, 63)); // Internal button color
+    lv_style_set_text_color(&ui_leftpanel_btnmatrix_btndefstyle, lv_color_make(255, 255, 255));
+    lv_style_set_pad_top(&ui_leftpanel_btnmatrix_btndefstyle, 0); // Add padding of 0 px on all sides
+    lv_style_set_pad_bottom(&ui_leftpanel_btnmatrix_btndefstyle, 0);
+    lv_style_set_pad_right(&ui_leftpanel_btnmatrix_btndefstyle, 0);
+    lv_style_set_pad_left(&ui_leftpanel_btnmatrix_btndefstyle, 0);
+    lv_style_set_text_font(&ui_leftpanel_btnmatrix_btndefstyle, &custom_emoji_leftpanel);
+
+    // LP btnmatrix btn style
+    lv_style_init(&ui_leftpanel_btnmatrix_btnselstyle);
+    lv_style_set_border_width(&ui_leftpanel_btnmatrix_btnselstyle, 3);                       // Add 2px-wide border
+    lv_style_set_border_color(&ui_leftpanel_btnmatrix_btnselstyle, lv_color_make(10, 0, 0)); // Add black outline
+    lv_style_set_bg_color(&ui_leftpanel_btnmatrix_btnselstyle, lv_color_make(56, 69, 255));  // Make bg color lighter
+    lv_style_set_outline_width(&ui_leftpanel_btnmatrix_btnselstyle, 0);
+    lv_style_set_text_font(&ui_leftpanel_btnmatrix_btnselstyle, &custom_emoji_leftpanel);
 }
 
 //  Function to combine and simplify checking for touchpad click and button_sel press

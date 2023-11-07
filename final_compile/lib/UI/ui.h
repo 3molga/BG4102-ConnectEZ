@@ -79,7 +79,8 @@ extern lv_style_t ui_mainpanel_btnmatrix_wrapperstyle;
 extern lv_style_t ui_mainpanel_btnmatrix_mainstyle;
 extern lv_style_t ui_mainpanel_btnmatrix_btndefstyle;
 extern lv_style_t ui_mainpanel_btnmatrix_btnselstyle;
-extern lv_style_t ui_mainpanel_btnmatrix_btnprestyle;
+extern lv_style_t ui_leftpanel_btnmatrix_btndefstyle;
+extern lv_style_t ui_leftpanel_btnmatrix_btnselstyle;
 
 // Utility functions
 lv_coord_t calc_btnmatrix_height(lv_obj_t * btnmatrixobj, lv_coord_t rowheight);

@@ -4,6 +4,16 @@
 
 #include "../ui.h"
 
+// Define symbols
+#define PRONOUNS_EMOJI "\xEF\x80\x87"
+#define QUESTIONS_EMOJI "\xEF\x84\xA8"
+#define VERBS_EMOJI "\xEF\x95\x94"
+#define TIME_EMOJI "\xEF\x80\x97"
+#define PLACES_EMOJI "\xEF\x88\x9D"
+#define FOOD_EMOJI "\xEF\x8B\xA7"
+#define FEELINGS_EMOJI "\xEF\x98\xB0"
+#define ADJECTIVES_EMOJI "\xEF\x83\x90"
+
 // Init function - sets up all objects to their intended initial state
 void ui_main_screen_init(void)
 {
@@ -39,27 +49,29 @@ void ui_main_screen_init(void)
     lv_obj_set_align(ui_leftpanel_wrapper, LV_ALIGN_BOTTOM_LEFT);
     lv_obj_add_style(ui_leftpanel_wrapper, &ui_mainpanel_btnmatrix_wrapperstyle, 0);
 
-    static const char *lp_btnm_map[] = {"A", "\n",
-                                        "B", "\n",
-                                        "C", "\n",
-                                        "D", "\n",
-                                        "E", "\n",
-                                        "F", ""};
+    static const char *lp_btnm_map[] = {PRONOUNS_EMOJI, "\n",
+                                        QUESTIONS_EMOJI, "\n",
+                                        VERBS_EMOJI, "\n",
+                                        TIME_EMOJI, "\n",
+                                        PLACES_EMOJI, "\n",
+                                        FOOD_EMOJI, "\n",
+                                        FEELINGS_EMOJI, "\n",
+                                        ADJECTIVES_EMOJI, ""};
 
     ui_leftpanel_btnmatrix = lv_btnmatrix_create(ui_leftpanel_wrapper);
-
-    // Apply controls
-    lv_btnmatrix_set_map(ui_leftpanel_btnmatrix, lp_btnm_map);
-    lv_btnmatrix_set_btn_ctrl_all(ui_leftpanel_btnmatrix, LV_BTNMATRIX_CTRL_NO_REPEAT);
-    lv_btnmatrix_set_one_checked(ui_leftpanel_btnmatrix, true);
-    lv_btnmatrix_set_selected_btn(ui_leftpanel_btnmatrix, 0); // Start with first button selected
 
     //  Apply buttonmatrix styles
     lv_obj_add_style(ui_leftpanel_btnmatrix, &ui_mainpanel_btnmatrix_mainstyle, 0);
     lv_obj_add_style(ui_leftpanel_btnmatrix, &ui_mainpanel_btnmatrix_mainstyle, LV_PART_MAIN | LV_STATE_FOCUS_KEY);
-    lv_obj_add_style(ui_leftpanel_btnmatrix, &ui_mainpanel_btnmatrix_btndefstyle, LV_PART_ITEMS | LV_STATE_DEFAULT);
-    lv_obj_add_style(ui_leftpanel_btnmatrix, &ui_mainpanel_btnmatrix_btnselstyle, LV_PART_ITEMS | LV_STATE_FOCUS_KEY);
-    lv_obj_add_style(ui_leftpanel_btnmatrix, &ui_mainpanel_btnmatrix_btnselstyle, LV_PART_ITEMS | LV_STATE_PRESSED);
+    lv_obj_add_style(ui_leftpanel_btnmatrix, &ui_leftpanel_btnmatrix_btndefstyle, LV_PART_ITEMS | LV_STATE_DEFAULT);
+    lv_obj_add_style(ui_leftpanel_btnmatrix, &ui_leftpanel_btnmatrix_btnselstyle, LV_PART_ITEMS | LV_STATE_FOCUS_KEY);
+    lv_obj_add_style(ui_leftpanel_btnmatrix, &ui_leftpanel_btnmatrix_btnselstyle, LV_PART_ITEMS | LV_STATE_PRESSED);
+
+    //  Apply controls
+    lv_btnmatrix_set_map(ui_leftpanel_btnmatrix, lp_btnm_map);
+    lv_btnmatrix_set_btn_ctrl_all(ui_leftpanel_btnmatrix, LV_BTNMATRIX_CTRL_NO_REPEAT);
+    lv_btnmatrix_set_one_checked(ui_leftpanel_btnmatrix, true);
+    lv_btnmatrix_set_selected_btn(ui_leftpanel_btnmatrix, 0); // Start with first button selected
 
     // Set position
     lv_obj_set_width(ui_leftpanel_btnmatrix, lv_pct(100));
