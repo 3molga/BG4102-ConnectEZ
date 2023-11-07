@@ -63,7 +63,7 @@ lv_style_t ui_mainpanel_btnmatrix_btnselstyle;
 lv_style_t ui_mainpanel_btnmatrix_btnprestyle;
 
 // Buttonmatrixes
-lv_obj_t ** ui_mainpanels;
+lv_obj_t **ui_mainpanels;
 
 /* ---------------------------------------------------------------------------------
                                     FUNCTIONS
@@ -168,16 +168,7 @@ lv_coord_t calc_btnmatrix_height(lv_obj_t *btnmatrixobj, lv_coord_t rowheight)
     lv_coord_t pixelheight;
     lv_btnmatrix_t *btnm = (lv_btnmatrix_t *)btnmatrixobj;
 
-    // Then do some basic maths to get height
-    // Let's say we set it so that by default, 3 rows of buttons are displayed on the buttonmatrix
-    if (btnm->row_cnt > 3)
-    {
-        pixelheight = btnm->row_cnt * rowheight;
-    }
-    else
-    {
-        pixelheight = lv_obj_get_height(btnmatrixobj);
-    }
+    pixelheight = btnm->row_cnt * rowheight;
 
     return pixelheight;
 }
