@@ -3,7 +3,6 @@
 
 #include "ui.h"
 #include "ui_helpers.h"
-#include <Arduino.h>
 
 /* ---------------------------------------------------------------------------------
                                     VARIABLES
@@ -34,11 +33,14 @@ lv_style_t ui_btnselstyle;
 // SCREEN: ui_main_screen
 void ui_main_screen_init(void);
 void ui_main_screen_setindev(lv_group_t *group, lv_obj_t *btnmatrix);
+void ui_initmainpanel(uint16_t leftpanel_btnid);
+
 void ui_event_returntostart(lv_event_t *e);
 void ui_event_mainpanel_esc(lv_event_t *e);
 void ui_event_leftpanel_sel(lv_event_t *e);
 void ui_event_leftpanel_esc(lv_event_t *e);
-void ui_event_scroll(lv_event_t *e);
+void ui_event_scroll_mainpanel(lv_event_t *e);
+void ui_event_scroll_leftpanel(lv_event_t *e);
 
 lv_obj_t *ui_main_screen;
 lv_obj_t *ui_returntostart;
@@ -60,6 +62,8 @@ lv_style_t ui_mainpanel_btnmatrix_btndefstyle;
 lv_style_t ui_mainpanel_btnmatrix_btnselstyle;
 lv_style_t ui_mainpanel_btnmatrix_btnprestyle;
 
+// Buttonmatrixes
+lv_obj_t ** ui_mainpanels;
 
 /* ---------------------------------------------------------------------------------
                                     FUNCTIONS
@@ -78,6 +82,7 @@ void ui_init(void)
     ui_start_screen_init();
     ui_main_screen_init();
     ui_start_screen_setindev(ui_grp_init_button);
+
     lv_disp_load_scr(ui_start_screen);
 }
 
@@ -154,25 +159,25 @@ bool check_inputs_del(lv_event_t *event)
     }
 }
 
-// Function to calculate btnmatrix height based on btnmatrix 
+// Function to calculate btnmatrix height based on btnmatrix
 // Inputs: btnmatrix map char array
 // Outputs: height in pixels (int16_t/lv_coord_t (equiv))
-lv_coord_t calc_btnmatrix_height(lv_obj_t * btnmatrixobj, lv_coord_t rowheight)
+lv_coord_t calc_btnmatrix_height(lv_obj_t *btnmatrixobj, lv_coord_t rowheight)
 {
     LV_ASSERT_OBJ(obj, lv_btnmatrix_t);
     lv_coord_t pixelheight;
-    lv_btnmatrix_t * btnm = (lv_btnmatrix_t *) btnmatrixobj;
+    lv_btnmatrix_t *btnm = (lv_btnmatrix_t *)btnmatrixobj;
 
     // Then do some basic maths to get height
     // Let's say we set it so that by default, 3 rows of buttons are displayed on the buttonmatrix
-    if (btnm -> row_cnt > 3)
+    if (btnm->row_cnt > 3)
     {
-        pixelheight = btnm -> row_cnt * rowheight; 
+        pixelheight = btnm->row_cnt * rowheight;
     }
     else
     {
         pixelheight = lv_obj_get_height(btnmatrixobj);
     }
-    
+
     return pixelheight;
 }

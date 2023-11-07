@@ -8,7 +8,6 @@
    ---------------------------------------------------------------------------------*/
 #include <vector>
 #include <string>
-#include <cmath>
 #include <Arduino.h>
 #include <TFT_eSPI.h>
 #include <XPT2046_Calibrated.h>
