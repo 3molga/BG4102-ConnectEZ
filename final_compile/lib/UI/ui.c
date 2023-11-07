@@ -3,6 +3,7 @@
 
 #include "ui.h"
 #include "ui_helpers.h"
+#include <Arduino.h>
 
 /* ---------------------------------------------------------------------------------
                                     VARIABLES
@@ -37,6 +38,7 @@ void ui_event_returntostart(lv_event_t *e);
 void ui_event_mainpanel_esc(lv_event_t *e);
 void ui_event_leftpanel_sel(lv_event_t *e);
 void ui_event_leftpanel_esc(lv_event_t *e);
+void ui_event_scroll(lv_event_t *e);
 
 lv_obj_t *ui_main_screen;
 lv_obj_t *ui_returntostart;
@@ -44,14 +46,20 @@ lv_obj_t *ui_mainpanel;
 lv_obj_t *ui_leftpanel;
 
 lv_obj_t *ui_mainpanel_btnmatrix;
+lv_obj_t *ui_mainpanel_wrapper;
+
 lv_obj_t *ui_leftpanel_btnmatrix;
+lv_obj_t *ui_leftpanel_wrapper;
+
 lv_group_t *ui_grp_mp_btnmatrix; // Assign this dynamically
 lv_group_t *ui_grp_lp_btnmatrix;
 
+lv_style_t ui_mainpanel_btnmatrix_wrapperstyle;
 lv_style_t ui_mainpanel_btnmatrix_mainstyle;
 lv_style_t ui_mainpanel_btnmatrix_btndefstyle;
 lv_style_t ui_mainpanel_btnmatrix_btnselstyle;
 lv_style_t ui_mainpanel_btnmatrix_btnprestyle;
+
 
 /* ---------------------------------------------------------------------------------
                                     FUNCTIONS
@@ -84,16 +92,20 @@ void init_styles()
     lv_style_set_outline_width(&ui_btndefstyle, 0);
     lv_style_set_shadow_width(&ui_btndefstyle, 0);
 
+    // Default btnmatrix wrapper style - shouldn't ever change
+    lv_style_init(&ui_mainpanel_btnmatrix_wrapperstyle);
+    lv_style_set_bg_color(&ui_mainpanel_btnmatrix_wrapperstyle, lv_color_make(110, 185, 240));
+    lv_style_set_border_width(&ui_mainpanel_btnmatrix_wrapperstyle, 2); // Make border 2 px wide
+    lv_style_set_border_color(&ui_mainpanel_btnmatrix_wrapperstyle, lv_color_make(0, 0, 0));
+    lv_style_set_outline_width(&ui_mainpanel_btnmatrix_wrapperstyle, 0); // Make outline transparent
+    lv_style_set_pad_all(&ui_mainpanel_btnmatrix_wrapperstyle, 0);       // Make paddings zero
+
     // Default btnmatrix background style - shouldn't ever change
     lv_style_init(&ui_mainpanel_btnmatrix_mainstyle);
-    lv_style_set_bg_color(&ui_mainpanel_btnmatrix_mainstyle, lv_color_make(110, 185, 240));
-    lv_style_set_border_width(&ui_mainpanel_btnmatrix_mainstyle, 2);     // Make border 2 px wide
-    lv_style_set_border_color(&ui_mainpanel_btnmatrix_mainstyle, lv_color_make(0, 0, 0));
-    lv_style_set_outline_width(&ui_mainpanel_btnmatrix_mainstyle, 0);    // Make outline transparent
-    lv_style_set_pad_top(&ui_mainpanel_btnmatrix_mainstyle, 8);          // Set paddings 
-    lv_style_set_pad_bottom(&ui_mainpanel_btnmatrix_mainstyle, 4);       // (top and left should be 4px wider than bot/right, for some reason)
-    lv_style_set_pad_right(&ui_mainpanel_btnmatrix_mainstyle, 4);
-    lv_style_set_pad_left(&ui_mainpanel_btnmatrix_mainstyle, 8);
+    lv_style_set_bg_opa(&ui_mainpanel_btnmatrix_mainstyle, 0);
+    lv_style_set_border_width(&ui_mainpanel_btnmatrix_mainstyle, 0);
+    lv_style_set_outline_width(&ui_mainpanel_btnmatrix_mainstyle, 0); // Make outline transparent
+    lv_style_set_pad_all(&ui_mainpanel_btnmatrix_mainstyle, 4);       // Set paddings
 
     // Default btnmatrix btn style
     lv_style_init(&ui_mainpanel_btnmatrix_btndefstyle);
@@ -102,7 +114,7 @@ void init_styles()
     lv_style_set_outline_width(&ui_mainpanel_btnmatrix_btndefstyle, 0);                    // Remove outline
     lv_style_set_bg_color(&ui_mainpanel_btnmatrix_btndefstyle, lv_color_make(33, 40, 63)); // Internal button color
     lv_style_set_text_color(&ui_mainpanel_btnmatrix_btndefstyle, lv_color_make(255, 255, 255));
-    lv_style_set_pad_top(&ui_mainpanel_btnmatrix_btndefstyle, 0);                          // Add padding of 0 px on all sides
+    lv_style_set_pad_top(&ui_mainpanel_btnmatrix_btndefstyle, 0); // Add padding of 0 px on all sides
     lv_style_set_pad_bottom(&ui_mainpanel_btnmatrix_btndefstyle, 0);
     lv_style_set_pad_right(&ui_mainpanel_btnmatrix_btndefstyle, 0);
     lv_style_set_pad_left(&ui_mainpanel_btnmatrix_btndefstyle, 0);
@@ -140,4 +152,27 @@ bool check_inputs_del(lv_event_t *event)
     {
         return 0;
     }
+}
+
+// Function to calculate btnmatrix height based on btnmatrix 
+// Inputs: btnmatrix map char array
+// Outputs: height in pixels (int16_t/lv_coord_t (equiv))
+lv_coord_t calc_btnmatrix_height(lv_obj_t * btnmatrixobj, lv_coord_t rowheight)
+{
+    LV_ASSERT_OBJ(obj, lv_btnmatrix_t);
+    lv_coord_t pixelheight;
+    lv_btnmatrix_t * btnm = (lv_btnmatrix_t *) btnmatrixobj;
+
+    // Then do some basic maths to get height
+    // Let's say we set it so that by default, 3 rows of buttons are displayed on the buttonmatrix
+    if (btnm -> row_cnt > 3)
+    {
+        pixelheight = btnm -> row_cnt * rowheight; 
+    }
+    else
+    {
+        pixelheight = lv_obj_get_height(btnmatrixobj);
+    }
+    
+    return pixelheight;
 }

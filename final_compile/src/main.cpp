@@ -8,6 +8,7 @@
    ---------------------------------------------------------------------------------*/
 #include <vector>
 #include <string>
+#include <cmath>
 #include <Arduino.h>
 #include <TFT_eSPI.h>
 #include <XPT2046_Calibrated.h>
@@ -64,8 +65,8 @@ WiFiClientSecure client;
 UniversalTelegramBot bot(BOTtoken, client);
 telebot botController(bot, CHAT_ID);
 
-#define API_KEY "AIzaSyC9IZqH7onhkDCxWYMoz4Hb_ZWK1eQJ7YM"   // Insert Firebase project API Key
-#define USER_EMAIL "zaneyong00@gmail.com"// Insert Authorized Email and Corresponding Password
+#define API_KEY "AIzaSyC9IZqH7onhkDCxWYMoz4Hb_ZWK1eQJ7YM" // Insert Firebase project API Key
+#define USER_EMAIL "zaneyong00@gmail.com"                 // Insert Authorized Email and Corresponding Password
 #define USER_PASSWORD "zane1234"
 #define DATABASE_URL "https://connectez-87c05-default-rtdb.asia-southeast1.firebasedatabase.app/" // Insert RTDB URLefine the RTDB URL
 googlefirebase fb;
@@ -105,6 +106,8 @@ void setup()
   // Init UI elements
   ui_init();
 
+  // Temporarily disable all this until GUI is properly sorted
+  /*
   // Connect to Wi-Fi
   WiFi.mode(WIFI_STA);
   WiFi.disconnect();
@@ -125,8 +128,6 @@ void setup()
     }
   }
 
-  // fb.initWiFi(WIFI_SSID, WIFI_PASSWORD); This shouldn't be required
-  // Serial.printf("Connected to %s Wifi", WIFI_SSID);
   fb.setup(API_KEY, USER_EMAIL, USER_PASSWORD, DATABASE_URL);
   Serial.printf("Connected to Google Firebase at %s", DATABASE_URL);
   fb.begin(ACCEL_SDA, ACCEL_SCL);
@@ -134,13 +135,14 @@ void setup()
 
   // Set up parallel processing task to handle Telegram reading
   xTaskCreatePinnedToCore(
-      TeleHandler,            /* Task function. */
-      "Telegram Bot Handler", /* name of task. */
-      100000,                 /* Stack size of task */
-      NULL,                   /* parameter of the task */
-      1,                      /* priority of the task */
-      NULL,                   /* Task handle to keep track of created task */
-      1);                     /* pin task to core 0 */
+      TeleHandler,            // Task function.
+      "Telegram Bot Handler", // name of task.
+      100000,                 // Stack size of task
+      NULL,                   // parameter of the task
+      1,                      // priority of the task
+      NULL,                   // Task handle to keep track of created task
+      1);                     // pin task to core 0
+  */
 }
 
 void loop()
@@ -169,6 +171,7 @@ void loop()
   delay(5); // 5 ms shouldn't lead to missing any inputs right? RIGHT?
 }
 
+/*
 // 2nd loop to handle Telegram operations
 void TeleHandler(void *pvParameters)
 {
@@ -188,6 +191,7 @@ void TeleHandler(void *pvParameters)
     }
   }
 }
+*/
 
 /* ---------------------------------------------------------------------------------
                                       FUNCTIONS
