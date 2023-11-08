@@ -2,6 +2,7 @@
 #include <googlefirebase.h>
 #include <MPU6050_accelerometer.h>
 #include <MAX30102_heartratesensor.h>
+#include <ezButton.h>
 
 #define WIFI_SSID "Zane’s iPhone"                           // Insert your network credentials
 #define WIFI_PASSWORD "zane1234"                            // Insert your network password
@@ -11,12 +12,18 @@
 #define DATABASE_URL "https://connectez-87c05-default-rtdb.asia-southeast1.firebasedatabase.app/" // Insert RTDB URLefine the RTDB URL
 
 // MPU6050_accelerometer pins
-#define I2C_SDA_MPU 8 
-#define I2C_SCL_MPU 9 
+#define I2C_SDA_MPU 2 
+#define I2C_SCL_MPU 1
 
 // MAX30102_heartratesensor pins
-#define I2C_SDA_HBR 10
-#define I2C_SCL_HBR 11
+#define I2C_SDA_HBR 41
+#define I2C_SCL_HBR 42
+
+// Buzzer and button pin
+#define BUZZER_PIN 12
+ezButton button(7);  // create ezButton object that attach to pin 7;
+int lastState = HIGH; 
+int currentState = LOW; 
 
 googlefirebase fb;
 MPU6050_accelerometer mpu;
@@ -36,13 +43,26 @@ void setup() {
     fb.setup(API_KEY, USER_EMAIL, USER_PASSWORD, DATABASE_URL);
     Serial.printf("Connected to Google Firebase at %s", DATABASE_URL);
     Serial.println("");
+
+    button.setDebounceTime(50); // set debounce time to 50 milliseconds
+    pinMode(BUZZER_PIN, OUTPUT);
 }
 
 void loop() {
+    // Need to set button loop
+    button.loop(); // MUST call the loop() function first
+    int btnState = button.getState();
+    if (button.isPressed()) {
+        Serial.println("The button is pressed");
+        currentState = LOW;
+        analogWrite(BUZZER_PIN, currentState);
+    }
+
     // Fall detection
     mpu.readSensorData();
     if (mpu.fallDetection() == 1){
         fb.sendDataToDatabase(mpu.whatTime(), mpu.xAcceleration(), mpu.yAcceleration(), mpu.zAcceleration(), mpu.xGyro(), mpu.yGyro(), mpu.zGyro(), mpu.totalAcceleration(), mpu.totalAngularVelocity());
+        analogWrite(BUZZER_PIN, lastState);
     }
 
     // Heart rate detection
