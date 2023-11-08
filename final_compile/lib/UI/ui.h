@@ -21,7 +21,6 @@ extern "C" {
 #include "ui_helpers.h"
 #include "components/ui_comp.h"
 #include "components/ui_comp_hook.h"
-#include "ui_events.h"
 
 // Global-ish UI objects and functions
 extern lv_indev_t *indev_joystick;
@@ -84,6 +83,17 @@ extern lv_style_t ui_leftpanel_btnmatrix_btnselstyle;
 
 // Utility functions
 lv_coord_t calc_btnmatrix_height(lv_obj_t * btnmatrixobj, lv_coord_t rowheight);
+
+// Struct to store words
+// Assume a maximum of 5 words that the user can input for now?
+struct words_input{
+  uint16_t lp_array_ID[5];
+  uint16_t mp_array_ID[5];
+  uint16_t lp_array_last_ID;
+  char* lp_array_words[5];
+  char* mp_array_words[5];
+};
+struct words_input user_input_struct;
 
 LV_IMG_DECLARE(ui_img_1_bg_png);   // assets\1_bg.png
 LV_IMG_DECLARE(ui_img_logo_png);   // assets\logo.png

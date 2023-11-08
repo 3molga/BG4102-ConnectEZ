@@ -66,6 +66,9 @@ lv_style_t ui_leftpanel_btnmatrix_btnselstyle;
 // Buttonmatrixes
 lv_obj_t **ui_mainpanels;
 
+// Word storage
+struct words_input user_input_struct;
+
 /* ---------------------------------------------------------------------------------
                                     FUNCTIONS
    ---------------------------------------------------------------------------------*/

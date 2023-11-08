@@ -6,32 +6,32 @@
 #include <Arduino.h>
 
 // Class declaration
-class joystickAxis {
+class joystickAxis
+{
 
-// Public stuff
+	// Public stuff
 public:
-  // Constructor
-	  	joystickAxis(int joystickAxisPin, bool joystickAxisXY); // Creates object for each pin
+	// Constructor
+	joystickAxis(int joystickAxisPin, bool joystickAxisXY); // Creates object for each pin
 
-  // Functions
-  		void joystickAxisLoop(); // Main loop to check state
-  		String returnJoystickAxisToggledMsg(); // Returns message
+	// Functions
+	void joystickAxisLoop();			   // Main loop to check state
+	String returnJoystickAxisToggledMsg(); // Returns message
 
-  // Variables
-  		int joystickAxisCurrentState; // joystickAxis current state
-	  	String joystickAxisMessage; // joystickAxis message
+	// Variables
+	int joystickAxisCurrentState; // joystickAxis current state
+	String joystickAxisMessage;	  // joystickAxis message
 
-// Private stuff
+	// Private stuff
 private:
-  // Variables
-		int _joystickAxisPin; // Pin int
-	 	bool _joystickAxisXY; // joystickAxis X or Y (0/1)
-		int _joystickAxisValue; // joystickAxis current value
-  		
+	// Variables
+	int _joystickAxisPin;	// Pin int
+	bool _joystickAxisXY;	// joystickAxis X or Y (0/1)
+	int _joystickAxisValue; // joystickAxis current value
 
-  // Functions
-		int _joystickAxisToggleCheck(); // Checks if joystickAxis is toggled
-		void _joystickAxisUpdateMsg(); //Updates message from joystickAxis
+	// Functions
+	int _joystickAxisToggleCheck(); // Checks if joystickAxis is toggled
+	void _joystickAxisUpdateMsg();	// Updates message from joystickAxis
 };
 
 #endif

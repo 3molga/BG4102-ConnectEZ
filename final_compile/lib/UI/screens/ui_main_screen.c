@@ -158,11 +158,11 @@ void ui_event_leftpanel_sel(lv_event_t *e)
         // Set indevs
         ui_main_screen_setindev(ui_grp_mp_btnmatrix, ui_mainpanel_btnmatrix);
 
-        // Reset buttons
-        lv_btnmatrix_set_selected_btn(ui_leftpanel_btnmatrix, LV_BTNMATRIX_BTN_NONE);
-
         // Reset scroll to top
         lv_obj_scroll_to_y(ui_mainpanel_wrapper, 0, LV_ANIM_OFF);
+
+        // Store last selected id
+        user_input_struct.lp_array_last_ID = btnid;
     }
 }
 
@@ -187,10 +187,7 @@ void ui_event_mainpanel_esc(lv_event_t *e)
         // Reset indev and button
         ui_main_screen_setindev(ui_grp_lp_btnmatrix, ui_leftpanel_btnmatrix);
         lv_btnmatrix_set_selected_btn(ui_mainpanel_btnmatrix, LV_BTNMATRIX_BTN_NONE);
-
-        // Reset scroll to top
-        lv_obj_scroll_to_y(ui_leftpanel_wrapper, 0, LV_ANIM_ON);
-
+        lv_btnmatrix_set_selected_btn(ui_leftpanel_btnmatrix, user_input_struct.lp_array_last_ID);
     }
 }
 

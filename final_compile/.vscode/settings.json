@@ -56,7 +56,8 @@
         "cinttypes": "cpp",
         "typeinfo": "cpp",
         "lvgl.h": "c",
-        "ui.h": "c"
+        "ui.h": "cpp",
+        "joystickaxis.h": "cpp"
     },
     "C_Cpp.dimInactiveRegions": false,
     "C_Cpp.default.compilerPath": "C:/Users/ihack/.platformio/packages/toolchain-xtensa-esp32s3@8.4.0+2021r2-patch5/bin/xtensa-esp32s3-elf-gcc.exe",

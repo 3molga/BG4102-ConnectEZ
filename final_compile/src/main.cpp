@@ -1,6 +1,6 @@
 /*  MAIN FILE TO RUN CONNECTEZ GUI AND EVERYTHING
     VER 0.0.1
-    by thad (and yeah pretty much only me :^)
+    by thad 
 */
 
 /* ---------------------------------------------------------------------------------

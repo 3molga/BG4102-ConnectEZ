@@ -860,7 +860,7 @@ lv_font_t custom_emoji_leftpanel = {
     .underline_thickness = 2,
 #endif
     .dsc = &font_dsc,          /*The custom font data. Will be accessed by `get_glyph_bitmap/dsc` */
-    .fallback = LV_FONT_MONTSERRAT_20,
+    .fallback = &lv_font_montserrat_20,
     .user_data = NULL
 };
 

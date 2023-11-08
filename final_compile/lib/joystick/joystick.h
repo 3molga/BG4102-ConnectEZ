@@ -9,36 +9,37 @@
 #include "joystickAxis.h"
 
 //  Class declaration
-class joystick {
+class joystick
+{
 
-// Public stuff
+  // Public stuff
 public:
   // Constructor and joystickAxis objects
-	  joystick(int joystickXPin, int joystickYPin, bool use_buffer); // Creates object from X and Y pins
-    joystickAxis joyX;
-    joystickAxis joyY; 
-    String message;
+  joystick(int joystickXPin, int joystickYPin, bool use_buffer); // Creates object from X and Y pins
+  joystickAxis joyX;
+  joystickAxis joyY;
+  String message;
 
   // Functions
-    void setup();
-    void stateTrigger();
-    String messageCheck();
-    uint8_t returnState();
-    void returnBufferElement(uint8_t *buffer);
-    void clearBufferElement();
+  void setup();
+  void stateTrigger();
+  String messageCheck();
+  uint8_t returnState();
+  void returnBufferElement(uint8_t *buffer);
+  void clearBufferElement();
 
-// Private stuff
+  // Private stuff
 private:
   // Variables
-    uint8_t _curValue;
-    uint8_t _prevValue;
-    std::vector<uint8_t> _buffer;
-    bool _bufferuse;
-    unsigned long _lastTriggered;
-  
+  uint8_t _curValue;
+  uint8_t _prevValue;
+  std::vector<uint8_t> _buffer;
+  bool _bufferuse;
+  unsigned long _lastTriggered;
+
   // Functions
-    void _updateState();
-    void _addBufferElement(uint8_t _curValue);
+  void _updateState();
+  void _addBufferElement(uint8_t _curValue);
 };
 
 #endif
