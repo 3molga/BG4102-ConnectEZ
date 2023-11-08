@@ -27,7 +27,7 @@ void ui_start_screen_init(void)
     ui_development_label = lv_label_create(ui_start_screen);
     lv_obj_set_x(ui_development_label, 4);
     lv_obj_set_y(ui_development_label, 5);
-    lv_label_set_text(ui_development_label, "Under Development v0.0.1");
+    lv_label_set_text(ui_development_label, "Under Development v0.6.9 :333");
     lv_obj_clear_flag(ui_development_label, LV_OBJ_FLAG_PRESS_LOCK | LV_OBJ_FLAG_CLICK_FOCUSABLE | LV_OBJ_FLAG_GESTURE_BUBBLE | LV_OBJ_FLAG_SNAPPABLE | LV_OBJ_FLAG_SCROLLABLE | LV_OBJ_FLAG_SCROLL_ELASTIC | LV_OBJ_FLAG_SCROLL_MOMENTUM | LV_OBJ_FLAG_SCROLL_CHAIN); /// Flags
     lv_obj_set_scrollbar_mode(ui_development_label, LV_SCROLLBAR_MODE_OFF);
     lv_obj_set_style_text_color(ui_development_label, lv_color_hex(0xFFFFFF), LV_PART_MAIN | LV_STATE_DEFAULT);
@@ -80,5 +80,8 @@ void ui_event_init_button(lv_event_t *e)
 
         // Reset buttons
         lv_btnmatrix_set_selected_btn(ui_mainpanel_btnmatrix, LV_BTNMATRIX_BTN_NONE);
+
+        // Reset scroll
+        lv_obj_scroll_to_y(ui_leftpanel_wrapper, 0, LV_ANIM_OFF);
     }
 }
