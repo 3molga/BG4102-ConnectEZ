@@ -45,12 +45,9 @@ void ui_main_screen_init(void)
     lv_obj_set_style_bg_opa(ui_main_screen, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
 
     ui_returntostart = lv_btn_create(ui_main_screen);
-    lv_obj_set_width(ui_returntostart, 20);
-    lv_obj_set_height(ui_returntostart, 20);
-    lv_obj_set_x(ui_returntostart, lv_pct(-2));
-    lv_obj_set_y(ui_returntostart, lv_pct(2));
-    lv_obj_set_align(ui_returntostart, LV_ALIGN_TOP_RIGHT);
-    lv_obj_add_flag(ui_returntostart, LV_OBJ_FLAG_SCROLL_ON_FOCUS);                                                                                                          /// Flags
+    lv_obj_set_size(ui_returntostart, 20, 20);
+    lv_obj_set_pos(ui_returntostart, lv_pct(-2), lv_pct(2));
+    lv_obj_set_align(ui_returntostart, LV_ALIGN_TOP_RIGHT);                                                                                                                  /// Flags
     lv_obj_clear_flag(ui_returntostart, LV_OBJ_FLAG_PRESS_LOCK | LV_OBJ_FLAG_CLICK_FOCUSABLE | LV_OBJ_FLAG_GESTURE_BUBBLE | LV_OBJ_FLAG_SNAPPABLE | LV_OBJ_FLAG_SCROLLABLE); /// Flags
     lv_obj_set_style_bg_color(ui_returntostart, lv_color_hex(0xFF0000), LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_bg_opa(ui_returntostart, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
@@ -61,6 +58,14 @@ void ui_main_screen_init(void)
     lv_obj_set_style_shadow_spread(ui_returntostart, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_shadow_ofs_x(ui_returntostart, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_shadow_ofs_y(ui_returntostart, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
+
+    // Word display
+    ui_worddisplay = lv_label_create(ui_main_screen);
+    lv_obj_set_size(ui_worddisplay, lv_pct(80), lv_pct(20));
+    lv_obj_set_pos(ui_worddisplay, lv_pct(2), lv_pct(2));
+    lv_obj_set_align(ui_worddisplay, LV_ALIGN_TOP_LEFT);
+    lv_obj_clear_flag(ui_worddisplay, LV_OBJ_FLAG_CLICKABLE | LV_OBJ_FLAG_SCROLLABLE);
+    lv_obj_add_style(ui_worddisplay, &ui_worddisplay_style, 0);
 
     // Left panel btnmatrix
     // Create wrapper
@@ -157,12 +162,16 @@ void ui_event_mainpanel_sel(lv_event_t *e)
         lv_btnmatrix_t *btnm = (lv_btnmatrix_t *)btnmatobj;
         uint16_t btnid = btnm->btn_id_sel;
 
-        // Get word
+        // Get word (yeah just ignore that discard const warning, it's intentional)
         const char *word = lv_btnmatrix_get_btn_text(btnmatobj, btnid);
         char *newword = word;
 
         // Assign values into lp_array_ID and mp_array_ID
         assign_inputs(btnid, user_input_struct.lp_array_last_ID, newword);
+
+        // Update worddisplay
+        char *totalword = generate_worddisplay();
+        lv_label_set_text(ui_worddisplay, totalword);
     }
 }
 
@@ -565,7 +574,7 @@ void assign_inputs(uint16_t mp_ID, uint16_t lp_ID, char *word)
 }
 
 /*  Function to remove newlines from char */
-char* remove_newlines(char *word)
+char *remove_newlines(char *word)
 {
     int i;
     char *newword = word;
@@ -578,4 +587,27 @@ char* remove_newlines(char *word)
         }
     }
     return newword;
+}
+
+/*  Function to generate text to display on worddisplay */
+char *generate_worddisplay()
+{
+    char *worddisplay;
+    char plus_char = " + ";
+
+    // Who cares about efficiency anyway lmao
+    for (int i = 0; i < user_input_struct.num_words; i++)
+    {
+        if (i == 0)
+        {
+            worddisplay = user_input_struct.mp_array_words[i];
+        }
+        else
+        {
+            strcat(worddisplay, plus_char);
+            strcat(worddisplay, user_input_struct.mp_array_words[i]);
+        }
+    }
+
+    return worddisplay;
 }

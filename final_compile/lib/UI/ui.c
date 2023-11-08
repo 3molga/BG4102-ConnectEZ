@@ -46,6 +46,7 @@ lv_obj_t *ui_main_screen;
 lv_obj_t *ui_returntostart;
 lv_obj_t *ui_mainpanel;
 lv_obj_t *ui_leftpanel;
+lv_obj_t *ui_worddisplay;
 
 lv_obj_t *ui_mainpanel_btnmatrix;
 lv_obj_t *ui_mainpanel_wrapper;
@@ -62,6 +63,8 @@ lv_style_t ui_mainpanel_btnmatrix_btndefstyle;
 lv_style_t ui_mainpanel_btnmatrix_btnselstyle;
 lv_style_t ui_leftpanel_btnmatrix_btndefstyle;
 lv_style_t ui_leftpanel_btnmatrix_btnselstyle;
+
+lv_style_t ui_worddisplay_style;
 
 // Buttonmatrixes
 lv_obj_t **ui_mainpanels;
@@ -154,6 +157,17 @@ void init_styles()
     lv_style_set_bg_color(&ui_leftpanel_btnmatrix_btnselstyle, lv_color_make(56, 69, 255)); // Make bg color lighter
     lv_style_set_outline_width(&ui_leftpanel_btnmatrix_btnselstyle, 0);
     lv_style_set_text_font(&ui_leftpanel_btnmatrix_btnselstyle, &custom_emoji_leftpanel);
+
+    // Word display label style
+    lv_style_init(&ui_worddisplay_style);
+    lv_style_set_border_width(&ui_worddisplay_style, 2);
+    lv_style_set_border_color(&ui_worddisplay_style, lv_color_make(0, 0, 0));
+    lv_style_set_outline_width(&ui_worddisplay_style, 0);
+    lv_style_set_bg_color(&ui_worddisplay_style, lv_color_make(0, 0, 0));
+    lv_style_set_bg_opa(&ui_worddisplay_style, 100);
+    lv_style_set_text_font(&ui_worddisplay_style, &lv_font_montserrat_18);
+    lv_style_set_text_color(&ui_worddisplay_style, lv_color_make(0, 0, 0));
+
 }
 
 //  Function to combine and simplify checking for touchpad click and button_sel press

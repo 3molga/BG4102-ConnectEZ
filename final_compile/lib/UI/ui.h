@@ -67,6 +67,7 @@ extern "C"
   extern lv_obj_t *ui_returntostart;
   extern lv_obj_t *ui_mainpanel;
   extern lv_obj_t *ui_leftpanel;
+  extern lv_obj_t *ui_worddisplay;
 
   // Button matrix stuff
   extern lv_obj_t *ui_mainpanel_wrapper;
@@ -85,6 +86,8 @@ extern "C"
   extern lv_style_t ui_leftpanel_btnmatrix_btndefstyle;
   extern lv_style_t ui_leftpanel_btnmatrix_btnselstyle;
 
+  extern lv_style_t ui_worddisplay_style;
+
   // Utility functions
   extern lv_coord_t calc_btnmatrix_height(lv_obj_t *btnmatrixobj, lv_coord_t rowheight);
   extern void assign_inputs(uint16_t mp_ID, uint16_t lp_ID, char *word);
@@ -101,8 +104,8 @@ extern "C"
 
     char *mp_array_words[MAX_USER_INPUTS];
   };
-
   struct words_input user_input_struct;
+  extern char* generate_worddisplay();
 
   LV_IMG_DECLARE(ui_img_1_bg_png); // assets\1_bg.png
   LV_IMG_DECLARE(ui_img_logo_png); // assets\logo.png
