@@ -133,11 +133,43 @@ void ui_main_screen_setindev(lv_group_t *group, lv_obj_t *btnmatrix)
     lv_btnmatrix_set_selected_btn(btnmatrix, 0);
 }
 
+/*  Callback for pressing the red button
+    Returns user to main screen */
+void ui_event_returntostart(lv_event_t *e)
+{
+    if (check_inputs_sel(e))
+    {
+        _ui_screen_change(&ui_start_screen, LV_SCR_LOAD_ANIM_FADE_ON, 200, 0, &ui_start_screen_init);
+        ui_start_screen_setindev(ui_grp_init_button);
+        _ui_screen_delete(&ui_main_screen);
+    }
+}
+
+/*  Call back for pressing main panel buttons
+    Does a bunch of stuff :)*/
+void ui_event_mainpanel_sel(lv_event_t *e)
+{
+    if (check_inputs_sel(e))
+    {
+        // Check btnid
+        lv_obj_t *btnmatobj = lv_event_get_target(e);
+        LV_ASSERT_OBJ(btnmat, lv_btnmatrix_t);
+        lv_btnmatrix_t *btnm = (lv_btnmatrix_t *)btnmatobj;
+        uint16_t btnid = btnm->btn_id_sel;
+
+        // Get word
+        const char *word = lv_btnmatrix_get_btn_text(btnmatobj, btnid);
+        char *newword = word;
+
+        // Assign values into lp_array_ID and mp_array_ID
+        assign_inputs(btnid, user_input_struct.lp_array_last_ID, newword);
+    }
+}
+
 /*  Callback for pressing left panel buttons
     Prevent triggering when it's being scrolled
     Removes indevs from left panel, adds them to main panel, and sets left panel selected button ID to 0
-    Also resets main panel scroll to the top
-    Eventually, add functionality to filter panel that is loaded based on ID of button pressed in left panel? */
+    Also resets main panel scroll to the top */
 void ui_event_leftpanel_sel(lv_event_t *e)
 {
     if (check_inputs_sel(e))
@@ -163,18 +195,6 @@ void ui_event_leftpanel_sel(lv_event_t *e)
 
         // Store last selected id
         user_input_struct.lp_array_last_ID = btnid;
-    }
-}
-
-/*  Callback for pressing the red button
-    Returns user to main screen */
-void ui_event_returntostart(lv_event_t *e)
-{
-    if (check_inputs_sel(e))
-    {
-        _ui_screen_change(&ui_start_screen, LV_SCR_LOAD_ANIM_FADE_ON, 200, 0, &ui_start_screen_init);
-        ui_start_screen_setindev(ui_grp_init_button);
-        _ui_screen_delete(&ui_main_screen);
     }
 }
 
@@ -335,7 +355,10 @@ void ui_event_scroll_leftpanel(lv_event_t *e)
 /*  Function to create mainpanels */
 void ui_initmainpanel(uint16_t ID)
 {
-    if (ID > 7){return;};
+    if (ID > 7)
+    {
+        return;
+    };
 
     // Create btnmat wrapper
     ui_mainpanel_wrapper = lv_obj_create(ui_main_screen);
@@ -354,7 +377,7 @@ void ui_initmainpanel(uint16_t ID)
         static const char *btnmap[] = {"I", "You", "\n",
                                        "He", "She", "\n",
                                        "We", "They", "\n",
-                                       "It", "One", 
+                                       "It", "One",
                                        ""};
         lv_btnmatrix_set_map(ui_mainpanel_btnmatrix, btnmap);
 
@@ -386,7 +409,7 @@ void ui_initmainpanel(uint16_t ID)
                                        "Drink", "Eat", "\n",
                                        "Shower", "Sleep", "\n",
                                        "Stand", "Sit", "\n",
-                                       "Open", "Close", 
+                                       "Open", "Close",
                                        ""};
         lv_btnmatrix_set_map(ui_mainpanel_btnmatrix, btnmap);
 
@@ -435,7 +458,7 @@ void ui_initmainpanel(uint16_t ID)
                                        "Kuey\nTeow", "Beehoon", "\n",
                                        "Porridge", "Soup", "\n",
                                        "Chicken", "Beef", "\n",
-                                       "Duck", "Pork", "\n", 
+                                       "Duck", "Pork", "\n",
                                        "Fish", "Prawns", "\n",
                                        "Cabbage", "Brocolli", "\n",
                                        "Kailan", "Lettuce", "\n",
@@ -468,19 +491,19 @@ void ui_initmainpanel(uint16_t ID)
         lv_obj_set_style_bg_color(ui_mainpanel_btnmatrix, DARK_BROWN, LV_PART_ITEMS | LV_STATE_DEFAULT);
         lv_obj_set_style_bg_color(ui_mainpanel_btnmatrix, LIGHT_BROWN, LV_PART_ITEMS | LV_STATE_FOCUS_KEY);
         lv_obj_set_style_bg_color(ui_mainpanel_btnmatrix, LIGHT_BROWN, LV_PART_ITEMS | LV_STATE_PRESSED);
-    } 
+    }
     else if (ID == 7) // Adjectives
     {
         static const char *btnmap[] = {"Hot", "Cold", "\n",
-                                        "Big", "Small", "\n",
-                                        "Sweet", "Salty", "\n",
-                                        "Sour", "Bitter", "\n",
-                                        "High", "Low", "\n",
-                                        "Bright", "Dark", "\n",
-                                        "Heavy", "Light", "\n",
-                                        "Difficult", "Easy", "\n",
-                                        "Near", "Far",
-                                        ""};
+                                       "Big", "Small", "\n",
+                                       "Sweet", "Salty", "\n",
+                                       "Sour", "Bitter", "\n",
+                                       "High", "Low", "\n",
+                                       "Bright", "Dark", "\n",
+                                       "Heavy", "Light", "\n",
+                                       "Difficult", "Easy", "\n",
+                                       "Near", "Far",
+                                       ""};
         lv_btnmatrix_set_map(ui_mainpanel_btnmatrix, btnmap);
 
         // Wrapper bg properties
@@ -514,7 +537,45 @@ void ui_initmainpanel(uint16_t ID)
     // Add callbacks
     lv_obj_add_event_cb(ui_mainpanel_btnmatrix, ui_event_mainpanel_esc, LV_EVENT_ALL, NULL);
     lv_obj_add_event_cb(ui_mainpanel_btnmatrix, ui_event_scroll_mainpanel, LV_EVENT_ALL, NULL);
+    lv_obj_add_event_cb(ui_mainpanel_btnmatrix, ui_event_mainpanel_sel, LV_EVENT_ALL, NULL);
 
     // Add to group
     lv_group_add_obj(ui_grp_mp_btnmatrix, ui_mainpanel_btnmatrix);
+}
+
+/*  Function to check and assign user inputs */
+void assign_inputs(uint16_t mp_ID, uint16_t lp_ID, char *word)
+{
+    // First check that user has not exceeded the maximum number of words
+    uint16_t temp_num = user_input_struct.num_words;
+
+    if (temp_num + 1 > MAX_USER_INPUTS)
+    {
+        return; // TO-DO: raise some kind of error in a pop up panel
+    }
+
+    // Then assign button IDs
+    user_input_struct.lp_array_ID[temp_num] = lp_ID;
+    user_input_struct.mp_array_ID[temp_num] = mp_ID;
+
+    // Then assign button word
+    char *newword = remove_newlines(word);
+    user_input_struct.mp_array_words[temp_num] = newword;
+    user_input_struct.num_words = temp_num + 1;
+}
+
+/*  Function to remove newlines from char */
+char* remove_newlines(char *word)
+{
+    int i;
+    char *newword = word;
+
+    for (i = 0; newword[i] != '\0'; i++)
+    {
+        if (newword[i] == '\n')
+        {
+            newword[i] = ' ';
+        }
+    }
+    return newword;
 }

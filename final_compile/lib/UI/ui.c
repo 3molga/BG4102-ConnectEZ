@@ -68,6 +68,8 @@ lv_obj_t **ui_mainpanels;
 
 // Word storage
 struct words_input user_input_struct;
+void assign_inputs(uint16_t mp_ID, uint16_t lp_ID, char *word);
+char* remove_newlines(char *word);
 
 /* ---------------------------------------------------------------------------------
                                     FUNCTIONS
@@ -81,6 +83,8 @@ void ui_init(void)
     lv_disp_set_theme(dispp, theme);
 
     init_styles();
+
+    user_input_struct.num_words = 0;
 
     // For whatever reason, init-ing the screens in this order seems to work
     ui_start_screen_init();
@@ -117,11 +121,11 @@ void init_styles()
 
     // Default btnmatrix btn style
     lv_style_init(&ui_mainpanel_btnmatrix_btndefstyle);
-    lv_style_set_shadow_width(&ui_mainpanel_btnmatrix_btndefstyle, 0);                     // Remove shadow
-    lv_style_set_border_width(&ui_mainpanel_btnmatrix_btndefstyle, 0);                     // Remove border
-    lv_style_set_outline_width(&ui_mainpanel_btnmatrix_btndefstyle, 0);                    // Remove outline
+    lv_style_set_shadow_width(&ui_mainpanel_btnmatrix_btndefstyle, 0);  // Remove shadow
+    lv_style_set_border_width(&ui_mainpanel_btnmatrix_btndefstyle, 0);  // Remove border
+    lv_style_set_outline_width(&ui_mainpanel_btnmatrix_btndefstyle, 0); // Remove outline
     lv_style_set_text_color(&ui_mainpanel_btnmatrix_btndefstyle, lv_color_make(255, 255, 255));
-    lv_style_set_pad_all(&ui_mainpanel_btnmatrix_btndefstyle, 0);                          // Add padding of 0 px on all sides
+    lv_style_set_pad_all(&ui_mainpanel_btnmatrix_btndefstyle, 0); // Add padding of 0 px on all sides
     lv_style_set_text_font(&ui_mainpanel_btnmatrix_btndefstyle, &lv_font_montserrat_18);
 
     // btnmatrix btn style when "hovered"/selected by joystick
