@@ -90,8 +90,6 @@ extern "C"
 
   // Utility functions
   extern lv_coord_t calc_btnmatrix_height(lv_obj_t *btnmatrixobj, lv_coord_t rowheight);
-  extern void assign_inputs(uint16_t mp_ID, uint16_t lp_ID, char *word);
-  extern char* remove_newlines(char *word);
 
   // Struct to store words
   // Assume a maximum of 5 words that the user can input for now?
@@ -104,8 +102,13 @@ extern "C"
 
     char *mp_array_words[MAX_USER_INPUTS];
   };
-  struct words_input user_input_struct;
-  extern char* generate_worddisplay();
+  extern struct words_input user_input_struct;
+  extern const struct words_input empty_struct;
+
+  // Word-handling functions
+  extern void assign_inputs(uint16_t mp_ID, uint16_t lp_ID, const char *word);
+  extern char* remove_newlines(const char *word);
+  extern void generate_worddisplay(char *worddisplaytext);
 
   LV_IMG_DECLARE(ui_img_1_bg_png); // assets\1_bg.png
   LV_IMG_DECLARE(ui_img_logo_png); // assets\logo.png

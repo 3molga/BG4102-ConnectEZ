@@ -71,8 +71,11 @@ lv_obj_t **ui_mainpanels;
 
 // Word storage
 struct words_input user_input_struct;
-void assign_inputs(uint16_t mp_ID, uint16_t lp_ID, char *word);
-char* remove_newlines(char *word);
+const struct words_input empty_struct = {0};
+
+void assign_inputs(uint16_t mp_ID, uint16_t lp_ID, const char *word);
+char *remove_newlines(const char *word);
+void generate_worddisplay(char *worddisplaytext);
 
 /* ---------------------------------------------------------------------------------
                                     FUNCTIONS
@@ -163,11 +166,10 @@ void init_styles()
     lv_style_set_border_width(&ui_worddisplay_style, 2);
     lv_style_set_border_color(&ui_worddisplay_style, lv_color_make(0, 0, 0));
     lv_style_set_outline_width(&ui_worddisplay_style, 0);
-    lv_style_set_bg_color(&ui_worddisplay_style, lv_color_make(0, 0, 0));
-    lv_style_set_bg_opa(&ui_worddisplay_style, 100);
+    lv_style_set_bg_color(&ui_worddisplay_style, lv_color_make(255, 255, 255));
+    lv_style_set_bg_opa(&ui_worddisplay_style, LV_OPA_100);
     lv_style_set_text_font(&ui_worddisplay_style, &lv_font_montserrat_18);
     lv_style_set_text_color(&ui_worddisplay_style, lv_color_make(0, 0, 0));
-
 }
 
 //  Function to combine and simplify checking for touchpad click and button_sel press

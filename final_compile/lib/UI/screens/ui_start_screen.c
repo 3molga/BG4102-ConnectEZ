@@ -83,5 +83,11 @@ void ui_event_init_button(lv_event_t *e)
 
         // Reset scroll
         lv_obj_scroll_to_y(ui_leftpanel_wrapper, 0, LV_ANIM_OFF);
+    
+        // Reset text
+        lv_label_set_text(ui_worddisplay, "");
+
+        // Reset user_input_struct
+        user_input_struct = empty_struct;
     }
 }

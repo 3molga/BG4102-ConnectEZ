@@ -66,6 +66,7 @@ void ui_main_screen_init(void)
     lv_obj_set_align(ui_worddisplay, LV_ALIGN_TOP_LEFT);
     lv_obj_clear_flag(ui_worddisplay, LV_OBJ_FLAG_CLICKABLE | LV_OBJ_FLAG_SCROLLABLE);
     lv_obj_add_style(ui_worddisplay, &ui_worddisplay_style, 0);
+    lv_label_set_text(ui_worddisplay, "");
 
     // Left panel btnmatrix
     // Create wrapper
@@ -162,16 +163,18 @@ void ui_event_mainpanel_sel(lv_event_t *e)
         lv_btnmatrix_t *btnm = (lv_btnmatrix_t *)btnmatobj;
         uint16_t btnid = btnm->btn_id_sel;
 
-        // Get word (yeah just ignore that discard const warning, it's intentional)
+        // Get word 
         const char *word = lv_btnmatrix_get_btn_text(btnmatobj, btnid);
-        char *newword = word;
+        char *newword = remove_newlines(word);
 
         // Assign values into lp_array_ID and mp_array_ID
         assign_inputs(btnid, user_input_struct.lp_array_last_ID, newword);
 
         // Update worddisplay
-        char *totalword = generate_worddisplay();
-        lv_label_set_text(ui_worddisplay, totalword);
+        char totalword[255];
+        char * wordptr = totalword;
+        generate_worddisplay(wordptr);
+        lv_label_set_text(ui_worddisplay, (const char*)totalword);
     }
 }
 
@@ -553,7 +556,7 @@ void ui_initmainpanel(uint16_t ID)
 }
 
 /*  Function to check and assign user inputs */
-void assign_inputs(uint16_t mp_ID, uint16_t lp_ID, char *word)
+void assign_inputs(uint16_t mp_ID, uint16_t lp_ID, const char* word)
 {
     // First check that user has not exceeded the maximum number of words
     uint16_t temp_num = user_input_struct.num_words;
@@ -568,46 +571,41 @@ void assign_inputs(uint16_t mp_ID, uint16_t lp_ID, char *word)
     user_input_struct.mp_array_ID[temp_num] = mp_ID;
 
     // Then assign button word
-    char *newword = remove_newlines(word);
-    user_input_struct.mp_array_words[temp_num] = newword;
+    user_input_struct.mp_array_words[temp_num] = strdup(word);
     user_input_struct.num_words = temp_num + 1;
 }
 
-/*  Function to remove newlines from char */
-char *remove_newlines(char *word)
+/*  Function to remove newlines from const char returned from get_btn_text */
+char *remove_newlines(const char* word)
 {
-    int i;
-    char *newword = word;
+    char * newword = strdup(word);
 
-    for (i = 0; newword[i] != '\0'; i++)
+    for (int i = 0; i < strlen(word); i++)
     {
         if (newword[i] == '\n')
         {
             newword[i] = ' ';
         }
-    }
+    } 
+
     return newword;
 }
 
 /*  Function to generate text to display on worddisplay */
-char *generate_worddisplay()
+void generate_worddisplay(char *worddisplaytext)
 {
-    char *worddisplay;
-    char plus_char = " + ";
+    // Create empty buffer
+    char word[255];
 
-    // Who cares about efficiency anyway lmao
-    for (int i = 0; i < user_input_struct.num_words; i++)
+    // Copy first word into string
+    strcpy(word, user_input_struct.mp_array_words[0]);
+
+    for (int i = 1; i < user_input_struct.num_words; i++)
     {
-        if (i == 0)
-        {
-            worddisplay = user_input_struct.mp_array_words[i];
-        }
-        else
-        {
-            strcat(worddisplay, plus_char);
-            strcat(worddisplay, user_input_struct.mp_array_words[i]);
-        }
+        strcat(word, " + ");
+        strcat(word, user_input_struct.mp_array_words[i]);
     }
 
-    return worddisplay;
+    
+    strcpy(worddisplaytext, word);
 }
