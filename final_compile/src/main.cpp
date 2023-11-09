@@ -501,7 +501,7 @@ std::string format_sentence()
   else if (hasPronouns && hasNouns) // If there are both, go with pronoun then noun (modify pronoun to show possessive)
   {
     // This is going to be ugly
-    char *tempPronoun = const_cast<char *>((pronouns.front()).c_str());
+    std::string tempPronoun = pronouns.front();
     if (tempPronoun == "I")
     {
       sentence.append("My");
@@ -550,19 +550,20 @@ std::string format_sentence()
   {
     sentence.append("feel");
     sentence.append(feelings.front());
+    sentence.append(" ");
   }
 
   // Add adjectives
   if (hasAdj)
   {
     sentence.append(adjectives.front());
-    sentence.append("-ly"); // I would like to apologize to all my English teachers
+    sentence.append("-ly "); // I would like to apologize to all my English teachers
   }
 
   // If there's a time included, it will always be at the end
   if (hasTimes)
   {
-    sentence.append(" ");
+    sentence.append(" in the ");
     sentence.append(times.front());
   }
 
@@ -577,6 +578,6 @@ std::string format_sentence()
   }
 
   // Assemble final sentence
-  message = "NEW USER MESSAGE: \n\n" + "Inferred sentence: " + sentence + "\n" + "User inputted: " + raw;
+  message = "NEW USER MESSAGE: \n\nInferred sentence: " + sentence + "\n" + "User inputted: " + raw;
   return message;
 }

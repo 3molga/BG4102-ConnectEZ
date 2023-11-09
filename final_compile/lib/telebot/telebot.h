@@ -32,6 +32,8 @@ private:
 	int numMessagesReceived;
 	int numMessagesQueued;
 	std::vector<std::string> messageQueue;
+	std::vector<std::string> messageHistory;
+
 
 	// Functions
 	void handleMessagesReceived(int numMessagesReceived);

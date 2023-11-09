@@ -1,4 +1,4 @@
-// Source file for telegram bot behaviour
+// Source file to control telegram bot behaviour
 
 #include <Arduino.h>
 #include <string>
@@ -11,22 +11,27 @@
 unsigned long lastTimeBotRan;
 int numMessagesReceived;
 int numMessagesQueued;
+int chatHistoryID;
 std::vector<std::string> messageQueue;
-std::string lastMessage;
+std::vector<std::string> messageHistory;
 
 //---------------------------------PUBLIC---------------------------------
 // Constructor
 telebot::telebot(UniversalTelegramBot &bot, String CHAT_ID)
-  : botRequestDelay(1000),
-    chat_id(CHAT_ID) {
+    : botRequestDelay(1000),
+      chat_id(CHAT_ID)
+{
   this->bot = &bot;
 }
 
 // handleActiveUpdates
 // Sends all queued messages in the queue
-void telebot::handleActiveUpdates() {
-  if (numMessagesQueued) {
-    while (numMessagesQueued) {
+void telebot::handleActiveUpdates()
+{
+  if (numMessagesQueued)
+  {
+    while (numMessagesQueued)
+    {
       // Send first message in queue
       // Convert from std::string to String for UniversalTelegramBot
       String messageToSend = String(messageQueue[0].c_str());
@@ -41,11 +46,14 @@ void telebot::handleActiveUpdates() {
 
 // handlePassiveUpdates
 // Queries updates from Telegram and handles them
-void telebot::handlePassiveUpdates() {
-  if (millis() > lastTimeBotRan + botRequestDelay) {
+void telebot::handlePassiveUpdates()
+{
+  if (millis() > lastTimeBotRan + botRequestDelay)
+  {
     numMessagesReceived = bot->getUpdates(bot->last_message_received + 1);
 
-    while (numMessagesReceived) {
+    while (numMessagesReceived)
+    {
       handleMessagesReceived(numMessagesReceived);
       numMessagesReceived = bot->getUpdates(bot->last_message_received + 1);
     }
@@ -55,15 +63,19 @@ void telebot::handlePassiveUpdates() {
 
 // queueMessage
 // Queues another message to be sent by bot
-void telebot::queueMessage(std::string messageToQueue) {
+void telebot::queueMessage(std::string messageToQueue)
+{
   numMessagesQueued += 1;
-  lastMessage = messageToQueue;
+  chatHistoryID += 1;
+  messageHistory.push_back(messageToQueue);
   messageQueue.push_back(messageToQueue);
 }
 
 // -----------------------PRIVATE-----------------------
-void telebot::handleMessagesReceived(int numMessagesReceived) {
-  for (int i = 0; i < numMessagesReceived; i++) {
+void telebot::handleMessagesReceived(int numMessagesReceived)
+{
+  for (int i = 0; i < numMessagesReceived; i++)
+  {
     // Check the chat id of the requester
     String chat_id = String(bot->messages[i].chat_id);
 
@@ -72,31 +84,55 @@ void telebot::handleMessagesReceived(int numMessagesReceived) {
     String from_name = bot->messages[i].from_name;
 
     // Change this message accordingly to the device function
-    if (text == "/start") {
+    if (text == "/start")
+    {
       String welcome = "Welcome, " + from_name + ".\n";
       welcome += "Use the following commands to control your outputs:\n\n";
       welcome += "/info for information about our device;\n";
-      welcome += "/query for the last message sent by the user;\n"; 
+      welcome += "/history for the last messages sent by the user;\n";
       // welcome += "/easter for a surprise easter egg!"
       bot->sendMessage(chat_id, welcome, "");
     }
 
     // Returns information about our device
-    if (text == "/info") {
+    if (text == "/info")
+    {
       bot->sendMessage(chat_id, "This is the ConnectEZ, an AAC device designed to prioritize user personalization and maximise social interaction!", "");
-      return;
-      }
-    
-    // To query about where the user currently is on the grid
-    if (text == "/query") {
-      String queryGridMessage = lastMessage.c_str();
-      bot->sendMessage(chat_id, queryGridMessage, "");
       return;
     }
 
+    // Returns last chat history
+    if (text == "/history")
+    {
+      String messageHistoryString = "This is the earliest message sent by the user: \n\n";
+      messageHistoryString += messageHistory[0].c_str();
+      messageHistoryString += "\n\nUse the following commands to navigate the chat history: \n";
+      messageHistoryString += "/previous to retrieve the previous message from this history; \n";
+      messageHistoryString += "/next to retrieve the next message from this history.";
+      bot->sendMessage(chat_id, messageHistoryString, "");
+      return;
+    }
+
+    // /previous
+    if (text == "/previous")
+    {
+      chatHistoryID -= 1;
+      String messagePrevString = "Retrieving previous message: \n\n";
+      messagePrevString += messageHistory[chatHistoryID].c_str();
+    }
+
+    // /next
+    if (text == "/next")
+    {
+      chatHistoryID += 1;
+      String messagePrevString = "Retrieving next message: \n\n";
+      messagePrevString += messageHistory[chatHistoryID].c_str();
+    }
+
     // Easter egg :)
-    if (text == "/easter") {
-      bot->sendMessage(chat_id, ":3", "");
+    if (text == "/easter")
+    {
+      bot->sendMessage(chat_id, "God I fucking hate my life.", "");
       return;
     }
   }
