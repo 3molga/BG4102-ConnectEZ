@@ -1,6 +1,6 @@
 /*  MAIN FILE TO RUN CONNECTEZ GUI AND EVERYTHING
     VER 0.0.1
-    by thad 
+    by thad
 */
 
 /* ---------------------------------------------------------------------------------
@@ -31,6 +31,7 @@
 joystick joystick_dev(4, 5, 1); // X pin, Y pin, buffer use bool
 ezButton button_sel(15);
 ezButton button_esc(16);
+ezButton button_tele(17);
 
 // Define LVGL/TFT_eSPI variables and declare objects/functions
 static const uint16_t screenWidth = 320;
@@ -70,8 +71,9 @@ telebot botController(bot, CHAT_ID);
 #define DATABASE_URL "https://connectez-87c05-default-rtdb.asia-southeast1.firebasedatabase.app/" // Insert RTDB URLefine the RTDB URL
 googlefirebase fb;
 
-// Declare function for 2nd Telegram loop
+// Declare functions for multitasking loops
 void TeleHandler(void *pvParameters);
+TaskHandle_t TeleTask;
 
 uint8_t debugCount;
 
@@ -98,18 +100,13 @@ void setup()
   // Init buttons
   button_sel.setDebounceTime(50);
   button_esc.setDebounceTime(50);
+  button_tele.setDebounceTime(50);
 
   // Init LVGL functional elements in general
   lvgl_init_functional_objects();
 
-  // Init UI elements
-  ui_init();
-
-  // Temporarily disable all this until GUI is properly sorted
-  /*
   // Connect to Wi-Fi
   WiFi.mode(WIFI_STA);
-  WiFi.disconnect();
   WiFi.begin(ssid, password);
   client.setCACert(TELEGRAM_CERTIFICATE_ROOT);
   while (millis() < 5000)
@@ -132,45 +129,48 @@ void setup()
   fb.begin(ACCEL_SDA, ACCEL_SCL);
   Serial.printf("Accelerometer Initialized");
 
+  // Init UI elements
+  ui_init();
+
   // Set up parallel processing task to handle Telegram reading
   xTaskCreatePinnedToCore(
       TeleHandler,            // Task function.
       "Telegram Bot Handler", // name of task.
       100000,                 // Stack size of task
       NULL,                   // parameter of the task
-      1,                      // priority of the task
-      NULL,                   // Task handle to keep track of created task
-      1);                     // pin task to core 0
-  */
+      0,                      // priority of the task
+      &TeleTask,              // Task handle to keep track of created task
+      0);                     // pin task to core 0
 }
 
+// Main loop to handle LVGL stuff
 void loop()
 {
+  static uint16_t telepresscount = 0;
+
   // Read joystick inputs
   joystick_dev.stateTrigger();
 
   // Read button inputs
   button_sel.loop();
   button_esc.loop();
+  button_tele.loop();
 
-  // Debugging
-  /*
-  if (button_sel.isPressed())
+  if (button_tele.getCount() > telepresscount)
   {
-    Serial.println("Button pressed");
+    if (user_input_struct.num_words > 0)
+    {
+      botController.queueMessage(std::string(user_input_struct.mp_array_sentence));
+    }
   }
-  else if (button_sel.isReleased())
-  {
-    Serial.println("Button released");
-  }
-  */
+
+  telepresscount = button_tele.getCount();
 
   // Call LVGL to do its thing
   lv_timer_handler();
   delay(5); // 5 ms shouldn't lead to missing any inputs right? RIGHT?
 }
 
-/*
 // 2nd loop to handle Telegram operations
 void TeleHandler(void *pvParameters)
 {
@@ -190,7 +190,6 @@ void TeleHandler(void *pvParameters)
     }
   }
 }
-*/
 
 /* ---------------------------------------------------------------------------------
                                       FUNCTIONS

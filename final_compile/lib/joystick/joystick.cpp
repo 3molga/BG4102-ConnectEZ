@@ -5,8 +5,8 @@
 #include "joystick.h"
 #include "joystickAxis.h"
 
-const unsigned long updateTime = 500; // In ms
-const unsigned long debounceTime = 200;
+const unsigned long updateTime = 400; // In ms
+const unsigned long debounceTime = 150;
 
 // Public variables
 String message;

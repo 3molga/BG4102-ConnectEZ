@@ -168,7 +168,7 @@ void init_styles()
     lv_style_set_outline_width(&ui_worddisplay_style, 0);
     lv_style_set_bg_color(&ui_worddisplay_style, lv_color_make(255, 255, 255));
     lv_style_set_bg_opa(&ui_worddisplay_style, LV_OPA_100);
-    lv_style_set_text_font(&ui_worddisplay_style, &lv_font_montserrat_18);
+    lv_style_set_text_font(&ui_worddisplay_style, &lv_font_montserrat_16);
     lv_style_set_text_color(&ui_worddisplay_style, lv_color_make(0, 0, 0));
 }
 

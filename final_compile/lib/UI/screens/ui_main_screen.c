@@ -170,10 +170,11 @@ void ui_event_mainpanel_sel(lv_event_t *e)
         // Assign values into lp_array_ID and mp_array_ID
         assign_inputs(btnid, user_input_struct.lp_array_last_ID, newword);
 
-        // Update worddisplay
+        // Update worddisplay and mp_array_sentence
         char totalword[255];
         char * wordptr = totalword;
         generate_worddisplay(wordptr);
+        user_input_struct.mp_array_sentence = wordptr;
         lv_label_set_text(ui_worddisplay, (const char*)totalword);
     }
 }

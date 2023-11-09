@@ -101,6 +101,7 @@ extern "C"
     uint16_t num_words;
 
     char *mp_array_words[MAX_USER_INPUTS];
+    char *mp_array_sentence;
   };
   extern struct words_input user_input_struct;
   extern const struct words_input empty_struct;
