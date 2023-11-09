@@ -83,7 +83,7 @@ uint8_t debugCount;
 
 void setup()
 {
-  Serial.begin(9600);
+  Serial.begin(115200);
 
   // Init LCD screen
   lcd.begin();
@@ -102,14 +102,15 @@ void setup()
   button_esc.setDebounceTime(50);
   button_tele.setDebounceTime(50);
 
-  // Init LVGL functional elements in general
-  lvgl_init_functional_objects();
-
   // Connect to Wi-Fi
   WiFi.mode(WIFI_STA);
+  WiFi.disconnect();
+  Serial.println("CHECK WIFI INITIALIZED");
   WiFi.begin(ssid, password);
+  Serial.println("CHECK1");
   client.setCACert(TELEGRAM_CERTIFICATE_ROOT);
-  while (millis() < 5000)
+  Serial.println("CHECK2");
+  while (millis() < 10000)
   {
     if (WiFi.status() == WL_CONNECTED)
     {
@@ -124,12 +125,18 @@ void setup()
     }
   }
 
+/*
+
   fb.setup(API_KEY, USER_EMAIL, USER_PASSWORD, DATABASE_URL);
   Serial.printf("Connected to Google Firebase at %s", DATABASE_URL);
   fb.begin(ACCEL_SDA, ACCEL_SCL);
   Serial.printf("Accelerometer Initialized");
 
-  // Init UI elements
+*/
+
+
+  // Init LVGL functional elements in general
+  lvgl_init_functional_objects();
   ui_init();
 
   // Set up parallel processing task to handle Telegram reading
@@ -146,7 +153,7 @@ void setup()
 // Main loop to handle LVGL stuff
 void loop()
 {
-  static uint16_t telepresscount = 0;
+  static uint16_t telepresscount;
 
   // Read joystick inputs
   joystick_dev.stateTrigger();
@@ -160,7 +167,8 @@ void loop()
   {
     if (user_input_struct.num_words > 0)
     {
-      botController.queueMessage(std::string(user_input_struct.mp_array_sentence));
+      std::string message = user_input_struct.mp_array_sentence;
+      botController.queueMessage(message);
     }
   }
 

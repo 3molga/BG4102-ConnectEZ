@@ -174,7 +174,7 @@ void ui_event_mainpanel_sel(lv_event_t *e)
         char totalword[255];
         char * wordptr = totalword;
         generate_worddisplay(wordptr);
-        user_input_struct.mp_array_sentence = wordptr;
+        user_input_struct.mp_array_sentence = strdup(wordptr);
         lv_label_set_text(ui_worddisplay, (const char*)totalword);
     }
 }
