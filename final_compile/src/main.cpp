@@ -65,6 +65,7 @@ WiFiClientSecure client;
 UniversalTelegramBot bot(BOTtoken, client);
 telebot botController(bot, CHAT_ID);
 std::string format_sentence();
+std::string get_raw_input();
 
 #define API_KEY "AIzaSyC9IZqH7onhkDCxWYMoz4Hb_ZWK1eQJ7YM" // Insert Firebase project API Key
 #define USER_EMAIL "zaneyong00@gmail.com"                 // Insert Authorized Email and Corresponding Password
@@ -164,7 +165,8 @@ void loop()
     if (user_input_struct.num_words > 0)
     {
       std::string message = format_sentence();
-      botController.queueMessage(message);
+      std::string raw = get_raw_input();
+      botController.queueNewUserInput(raw, message);
     }
   }
 
@@ -406,13 +408,11 @@ void lvgl_init_functional_objects()
 
 /*  Function to format words into sentences
     Based on 2 things - left panel ID (aka the context of the word), and main panel word (the word itself)
-    Assembles two lines of sentences: one for the raw user input and one for the inferred sentence */
+    Assembles the formatted sentence itself */
 std::string format_sentence()
 {
   // Init temp variables
-  std::string raw;
   std::string sentence;
-  std::string message;
   bool isQuestion = 0;
   bool hasPronouns = 0;
   bool hasNouns = 0;
@@ -420,9 +420,6 @@ std::string format_sentence()
   bool hasTimes = 0;
   bool hasAdj = 0;
   bool hasFeel = 0;
-
-  // Copy whatever's in mp_array_sentence to raw
-  raw = user_input_struct.mp_array_sentence;
 
   // Warning: messy algo ahead
   // Start by finding words of 7 types: pronouns, nouns, verbs, feelings, adjectives, questions, time
@@ -577,7 +574,17 @@ std::string format_sentence()
     sentence = sentence + ".";
   }
 
-  // Assemble final sentence
-  message = "NEW USER MESSAGE: \n\nInferred sentence: " + sentence + "\n" + "User inputted: " + raw;
-  return message;
+  return sentence;
 }
+
+//  Function to get raw user input in the form of an std::string
+std::string get_raw_input()
+{
+  std::string raw;
+  raw = user_input_struct.mp_array_sentence;
+  return raw;
+}
+
+
+
+

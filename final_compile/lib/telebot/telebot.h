@@ -32,7 +32,8 @@ private:
 	int numMessagesReceived;
 	int numMessagesQueued;
 	std::vector<std::string> messageQueue;
-	std::vector<std::string> messageHistory;
+	std::vector<std::string> sentenceHistory;
+	std::vector<std::string> rawHistory;
 
 
 	// Functions

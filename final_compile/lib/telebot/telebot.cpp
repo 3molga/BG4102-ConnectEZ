@@ -13,7 +13,8 @@ int numMessagesReceived;
 int numMessagesQueued;
 int chatHistoryID;
 std::vector<std::string> messageQueue;
-std::vector<std::string> messageHistory;
+std::vector<std::string> sentenceHistory;
+std::vector<std::string> rawHistory;
 
 //---------------------------------PUBLIC---------------------------------
 // Constructor
@@ -67,8 +68,26 @@ void telebot::queueMessage(std::string messageToQueue)
 {
   numMessagesQueued += 1;
   chatHistoryID += 1;
-  messageHistory.push_back(messageToQueue);
   messageQueue.push_back(messageToQueue);
+}
+
+// queueNewUserInput
+// Queues a new user input to be sent by bot
+void telebot::queueNewUserInput(std::string formattedSentence, std::string rawInput)
+{
+  // Add both the formatted sentence and the raw input to the history
+  sentenceHistory.push_back(formattedSentence);
+  rawHistory.push_back(rawInput);
+
+  // And format them into an entire message to be sent
+  std::string entireMessage = "USER IS SENDING A MESSAGE:\n\n";
+  entireMessage += "Formatted Sentence: ";
+  entireMessage += formattedSentence;
+  entireMessage += "\nRaw User Input: ";
+  entireMessage += rawInput;
+
+  // And away we go!
+  this.queueMessage(entireMessage);
 }
 
 // -----------------------PRIVATE-----------------------
@@ -118,7 +137,7 @@ void telebot::handleMessagesReceived(int numMessagesReceived)
     {
       chatHistoryID -= 1;
       String messagePrevString = "Retrieving previous message: \n\n";
-      messagePrevString += messageHistory[chatHistoryID].c_str();
+      messagePrevString += sentenceHistory[chatHistoryID].c_str();
     }
 
     // /next
@@ -126,7 +145,7 @@ void telebot::handleMessagesReceived(int numMessagesReceived)
     {
       chatHistoryID += 1;
       String messagePrevString = "Retrieving next message: \n\n";
-      messagePrevString += messageHistory[chatHistoryID].c_str();
+      messagePrevString += sentenceHistory[chatHistoryID].c_str();
     }
 
     // Easter egg :)
