@@ -61,5 +61,6 @@
     },
     "C_Cpp.dimInactiveRegions": false,
     "C_Cpp.default.compilerPath": "C:/Users/ihack/.platformio/packages/toolchain-xtensa-esp32s3@8.4.0+2021r2-patch5/bin/xtensa-esp32s3-elf-gcc.exe",
-    "cmake.sourceDirectory": "C:/Users/ihack/Documents/ESP32/final_compile/lib/UI"
+    "cmake.sourceDirectory": "C:/Users/ihack/Documents/ESP32/final_compile/lib/UI",
+    "C_Cpp.errorSquiggles": "disabled"
 }

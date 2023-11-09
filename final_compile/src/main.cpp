@@ -64,6 +64,7 @@ const char *password = "yeah8913";                                // Wi-Fi passw
 WiFiClientSecure client;
 UniversalTelegramBot bot(BOTtoken, client);
 telebot botController(bot, CHAT_ID);
+std::string format_sentence();
 
 #define API_KEY "AIzaSyC9IZqH7onhkDCxWYMoz4Hb_ZWK1eQJ7YM" // Insert Firebase project API Key
 #define USER_EMAIL "zaneyong00@gmail.com"                 // Insert Authorized Email and Corresponding Password
@@ -105,12 +106,9 @@ void setup()
   // Connect to Wi-Fi
   WiFi.mode(WIFI_STA);
   WiFi.disconnect();
-  Serial.println("CHECK WIFI INITIALIZED");
   WiFi.begin(ssid, password);
-  Serial.println("CHECK1");
   client.setCACert(TELEGRAM_CERTIFICATE_ROOT);
-  Serial.println("CHECK2");
-  while (millis() < 10000)
+  while (millis() < 1000)
   {
     if (WiFi.status() == WL_CONNECTED)
     {
@@ -125,15 +123,13 @@ void setup()
     }
   }
 
-/*
+  /*
+    fb.setup(API_KEY, USER_EMAIL, USER_PASSWORD, DATABASE_URL);
+    Serial.printf("Connected to Google Firebase at %s", DATABASE_URL);
+    fb.begin(ACCEL_SDA, ACCEL_SCL);
+    Serial.printf("Accelerometer Initialized");
 
-  fb.setup(API_KEY, USER_EMAIL, USER_PASSWORD, DATABASE_URL);
-  Serial.printf("Connected to Google Firebase at %s", DATABASE_URL);
-  fb.begin(ACCEL_SDA, ACCEL_SCL);
-  Serial.printf("Accelerometer Initialized");
-
-*/
-
+  */
 
   // Init LVGL functional elements in general
   lvgl_init_functional_objects();
@@ -167,7 +163,7 @@ void loop()
   {
     if (user_input_struct.num_words > 0)
     {
-      std::string message = user_input_struct.mp_array_sentence;
+      std::string message = format_sentence();
       botController.queueMessage(message);
     }
   }
@@ -186,13 +182,10 @@ void TeleHandler(void *pvParameters)
   {
     if (WiFi.status() != WL_CONNECTED)
     {
-      // Wi-Fi is not connected LED
-      digitalWrite(ONBOARD_LED, LOW);
     }
     else
     {
-      // Wi-Fi is connected LED
-      digitalWrite(ONBOARD_LED, HIGH);
+      // Wi-Fi is connected
       botController.handleActiveUpdates();
       botController.handlePassiveUpdates();
     }
@@ -409,4 +402,181 @@ void lvgl_init_functional_objects()
   indev_button_drv.type = LV_INDEV_TYPE_KEYPAD;
   indev_button_drv.read_cb = button_read;
   indev_button = lv_indev_drv_register(&indev_button_drv);
+}
+
+/*  Function to format words into sentences
+    Based on 2 things - left panel ID (aka the context of the word), and main panel word (the word itself)
+    Assembles two lines of sentences: one for the raw user input and one for the inferred sentence */
+std::string format_sentence()
+{
+  // Init temp variables
+  std::string raw;
+  std::string sentence;
+  std::string message;
+  bool isQuestion = 0;
+  bool hasPronouns = 0;
+  bool hasNouns = 0;
+  bool hasVerb = 0;
+  bool hasTimes = 0;
+  bool hasAdj = 0;
+  bool hasFeel = 0;
+
+  // Copy whatever's in mp_array_sentence to raw
+  raw = user_input_struct.mp_array_sentence;
+
+  // Warning: messy algo ahead
+  // Start by finding words of 7 types: pronouns, nouns, verbs, feelings, adjectives, questions, time
+  // Init vectors for - pronouns, nouns, verbs, adjectives, questions, time
+  std::vector<std::string> pronouns;
+  std::vector<std::string> nouns;
+  std::vector<std::string> verbs;
+  std::vector<std::string> feelings;
+  std::vector<std::string> adjectives;
+  std::vector<std::string> questions;
+  std::vector<std::string> times;
+
+  // Fill the aforementioned vectors with the words with corresponding "type"
+  for (uint16_t i = 0; i < user_input_struct.num_words; i++)
+  {
+    std::string temp_string;
+    temp_string = user_input_struct.mp_array_words[i];
+
+    if (user_input_struct.lp_array_ID[i] == 0) // Pronouns
+    {
+      pronouns.push_back(temp_string);
+      hasPronouns = 1;
+    }
+    else if (user_input_struct.lp_array_ID[i] == 4 || user_input_struct.lp_array_ID[i] == 5) // Nouns
+    {
+      nouns.push_back(temp_string);
+      hasNouns = 1;
+    }
+    else if (user_input_struct.lp_array_ID[i] == 7) // Adjectives
+    {
+      adjectives.push_back(temp_string);
+      hasAdj = 1;
+    }
+    else if (user_input_struct.lp_array_ID[i] == 6) // Feelings
+    {
+      feelings.push_back(temp_string);
+      hasFeel = 1;
+    }
+    else if (user_input_struct.lp_array_ID[i] == 2) // Verbs
+    {
+      verbs.push_back(temp_string);
+      hasVerb = 1;
+    }
+    else if (user_input_struct.lp_array_ID[i] == 1) // Questions
+    {
+      questions.push_back(temp_string);
+      isQuestion = 1;
+    }
+    else if (user_input_struct.lp_array_ID[i] == 3) // Times
+    {
+      times.push_back(temp_string);
+      hasTimes = 1;
+    }
+  }
+
+  // Assemble the sentence
+  // If there's a question included, it will always be at the start
+  if (isQuestion)
+  {
+    sentence.append(questions.front());
+    sentence.append(" ");
+  }
+
+  // TO DO: define behaviour
+  // Weird if-else to set subject of sentence
+  if (hasPronouns && !hasNouns) // If there are only pronouns
+  {
+    sentence.append(pronouns.front());
+    sentence.append(" ");
+  }
+  else if (hasNouns && !hasPronouns) // If there are only nouns
+  {
+    sentence.append(nouns.front());
+    sentence.append(" ");
+  }
+  else if (hasPronouns && hasNouns) // If there are both, go with pronoun then noun (modify pronoun to show possessive)
+  {
+    // This is going to be ugly
+    char *tempPronoun = const_cast<char *>((pronouns.front()).c_str());
+    if (tempPronoun == "I")
+    {
+      sentence.append("My");
+    }
+    else if (tempPronoun == "You")
+    {
+      sentence.append("Your");
+    }
+    else if (tempPronoun == "He")
+    {
+      sentence.append("His");
+    }
+    else if (tempPronoun == "She")
+    {
+      sentence.append("Her");
+    }
+    else if (tempPronoun == "We")
+    {
+      sentence.append("Our");
+    }
+    else if (tempPronoun == "They")
+    {
+      sentence.append("Their");
+    }
+    else if (tempPronoun == "It")
+    {
+      sentence.append("Its");
+    }
+    else if (tempPronoun == "One")
+    {
+      sentence.append("One");
+    }
+    sentence.append(" ");
+    sentence.append(nouns.front());
+    sentence.append(" ");
+  }
+
+  // Add verbs
+  if (hasVerb)
+  {
+    sentence.append(verbs.front());
+  }
+
+  // Add feelings
+  if (hasFeel)
+  {
+    sentence.append("feel");
+    sentence.append(feelings.front());
+  }
+
+  // Add adjectives
+  if (hasAdj)
+  {
+    sentence.append(adjectives.front());
+    sentence.append("-ly"); // I would like to apologize to all my English teachers
+  }
+
+  // If there's a time included, it will always be at the end
+  if (hasTimes)
+  {
+    sentence.append(" ");
+    sentence.append(times.front());
+  }
+
+  // Add punctuation
+  if (isQuestion)
+  {
+    sentence = sentence + "?";
+  }
+  else
+  {
+    sentence = sentence + ".";
+  }
+
+  // Assemble final sentence
+  message = "NEW USER MESSAGE: \n\n" + "Inferred sentence: " + sentence + "\n" + "User inputted: " + raw;
+  return message;
 }

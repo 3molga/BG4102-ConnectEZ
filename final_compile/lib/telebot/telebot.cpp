@@ -12,6 +12,7 @@ unsigned long lastTimeBotRan;
 int numMessagesReceived;
 int numMessagesQueued;
 std::vector<std::string> messageQueue;
+std::string lastMessage;
 
 //---------------------------------PUBLIC---------------------------------
 // Constructor
@@ -56,6 +57,7 @@ void telebot::handlePassiveUpdates() {
 // Queues another message to be sent by bot
 void telebot::queueMessage(std::string messageToQueue) {
   numMessagesQueued += 1;
+  lastMessage = messageToQueue;
   messageQueue.push_back(messageToQueue);
 }
 
@@ -74,7 +76,7 @@ void telebot::handleMessagesReceived(int numMessagesReceived) {
       String welcome = "Welcome, " + from_name + ".\n";
       welcome += "Use the following commands to control your outputs:\n\n";
       welcome += "/info for information about our device;\n";
-      welcome += "/query for information about the current state of the user;\n"; 
+      welcome += "/query for the last message sent by the user;\n"; 
       // welcome += "/easter for a surprise easter egg!"
       bot->sendMessage(chat_id, welcome, "");
     }
@@ -87,9 +89,8 @@ void telebot::handleMessagesReceived(int numMessagesReceived) {
     
     // To query about where the user currently is on the grid
     if (text == "/query") {
-      char queryGridMessage[50];
-      String queryGridMessageS = queryGridMessage;
-      bot->sendMessage(chat_id, queryGridMessageS, "");
+      String queryGridMessage = lastMessage.c_str();
+      bot->sendMessage(chat_id, queryGridMessage, "");
       return;
     }
 
