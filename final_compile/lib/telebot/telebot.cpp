@@ -11,6 +11,7 @@
 unsigned long lastTimeBotRan;
 int numMessagesReceived;
 int numMessagesQueued;
+int numMessagesSent;
 int chatHistoryID;
 std::vector<std::string> messageQueue;
 std::vector<std::string> sentenceHistory;
@@ -67,6 +68,7 @@ void telebot::handlePassiveUpdates()
 void telebot::queueMessage(std::string messageToQueue)
 {
   numMessagesQueued += 1;
+  numMessagesSent += 1;
   chatHistoryID += 1;
   messageQueue.push_back(messageToQueue);
 }
@@ -87,7 +89,7 @@ void telebot::queueNewUserInput(std::string formattedSentence, std::string rawIn
   entireMessage += rawInput;
 
   // And away we go!
-  this.queueMessage(entireMessage);
+  queueMessage(entireMessage);
 }
 
 // -----------------------PRIVATE-----------------------
@@ -111,6 +113,7 @@ void telebot::handleMessagesReceived(int numMessagesReceived)
       welcome += "/history for the last messages sent by the user;\n";
       // welcome += "/easter for a surprise easter egg!"
       bot->sendMessage(chat_id, welcome, "");
+      return;
     }
 
     // Returns information about our device
@@ -124,7 +127,7 @@ void telebot::handleMessagesReceived(int numMessagesReceived)
     if (text == "/history")
     {
       String messageHistoryString = "This is the earliest message sent by the user: \n\n";
-      messageHistoryString += messageHistory[0].c_str();
+      messageHistoryString += sentenceHistory[0].c_str();
       messageHistoryString += "\n\nUse the following commands to navigate the chat history: \n";
       messageHistoryString += "/previous to retrieve the previous message from this history; \n";
       messageHistoryString += "/next to retrieve the next message from this history.";
@@ -135,23 +138,35 @@ void telebot::handleMessagesReceived(int numMessagesReceived)
     // /previous
     if (text == "/previous")
     {
-      chatHistoryID -= 1;
-      String messagePrevString = "Retrieving previous message: \n\n";
-      messagePrevString += sentenceHistory[chatHistoryID].c_str();
+      if (chatHistoryID - 1 > 0) // Ignore the very first message, which is the startup message (sent from outside)
+      {
+        chatHistoryID -= 1;
+        String messagePrevString = "Retrieving previous message: \n\n";
+        messagePrevString += sentenceHistory[chatHistoryID].c_str();
+        bot->sendMessage(chat_id, messagePrevString);
+        return;
+      }
+      return;
     }
 
     // /next
     if (text == "/next")
     {
-      chatHistoryID += 1;
-      String messagePrevString = "Retrieving next message: \n\n";
-      messagePrevString += sentenceHistory[chatHistoryID].c_str();
+      if (chatHistoryID + 1 <= numMessagesSent)
+      {
+        chatHistoryID += 1;
+        String messageNextString = "Retrieving next message: \n\n";
+        messageNextString += sentenceHistory[chatHistoryID].c_str();
+        bot->sendMessage(chat_id, messageNextString);
+        return;
+      }
+      return;
     }
 
     // Easter egg :)
-    if (text == "/easter")
+    if (text == "/easter" || text == "/owo" || text == "/:3")
     {
-      bot->sendMessage(chat_id, "God I fucking hate my life.", "");
+      bot->sendMessage(chat_id, "A good :3 to you as well!", "");
       return;
     }
   }

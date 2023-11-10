@@ -109,7 +109,7 @@ void setup()
   WiFi.disconnect();
   WiFi.begin(ssid, password);
   client.setCACert(TELEGRAM_CERTIFICATE_ROOT);
-  while (millis() < 1000)
+  while (millis() < 5000)
   {
     if (WiFi.status() == WL_CONNECTED)
     {
@@ -166,7 +166,7 @@ void loop()
     {
       std::string message = format_sentence();
       std::string raw = get_raw_input();
-      botController.queueNewUserInput(raw, message);
+      botController.queueNewUserInput(message, raw);
     }
   }
 
@@ -540,12 +540,13 @@ std::string format_sentence()
   if (hasVerb)
   {
     sentence.append(verbs.front());
+    sentence.append (" ");
   }
 
   // Add feelings
   if (hasFeel)
   {
-    sentence.append("feel");
+    sentence.append("feels");
     sentence.append(feelings.front());
     sentence.append(" ");
   }
@@ -562,15 +563,18 @@ std::string format_sentence()
   {
     sentence.append(" in the ");
     sentence.append(times.front());
+    sentence.append(" ");
   }
 
   // Add punctuation
   if (isQuestion)
   {
+    sentence.pop_back();
     sentence = sentence + "?";
   }
   else
   {
+    sentence.pop_back();
     sentence = sentence + ".";
   }
 

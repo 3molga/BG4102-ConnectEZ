@@ -20,6 +20,7 @@ public:
 	void handleActiveUpdates();
 	void handlePassiveUpdates();
 	void queueMessage(std::string messageQueued);
+	void queueNewUserInput(std::string formattedSentence, std::string rawInput);
 
 // Private stuff
 private:
@@ -31,6 +32,8 @@ private:
 	unsigned long lastTimeBotRan;
 	int numMessagesReceived;
 	int numMessagesQueued;
+	int numMessagesSent;
+	int chatHistoryID;
 	std::vector<std::string> messageQueue;
 	std::vector<std::string> sentenceHistory;
 	std::vector<std::string> rawHistory;
