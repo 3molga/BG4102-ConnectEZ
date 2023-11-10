@@ -546,7 +546,7 @@ std::string format_sentence()
   // Add feelings
   if (hasFeel)
   {
-    sentence.append("feels");
+    sentence.append("feels ");
     sentence.append(feelings.front());
     sentence.append(" ");
   }
@@ -561,7 +561,7 @@ std::string format_sentence()
   // If there's a time included, it will always be at the end
   if (hasTimes)
   {
-    sentence.append(" in the ");
+    sentence.append("in the ");
     sentence.append(times.front());
     sentence.append(" ");
   }

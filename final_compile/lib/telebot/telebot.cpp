@@ -69,7 +69,6 @@ void telebot::queueMessage(std::string messageToQueue)
 {
   numMessagesQueued += 1;
   numMessagesSent += 1;
-  chatHistoryID += 1;
   messageQueue.push_back(messageToQueue);
 }
 
@@ -145,8 +144,7 @@ void telebot::handleMessagesReceived(int numMessagesReceived)
         messagePrevString += sentenceHistory[chatHistoryID].c_str();
         bot->sendMessage(chat_id, messagePrevString);
         return;
-      }
-      return;
+      } else return;
     }
 
     // /next
@@ -159,8 +157,7 @@ void telebot::handleMessagesReceived(int numMessagesReceived)
         messageNextString += sentenceHistory[chatHistoryID].c_str();
         bot->sendMessage(chat_id, messageNextString);
         return;
-      }
-      return;
+      } else return;
     }
 
     // Easter egg :)
