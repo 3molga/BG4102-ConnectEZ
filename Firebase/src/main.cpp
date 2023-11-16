@@ -12,16 +12,16 @@
 #define DATABASE_URL "https://connectez-87c05-default-rtdb.asia-southeast1.firebasedatabase.app/" // Insert RTDB URLefine the RTDB URL
 
 // MPU6050_accelerometer pins
-#define I2C_SDA_MPU 2 
-#define I2C_SCL_MPU 1
+#define I2C_SDA_MPU 8
+#define I2C_SCL_MPU 9
 
 // MAX30102_heartratesensor pins
-#define I2C_SDA_HBR 41
-#define I2C_SCL_HBR 42
+#define I2C_SDA_HBR 10
+#define I2C_SCL_HBR 11
 
 // Buzzer and button pin
 #define BUZZER_PIN 12
-ezButton button(7);  // create ezButton object that attach to pin 7;
+ezButton button(5);  // create ezButton object that attach to pin 7;
 int lastState = HIGH; 
 int currentState = LOW; 
 
